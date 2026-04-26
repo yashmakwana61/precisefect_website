@@ -1,0 +1,14 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "arLOLNuoBrhA5HLozFRIw"
+uri = "file://exports/precisefect-project.zip"
+type = "unspecified"
+title = "Precisefect Project (ZIP)"
+
+[[outputs]]
+id = "Ms4Zhfr0cufSjo5eldrZv"
+uri = "file://exports/precisefect-project.tar.gz"
+type = "unspecified"
+title = "Precisefect Project (tar.gz)"
