@@ -41,7 +41,7 @@ export function Navbar() {
           <img
             src={logoUrl}
             alt="Precisefect"
-            className="h-20 md:h-24 w-auto -my-6"
+            className="h-35 md:h-24 w-auto -my-6"
           />
         </Link>
 
