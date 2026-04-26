@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import logoUrl from "@assets/Website_Logo_1777187773694.png";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -36,10 +37,12 @@ export function Navbar() {
       }`}
     >
       <div className="max-w-[1440px] mx-auto px-8 lg:px-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center">
-          <span className="text-2xl font-black tracking-tighter uppercase text-primary">
-            Precisefect
-          </span>
+        <Link href="/" className="flex items-center" aria-label="Precisefect — Precision Meets Perfection">
+          <img
+            src={logoUrl}
+            alt="Precisefect"
+            className="h-16 md:h-20 w-auto -my-4"
+          />
         </Link>
 
         {/* Desktop Nav */}
@@ -118,10 +121,12 @@ export function Footer() {
       <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-12 mb-16">
           <div className="col-span-1 md:col-span-2">
-            <Link href="/" className="inline-block mb-6">
-              <span className="text-3xl font-black tracking-tighter uppercase text-white">
-                Precisefect
-              </span>
+            <Link href="/" className="inline-block mb-6" aria-label="Precisefect">
+              <img
+                src={logoUrl}
+                alt="Precisefect"
+                className="h-14 w-auto brightness-0 invert"
+              />
             </Link>
             <p className="text-white/70 mb-6 max-w-sm text-sm leading-relaxed">
               Architecting operational perfection. We build resilient, automated systems for enterprises that require scale without structural entropy.
