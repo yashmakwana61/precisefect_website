@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Precisefect"
+version = "1.0.0"
+id = "artifacts/precisefect"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25462
+
+[services.development]
+run = "pnpm --filter @workspace/precisefect run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/precisefect", "run", "build" ]
+publicDir = "artifacts/precisefect/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25462"
+BASE_PATH = "/"
