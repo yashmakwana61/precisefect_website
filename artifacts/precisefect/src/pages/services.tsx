@@ -1,58 +1,56 @@
 import { Seo } from "@/components/seo";
-import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { Layers, Zap, Code, Workflow, ArrowRight } from "lucide-react";
+import { Database, Zap, Code, Network, ArrowRight } from "lucide-react";
 
 export default function Services() {
   const services = [
     {
-      icon: Layers,
-      title: "ERP Implementation",
-      desc: "End-to-end deployment of ERPNext, Odoo, and Zoho. We map your operations, customize the system, migrate data, and train your team.",
+      icon: Database,
+      title: "ERP Architecture",
+      desc: "End-to-end deployment of ERPNext, Odoo, and Zoho. We audit your operations, structure the database schema, migrate data, and launch.",
       href: "/services/erp",
-      color: "text-secondary"
     },
     {
       icon: Zap,
-      title: "Business Automation",
-      desc: "Remove human error from repeatable tasks. We build intelligent workflows that connect your disparate tools into a unified engine.",
+      title: "Middleware Automation",
+      desc: "Eradicate manual data entry. We engineer resilient workflows that connect your disparate tools into a unified, autonomous engine.",
       href: "/services/automation",
-      color: "text-accent"
     },
     {
       icon: Code,
-      title: "Custom Software",
-      desc: "When off-the-shelf software falls short, we engineer bespoke applications perfectly tailored to your proprietary processes.",
+      title: "Custom Engineering",
+      desc: "When native integrations fall short, we develop bespoke software microservices perfectly tailored to your proprietary logic.",
       href: "/contact",
-      color: "text-primary"
     },
     {
-      icon: Workflow,
-      title: "Integration Services",
-      desc: "Seamless API integrations connecting your legacy on-premise systems with modern cloud infrastructure and partner portals.",
+      icon: Network,
+      title: "System Integration",
+      desc: "Robust API bridges connecting legacy on-premise infrastructure with modern cloud applications and partner EDI networks.",
       href: "/contact",
-      color: "text-secondary"
     }
   ];
 
   return (
     <>
       <Seo 
-        title="Our Services | ERP & Automation" 
-        description="Precisefect offers ERP implementation, business automation, custom software, and integration services for growing enterprises."
+        title="Core Competencies | Precisefect" 
+        description="ERP implementation, middleware automation, and custom engineering for scaling enterprises."
       />
       
-      <section className="py-24 bg-background">
-        <div className="container mx-auto px-4 md:px-6">
+      <section className="py-24 md:py-32 bg-surface">
+        <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="max-w-3xl mb-16"
+            className="max-w-3xl mb-24"
           >
-            <h1 className="text-4xl md:text-6xl font-bold text-primary mb-6">Core Services</h1>
-            <p className="text-xl text-muted-foreground">
-              We architect digital infrastructure that enables operational scale without massive headcount expansion.
+            <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Core Competencies</p>
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary mb-8 leading-[0.95]">
+              Architectural <br/>Capabilities.
+            </h1>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              We design digital infrastructure that enables massive operational throughput without the burden of linear headcount expansion.
             </p>
           </motion.div>
 
@@ -63,15 +61,13 @@ export default function Services() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
                 key={i}
-                className="bg-card border border-border p-8 md:p-10 rounded-3xl hover:border-primary/20 transition-all hover:shadow-md flex flex-col h-full"
+                className="bg-surface-container-lowest ghost-border p-10 rounded-xl hover:shadow-xl hover:-translate-y-1 transition-all flex flex-col group"
               >
-                <service.icon className={`w-12 h-12 mb-6 ${service.color}`} />
+                <service.icon className="w-10 h-10 text-primary mb-8 stroke-[1.5]" />
                 <h3 className="text-2xl font-bold text-primary mb-4">{service.title}</h3>
-                <p className="text-muted-foreground mb-8 flex-grow">{service.desc}</p>
-                <Link href={service.href}>
-                  <Button variant="outline" className="rounded-full w-fit">
-                    Learn More <ArrowRight className="ml-2 w-4 h-4" />
-                  </Button>
+                <p className="text-muted-foreground mb-12 flex-grow leading-relaxed">{service.desc}</p>
+                <Link href={service.href} className="flex items-center text-sm font-bold text-primary group-hover:text-primary-container transition-colors mt-auto">
+                  Examine Detail <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-2" />
                 </Link>
               </motion.div>
             ))}
@@ -79,16 +75,16 @@ export default function Services() {
         </div>
       </section>
 
-      <section className="py-24 bg-primary text-center">
-        <div className="container mx-auto px-4 md:px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">Not sure which solution fits?</h2>
-          <p className="text-xl text-primary-foreground/70 mb-10 max-w-2xl mx-auto">
-            Let's discuss your current bottlenecks. We'll outline a roadmap to streamline your operations.
+      <section className="py-32 bg-primary text-white text-center">
+        <div className="max-w-[1440px] mx-auto px-8 lg:px-16 max-w-3xl">
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-8">Uncertain of the optimal protocol?</h2>
+          <p className="text-lg text-white/70 mb-12">
+            Submit a request for an architectural review. We will map your current bottlenecks and propose a unified data model.
           </p>
           <Link href="/contact">
-            <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground h-14 px-8 rounded-full">
-              Book a Discovery Call
-            </Button>
+            <button className="bg-white text-primary font-bold rounded-lg px-12 py-5 shadow-md btn-press text-lg">
+              Request Architectural Review
+            </button>
           </Link>
         </div>
       </section>

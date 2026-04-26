@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
-import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -33,29 +32,46 @@ export function Navbar() {
   return (
     <header
       className={`fixed top-0 w-full z-50 transition-all duration-300 border-b border-transparent ${
-        isScrolled ? "bg-background/90 backdrop-blur-md border-border shadow-sm py-3" : "bg-transparent py-5"
+        isScrolled ? "bg-background/80 backdrop-blur-[24px] border-border shadow-sm py-4" : "bg-transparent py-6"
       }`}
     >
-      <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="text-xl font-bold tracking-tight text-primary">
-            Precise<span className="text-secondary">fect</span>
+      <div className="max-w-[1440px] mx-auto px-8 lg:px-16 flex items-center justify-between">
+        <Link href="/" className="flex items-center">
+          <span className="text-2xl font-black tracking-tighter uppercase text-primary">
+            Precisefect
           </span>
         </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">
-              {link.label}
-            </Link>
-          ))}
-          <Link href="/contact">
-            <Button variant="default" className="bg-accent hover:bg-accent/90 text-accent-foreground rounded-full px-6">
-              Book a Consultation
-            </Button>
-          </Link>
+          {navLinks.map((link) => {
+            const isActive = location === link.href || (link.href !== '/' && location.startsWith(link.href));
+            return (
+              <Link 
+                key={link.href} 
+                href={link.href} 
+                className={`text-sm transition-colors py-1 ${
+                  isActive 
+                    ? "font-bold text-primary border-b-2 border-primary-container" 
+                    : "font-medium text-muted-foreground hover:text-primary-container"
+                }`}
+              >
+                {link.label}
+              </Link>
+            )
+          })}
         </nav>
+
+        <div className="hidden md:flex items-center gap-6">
+          <Link href="/login" className="text-sm font-medium text-muted-foreground hover:text-primary">
+            Login
+          </Link>
+          <Link href="/contact">
+            <button className="signature-gradient text-white font-bold rounded-lg px-8 py-3 shadow-sm btn-press">
+              Consultation
+            </button>
+          </Link>
+        </div>
 
         {/* Mobile Toggle */}
         <button
@@ -74,17 +90,20 @@ export function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="absolute top-full left-0 w-full bg-background border-b border-border shadow-lg py-4 md:hidden flex flex-col px-4 gap-4"
+            className="absolute top-full left-0 w-full bg-background border-b border-border shadow-lg py-6 md:hidden flex flex-col px-8 gap-4"
           >
             {navLinks.map((link) => (
-              <Link key={link.href} href={link.href} className="text-base font-medium py-2 text-foreground/80 hover:text-primary border-b border-border/50">
+              <Link key={link.href} href={link.href} className="text-base font-bold py-2 text-foreground/80 hover:text-primary border-b border-border/50">
                 {link.label}
               </Link>
             ))}
-            <Link href="/contact" className="pt-2">
-              <Button variant="default" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-                Book a Consultation
-              </Button>
+            <Link href="/login" className="text-base font-bold py-2 text-foreground/80">
+              Login
+            </Link>
+            <Link href="/contact" className="pt-4">
+              <button className="w-full signature-gradient text-white font-bold rounded-lg px-8 py-3 btn-press">
+                Consultation
+              </button>
             </Link>
           </motion.div>
         )}
@@ -95,56 +114,55 @@ export function Navbar() {
 
 export function Footer() {
   return (
-    <footer className="bg-primary text-primary-foreground py-16 md:py-24">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-          <div className="col-span-1 md:col-span-1">
+    <footer className="bg-primary text-white py-24">
+      <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-12 mb-16">
+          <div className="col-span-1 md:col-span-2">
             <Link href="/" className="inline-block mb-6">
-              <span className="text-2xl font-bold tracking-tight text-white">
-                Precise<span className="text-secondary">fect</span>
+              <span className="text-3xl font-black tracking-tighter uppercase text-white">
+                Precisefect
               </span>
             </Link>
-            <p className="text-primary-foreground/70 mb-6 max-w-sm">
-              Precision engineering meets perfect execution. We build operational systems for serious businesses.
+            <p className="text-white/70 mb-6 max-w-sm text-sm leading-relaxed">
+              Architecting operational perfection. We build resilient, automated systems for enterprises that require scale without structural entropy.
             </p>
           </div>
           
           <div>
-            <h3 className="font-semibold text-lg mb-4 text-white">Services</h3>
-            <ul className="space-y-3">
-              <li><Link href="/services/erp" className="text-primary-foreground/70 hover:text-white transition-colors">ERP Implementation</Link></li>
-              <li><Link href="/services/automation" className="text-primary-foreground/70 hover:text-white transition-colors">Business Automation</Link></li>
-              <li><Link href="/services" className="text-primary-foreground/70 hover:text-white transition-colors">Custom Integration</Link></li>
+            <h3 className="font-bold tracking-widest text-xs uppercase text-on-primary-container mb-6">Services</h3>
+            <ul className="space-y-4">
+              <li><Link href="/services/erp" className="text-sm text-white/70 hover:text-white transition-colors">ERP Architecture</Link></li>
+              <li><Link href="/services/automation" className="text-sm text-white/70 hover:text-white transition-colors">Operational Automation</Link></li>
+              <li><Link href="/services" className="text-sm text-white/70 hover:text-white transition-colors">Custom Integration</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="font-semibold text-lg mb-4 text-white">Company</h3>
-            <ul className="space-y-3">
-              <li><Link href="/about" className="text-primary-foreground/70 hover:text-white transition-colors">About Us</Link></li>
-              <li><Link href="/case-studies" className="text-primary-foreground/70 hover:text-white transition-colors">Case Studies</Link></li>
-              <li><Link href="/careers" className="text-primary-foreground/70 hover:text-white transition-colors">Careers</Link></li>
-              <li><Link href="/blog" className="text-primary-foreground/70 hover:text-white transition-colors">Insights</Link></li>
+            <h3 className="font-bold tracking-widest text-xs uppercase text-on-primary-container mb-6">Company</h3>
+            <ul className="space-y-4">
+              <li><Link href="/about" className="text-sm text-white/70 hover:text-white transition-colors">About Firm</Link></li>
+              <li><Link href="/case-studies" className="text-sm text-white/70 hover:text-white transition-colors">The Proof</Link></li>
+              <li><Link href="/careers" className="text-sm text-white/70 hover:text-white transition-colors">Careers</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="font-semibold text-lg mb-4 text-white">Contact</h3>
-            <ul className="space-y-3">
-              <li className="text-primary-foreground/70">hello@precisefect.com</li>
-              <li className="text-primary-foreground/70">+1 (555) 123-4567</li>
-              <li className="text-primary-foreground/70 pt-2">
+            <h3 className="font-bold tracking-widest text-xs uppercase text-on-primary-container mb-6">Contact</h3>
+            <ul className="space-y-4">
+              <li className="text-sm text-white/70">hello@precisefect.com</li>
+              <li className="text-sm text-white/70">San Francisco · Bangalore</li>
+              <li className="pt-4">
                 <Link href="/contact">
-                  <span className="text-accent hover:underline font-medium">Get in touch &rarr;</span>
+                  <span className="text-sm font-bold text-white hover:text-on-primary-container transition-colors">Submit RFP &rarr;</span>
                 </Link>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-primary-foreground/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-primary-foreground/50">
-          <p>&copy; {new Date().getFullYear()} Precisefect Consulting. All rights reserved.</p>
-          <div className="flex gap-6">
+        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/50">
+          <p>&copy; {new Date().getFullYear()} Precisefect Consulting. Proprietary & Confidential.</p>
+          <div className="flex gap-8">
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
           </div>
@@ -156,9 +174,9 @@ export function Footer() {
 
 export function Layout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-[100dvh] flex flex-col flex-grow w-full">
+    <div className="min-h-[100dvh] flex flex-col flex-grow w-full bg-background font-sans text-foreground">
       <Navbar />
-      <main className="flex-grow flex flex-col pt-20 md:pt-24">{children}</main>
+      <main className="flex-grow flex flex-col pt-[88px]">{children}</main>
       <Footer />
     </div>
   );

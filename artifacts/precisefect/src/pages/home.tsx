@@ -1,79 +1,89 @@
 import { Seo } from "@/components/seo";
-import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ArrowRight, BarChart3, Clock, Database, Layers, ShieldCheck, Zap } from "lucide-react";
+import { ArrowRight, Database, Zap, Network, LayoutGrid } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Home() {
   return (
     <>
       <Seo 
-        title="ERP & Automation Consulting" 
-        description="Precisefect implements ERP systems and builds business automation for scaling companies. Stop relying on spreadsheets and manual chaos."
+        title="ERP & Automation Architecture" 
+        description="Precisefect engineers operational perfection for scaling enterprises. Eradicate manual chaos."
       />
       
       {/* Hero Section */}
-      <section className="relative pt-20 pb-32 md:pt-32 md:pb-48 overflow-hidden bg-background">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-50 pointer-events-none" />
-        
-        <div className="container relative mx-auto px-4 md:px-6 flex flex-col items-center text-center">
+      <section className="py-24 bg-surface relative overflow-hidden">
+        <div className="max-w-[1440px] mx-auto px-8 lg:px-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 text-secondary text-sm font-medium mb-8"
+            className="flex flex-col items-start"
           >
-            <span className="w-2 h-2 rounded-full bg-secondary" />
-            Transforming Operations for Growing Businesses
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-tertiary-container text-on-tertiary-container text-xs font-bold uppercase tracking-widest mb-8">
+              <span className="w-1.5 h-1.5 rounded-full bg-on-tertiary-container" />
+              Operational Alpha
+            </div>
+            
+            <h1 className="text-6xl lg:text-7xl xl:text-8xl font-bold tracking-[-0.03em] text-primary mb-8 leading-[0.95]">
+              Architecting <br />
+              <span className="text-on-primary-container">Perfection.</span>
+            </h1>
+            
+            <p className="text-lg text-muted-foreground max-w-xl mb-12 leading-relaxed">
+              We engineer robust operational systems using cutting-edge ERP and automation middleware. Eliminate manual entropy, unify your data, and scale your business without scaling headcount.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row items-center gap-8">
+              <Link href="/contact">
+                <button className="signature-gradient text-white font-bold rounded-lg px-10 py-5 shadow-md btn-press text-lg">
+                  Submit RFP
+                </button>
+              </Link>
+              <Link href="/case-studies" className="group flex items-center text-primary font-bold text-lg hover:text-primary-container transition-colors">
+                Examine The Proof <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-2" />
+              </Link>
+            </div>
           </motion.div>
           
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-primary max-w-5xl mb-8 leading-[1.1]"
-          >
-            Scale your business, <br className="hidden md:block" />
-            not your headcount.
-          </motion.h1>
-          
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-xl md:text-2xl text-muted-foreground max-w-2xl mb-12"
-          >
-            We engineer perfect operational systems using cutting-edge ERP and automation. No more disconnected tools, no more manual data entry.
-          </motion.p>
-          
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-4"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="relative w-full aspect-square max-w-[600px] mx-auto lg:ml-auto"
           >
-            <Link href="/contact">
-              <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground h-14 px-8 text-lg rounded-full">
-                Schedule a Discovery Call
-              </Button>
-            </Link>
-            <Link href="/case-studies">
-              <Button size="lg" variant="outline" className="h-14 px-8 text-lg rounded-full border-primary/20 hover:bg-primary/5">
-                View Our Results
-              </Button>
-            </Link>
+            <div className="absolute -inset-4 bg-primary-container/20 rounded-full blur-[120px] -z-10" />
+            <div className="w-full h-full bg-surface-container-lowest ghost-border p-4 rounded-xl shadow-2xl relative overflow-hidden group">
+              <div className="w-full h-full bg-surface-container-high rounded-lg relative overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700 flex flex-col">
+                {/* Abstract Data Visualization */}
+                <div className="flex-1 border-b border-border p-8 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.05)_1px,transparent_1px)] bg-[size:2rem_2rem]" />
+                  <div className="w-full h-full flex flex-col gap-4 relative z-10 justify-center">
+                    <div className="w-3/4 h-8 bg-primary rounded-sm opacity-90" />
+                    <div className="w-1/2 h-8 bg-on-primary-container rounded-sm opacity-80" />
+                    <div className="w-5/6 h-8 bg-primary-container rounded-sm opacity-70" />
+                  </div>
+                </div>
+                <div className="h-24 bg-surface p-6 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 rounded-full bg-tertiary-container" />
+                    <span className="text-xs font-bold text-primary tracking-widest uppercase">System Nominal</span>
+                  </div>
+                  <div className="text-xs font-mono text-muted-foreground">latency: 12ms</div>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
 
       {/* Trust Signals */}
-      <section className="py-12 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 md:px-6">
-          <p className="text-center text-primary-foreground/60 font-medium mb-8 text-sm tracking-widest uppercase">TRUSTED BY OPERATIONS LEADERS AT</p>
-          <div className="flex flex-wrap justify-center gap-12 md:gap-24 opacity-80">
-            {/* Minimal text-based logos for serious B2B feel */}
+      <section className="py-16 bg-surface-container-lowest border-y border-border">
+        <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
+          <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-8">Trusted by Operational Leaders</p>
+          <div className="flex flex-wrap gap-12 md:gap-24 opacity-60 grayscale">
             {["Nexus Manufacturing", "Aura Logistics", "Veridian Retail", "Quantis Pharma"].map((name) => (
-              <div key={name} className="text-xl md:text-2xl font-bold tracking-tighter text-white">
+              <div key={name} className="text-xl md:text-2xl font-black tracking-tighter text-primary uppercase">
                 {name}
               </div>
             ))}
@@ -81,68 +91,75 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Value Prop */}
-      <section className="py-24 md:py-32 bg-background">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-3xl mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold text-primary mb-6">When the spreadsheets finally break, we build the system.</h2>
-            <p className="text-lg text-muted-foreground">Growing pains shouldn't mean operational chaos. We replace manual workflows and fragmented data with centralized, automated architecture designed for serious scale.</p>
+      {/* The Problem / Solution Pattern */}
+      <section className="py-32 bg-surface">
+        <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
+          <div className="mb-20">
+            <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">The Entropy Crisis</p>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-primary mb-6 max-w-3xl">
+              Spreadsheets fracture. <br/>Data degrades. Systems halt.
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              Manual workflows create structural vulnerability. We architect centralized data cores and automated pipelines designed for serious resilience.
+            </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-16">
             {[
-              { icon: Database, title: "Centralized Truth", desc: "One system for inventory, finance, and CRM. Stop reconciling data across five different platforms." },
-              { icon: Zap, title: "Ruthless Automation", desc: "If a human is doing it more than twice, we automate it. Save thousands of hours in manual entry." },
-              { icon: BarChart3, title: "Real-time Visibility", desc: "Make decisions based on what's happening right now, not what happened last month." }
+              { icon: Database, title: "Unified Core Design", desc: "A singular, immutable source of truth for inventory, finance, and CRM. Eradicate data reconciliation." },
+              { icon: Zap, title: "Autonomous Orchestration", desc: "If an action is repeatable, we automate it. Reclaim thousands of hours previously lost to manual data entry." },
+              { icon: Network, title: "Telemetry & Vision", desc: "Real-time operational dashboards. Steer the enterprise based on current physics, not last month's reports." }
             ].map((feature, i) => (
-              <div key={i} className="p-8 rounded-2xl bg-card border border-border hover:border-primary/20 transition-colors">
-                <div className="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center mb-6 text-secondary">
-                  <feature.icon size={24} />
-                </div>
-                <h3 className="text-xl font-bold text-primary mb-3">{feature.title}</h3>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                key={i} 
+                className="flex flex-col"
+              >
+                <feature.icon className="w-10 h-10 text-primary mb-6 stroke-[1.5]" />
+                <h3 className="text-xl font-bold text-primary mb-4">{feature.title}</h3>
                 <p className="text-muted-foreground leading-relaxed">{feature.desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Services Snapshot */}
-      <section className="py-24 bg-muted/50 border-y border-border">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+      {/* Services Grid */}
+      <section className="py-32 bg-surface-container-low">
+        <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
             <div>
-              <h2 className="text-3xl md:text-5xl font-bold text-primary mb-4">Our Expertise</h2>
-              <p className="text-lg text-muted-foreground max-w-xl">Precision engineering for your core business operations.</p>
+              <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Core Competencies</p>
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-primary">Symmetry in Motion.</h2>
             </div>
-            <Link href="/services">
-              <Button variant="outline" className="rounded-full">
-                View All Services <ArrowRight className="ml-2 w-4 h-4" />
-              </Button>
+            <Link href="/services" className="group flex items-center text-primary font-bold hover:text-primary-container transition-colors">
+              All Competencies <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-2" />
             </Link>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
             <Link href="/services/erp" className="group block">
-              <div className="bg-card border border-border p-8 md:p-12 rounded-3xl h-full transition-all duration-300 hover:shadow-lg hover:border-primary/20 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/5 rounded-bl-[100px] -z-10 transition-transform group-hover:scale-110" />
-                <Layers className="w-10 h-10 text-secondary mb-6" />
-                <h3 className="text-2xl md:text-3xl font-bold text-primary mb-4">ERP Implementation</h3>
-                <p className="text-muted-foreground mb-8 max-w-md">We architect and deploy robust ERP systems (ERPNext, Odoo, Zoho) tailored precisely to your operational model.</p>
-                <div className="flex items-center text-sm font-semibold text-primary">
-                  Explore ERP Solutions <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+              <div className="bg-surface-container-lowest ghost-border p-10 rounded-xl transition-all duration-300 hover:shadow-xl hover:-translate-y-1 h-full flex flex-col">
+                <LayoutGrid className="w-10 h-10 text-primary mb-8 stroke-[1.5]" />
+                <h3 className="text-2xl font-bold text-primary mb-4">ERP Architecture</h3>
+                <p className="text-muted-foreground mb-12 flex-grow max-w-md">We design and deploy monolithic ERP environments (ERPNext, Odoo, Zoho) calibrated precisely to your operational model.</p>
+                <div className="text-sm font-bold text-primary flex items-center mt-auto">
+                  Examine Methodology <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-2" />
                 </div>
               </div>
             </Link>
             
             <Link href="/services/automation" className="group block">
-              <div className="bg-primary border border-primary p-8 md:p-12 rounded-3xl h-full transition-all duration-300 hover:shadow-xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-bl-[100px] -z-10 transition-transform group-hover:scale-110" />
-                <Zap className="w-10 h-10 text-accent mb-6" />
-                <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">Business Automation</h3>
-                <p className="text-white/70 mb-8 max-w-md">Custom integration layers and workflow automations that connect your tools and eliminate manual data handling entirely.</p>
-                <div className="flex items-center text-sm font-semibold text-accent">
-                  Explore Automation <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+              <div className="bg-primary border border-primary-container p-10 rounded-xl transition-all duration-300 hover:shadow-xl hover:-translate-y-1 h-full flex flex-col relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-primary-container rounded-full blur-[80px] -z-10" />
+                <Zap className="w-10 h-10 text-surface mb-8 stroke-[1.5]" />
+                <h3 className="text-2xl font-bold text-surface mb-4">Middleware Automation</h3>
+                <p className="text-surface/70 mb-12 flex-grow max-w-md">Custom API layers and workflow automations that bridge legacy systems and eliminate manual data handling entirely.</p>
+                <div className="text-sm font-bold text-surface flex items-center mt-auto">
+                  Examine Methodology <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-2" />
                 </div>
               </div>
             </Link>
@@ -150,55 +167,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats / Proof */}
-      <section className="py-24 md:py-32 bg-background">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="text-3xl md:text-5xl font-bold text-primary mb-6">Proven outcomes. <br />No vanity metrics.</h2>
-              <p className="text-lg text-muted-foreground mb-8">We measure our success by the hours saved and the operational capacity unlocked for our clients.</p>
-              
-              <div className="space-y-6">
-                {[
-                  { label: "Reduction in manual data entry", value: "85%" },
-                  { label: "Faster order processing time", value: "3x" },
-                  { label: "Average operational savings", value: "$12M+" }
-                ].map((stat, i) => (
-                  <div key={i} className="flex flex-col border-b border-border pb-4">
-                    <span className="text-4xl md:text-5xl font-bold text-secondary mb-2">{stat.value}</span>
-                    <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{stat.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            <div className="bg-card rounded-3xl p-8 border border-border shadow-sm">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                  <ShieldCheck className="text-primary w-6 h-6" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-primary">"A completely different class of agency."</h4>
-                  <p className="text-sm text-muted-foreground">Sarah Jenkins, COO at Nexus</p>
-                </div>
-              </div>
-              <p className="text-lg text-foreground italic leading-relaxed">
-                "Precisefect didn't just install software; they re-engineered how our entire supply chain team operates. We were drowning in disparate systems. Now, everything flows perfectly. They are the only partners we trust with our core infrastructure."
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
-      <section className="py-24 bg-primary text-white text-center">
-        <div className="container mx-auto px-4 md:px-6 max-w-3xl">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to engineer your operations?</h2>
-          <p className="text-xl text-white/70 mb-10">Stop treating the symptoms. Let's fix the underlying system.</p>
+      <section className="py-32 bg-surface text-center">
+        <div className="max-w-[1440px] mx-auto px-8 lg:px-16 max-w-3xl">
+          <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-6">Initiate Protocol</p>
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-primary mb-8">Ready to engineer your operations?</h2>
+          <p className="text-lg text-muted-foreground mb-12">Stop treating the symptoms. Let's fix the underlying architecture.</p>
           <Link href="/contact">
-            <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground h-14 px-10 text-lg rounded-full">
-              Book Your Free Discovery Call
-            </Button>
+            <button className="signature-gradient text-white font-bold rounded-lg px-12 py-5 shadow-md btn-press text-lg">
+              Schedule Architectural Review
+            </button>
           </Link>
         </div>
       </section>

@@ -1,7 +1,7 @@
 import { Seo } from "@/components/seo";
-import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { Calendar, Clock, ArrowRight } from "lucide-react";
+import { Calendar, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Blog() {
   const posts = [
@@ -58,66 +58,82 @@ export default function Blog() {
   return (
     <>
       <Seo 
-        title="Insights & Engineering Blog | Precisefect" 
+        title="Field Notes & Insights | Precisefect" 
         description="Technical and strategic insights on ERP implementation, business automation, and scaling operations."
       />
       
-      <section className="py-24 bg-background">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-3xl mb-16">
-            <h1 className="text-4xl md:text-6xl font-bold text-primary mb-6">Insights.</h1>
-            <p className="text-xl text-muted-foreground">
+      <section className="py-24 md:py-32 bg-surface">
+        <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-3xl mb-24"
+          >
+            <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Field Notes</p>
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary mb-8 leading-[0.95]">
+              Architectural <br />
+              <span className="text-on-primary-container">Insights.</span>
+            </h1>
+            <p className="text-lg text-muted-foreground leading-relaxed">
               Technical essays, architectural tear-downs, and operational strategy from the engineers at Precisefect.
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post, i) => (
-              <article key={i} className="flex flex-col bg-card border border-border rounded-3xl p-8 hover:border-primary/30 transition-colors group cursor-pointer">
-                <div className="mb-6">
-                  <span className="text-xs font-bold text-secondary uppercase tracking-wider px-3 py-1 bg-secondary/10 rounded-full">
+              <motion.article 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                key={i} 
+                className="flex flex-col bg-surface-container-lowest ghost-border rounded-xl p-10 hover:-translate-y-1 hover:shadow-xl transition-all group cursor-pointer"
+              >
+                <div className="mb-8">
+                  <span className="text-xs font-bold text-primary uppercase tracking-[0.2em] border-b-2 border-primary-container pb-1">
                     {post.category}
                   </span>
                 </div>
-                <h2 className="text-2xl font-bold text-primary mb-4 group-hover:text-secondary transition-colors">
+                <h2 className="text-2xl font-bold text-primary mb-4 group-hover:text-primary-container transition-colors tracking-tight">
                   {post.title}
                 </h2>
-                <p className="text-muted-foreground mb-8 flex-grow leading-relaxed">
+                <p className="text-muted-foreground mb-12 flex-grow leading-relaxed">
                   {post.excerpt}
                 </p>
-                <div className="pt-6 border-t border-border mt-auto flex items-center justify-between text-xs text-muted-foreground">
+                <div className="pt-6 border-t border-border mt-auto flex items-center justify-between text-xs text-muted-foreground font-medium">
                   <div className="flex items-center gap-4">
-                    <span className="font-medium text-foreground">{post.author}</span>
-                    <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {post.date}</span>
+                    <span className="text-primary">{post.author}</span>
+                    <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> {post.date}</span>
                   </div>
                 </div>
-              </article>
+              </motion.article>
             ))}
           </div>
 
-          <div className="mt-16 text-center">
-            <Button variant="outline" size="lg" className="rounded-full px-8 border-primary/20">
-              Load More Articles
-            </Button>
+          <div className="mt-20 text-center">
+            <button className="bg-surface-container-high text-primary font-bold rounded-lg px-8 py-4 hover:bg-primary-container hover:text-white transition-colors btn-press">
+              Load More Field Notes
+            </button>
           </div>
         </div>
       </section>
 
-      <section className="py-24 bg-primary text-center">
-        <div className="container mx-auto px-4 md:px-6 max-w-2xl">
-          <h2 className="text-3xl font-bold text-white mb-6">Get insights in your inbox.</h2>
-          <p className="text-primary-foreground/70 mb-8">
-            No spam. Just high-signal essays on business systems engineering, sent once a month.
+      <section className="py-32 bg-primary text-center">
+        <div className="max-w-[1440px] mx-auto px-8 lg:px-16 max-w-2xl">
+          <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Transmission</p>
+          <h2 className="text-4xl font-bold tracking-tight text-white mb-6">Receive Architectural Insights.</h2>
+          <p className="text-white/70 mb-12 text-lg leading-relaxed">
+            No marketing noise. Just high-signal essays on business systems engineering, dispatched monthly.
           </p>
           <form className="flex flex-col sm:flex-row gap-4 justify-center" onSubmit={(e) => e.preventDefault()}>
             <input 
               type="email" 
-              placeholder="Email address" 
-              className="px-6 py-4 rounded-full bg-white/10 border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-accent min-w-[300px]"
+              placeholder="Corporate Email Address" 
+              className="px-6 py-4 rounded-lg bg-surface-container-lowest border-none text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary-container min-w-[320px] font-medium"
             />
-            <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground rounded-full h-[58px] px-8">
+            <button className="signature-gradient text-white font-bold rounded-lg px-8 py-4 btn-press">
               Subscribe
-            </Button>
+            </button>
           </form>
         </div>
       </section>

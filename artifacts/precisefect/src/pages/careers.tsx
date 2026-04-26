@@ -1,91 +1,128 @@
 import { Seo } from "@/components/seo";
-import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { MapPin, Briefcase } from "lucide-react";
+import { MapPin, Briefcase, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Careers() {
   const roles = [
     {
-      title: "ERP Implementation Consultant",
+      title: "ERP Implementation Architect",
       location: "Remote (US/Canada)",
       type: "Full-time",
-      desc: "Lead end-to-end deployments of ERPNext and Odoo. You need deep understanding of accounting, supply chain, and manufacturing principles alongside technical configuration skills."
+      desc: "Lead end-to-end deployments of ERPNext and Odoo. Deep understanding of supply chain physics and database schema design required."
     },
     {
-      title: "Business Automation Engineer",
+      title: "Middleware Automation Engineer",
       location: "San Francisco, CA or Remote",
       type: "Full-time",
-      desc: "Architect and deploy middleware integrations using Node.js, Python, and enterprise platforms (Make/n8n). Strong API design and data transformation experience required."
+      desc: "Engineer resilient integrations using Node.js, Python, and enterprise middleware. Masterful API design and data ETL experience mandatory."
     },
     {
-      title: "Solutions Architect",
+      title: "Principal Solutions Architect",
       location: "Bangalore, India",
       type: "Full-time",
-      desc: "Translate complex business requirements into technical blueprints. You will lead discovery phases, design database schemas, and map enterprise workflows."
+      desc: "Translate complex business entropy into structural blueprints. Design database schemas and map enterprise data flow before any code is written."
     },
     {
-      title: "Customer Success Manager",
+      title: "Systems Success Manager",
       location: "Remote (Global)",
       type: "Full-time",
-      desc: "Manage the post-launch hypercare period. Ensure client adoption of new ERP systems through training, documentation, and continuous workflow optimization."
+      desc: "Command the post-launch hypercare phase. Drive adoption of new ERP structures via rigorous training and continuous systemic optimization."
     }
   ];
 
   return (
     <>
       <Seo 
-        title="Careers | Precisefect" 
-        description="Join Precisefect. We are hiring engineers, architects, and consultants who want to solve complex operational problems for growing businesses."
+        title="Careers & Engineering Roles | Precisefect" 
+        description="Join Precisefect. We are hiring engineers, architects, and structural consultants who want to solve complex operational problems."
       />
       
-      <section className="py-24 bg-primary text-white overflow-hidden">
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">Build the systems that run businesses.</h1>
-            <p className="text-xl text-primary-foreground/80 mb-8 leading-relaxed">
-              We are a team of pragmatic engineers and operators. We value clear thinking, precise execution, and people who care deeply about the craft of building resilient systems.
+      <section className="py-24 md:py-32 bg-surface relative overflow-hidden">
+        <div className="max-w-[1440px] mx-auto px-8 lg:px-16 grid lg:grid-cols-2 gap-16 items-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Open Positions</p>
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary mb-8 leading-[0.95]">
+              Architect <br />
+              <span className="text-on-primary-container">the Core.</span>
+            </h1>
+            <p className="text-lg text-muted-foreground leading-relaxed mb-12 max-w-xl">
+              We are a collective of pragmatic engineers and system operators. We value precision, structural thinking, and those obsessed with the craft of resilient architecture.
             </p>
-          </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="relative w-full aspect-video lg:aspect-square max-w-[600px] ml-auto"
+          >
+            <div className="absolute -inset-4 bg-primary-container/20 rounded-full blur-[120px] -z-10" />
+            <div className="w-full h-full bg-surface-container-lowest ghost-border p-4 rounded-xl shadow-xl flex flex-col items-center justify-center relative overflow-hidden group">
+               <div className="w-full h-full bg-surface-container-high rounded-lg border border-border flex items-center justify-center grayscale group-hover:grayscale-0 transition-all duration-700">
+                  <div className="flex flex-col gap-3">
+                     {[...Array(6)].map((_, i) => (
+                        <div key={i} className="flex gap-3">
+                           <div className={`w-8 h-8 rounded-sm ${i % 2 === 0 ? 'bg-primary' : 'bg-primary-container'} opacity-80`} />
+                           <div className={`w-8 h-8 rounded-sm ${i % 3 === 0 ? 'bg-on-primary-container' : 'bg-primary'} opacity-70`} />
+                           <div className={`w-8 h-8 rounded-sm ${i % 2 !== 0 ? 'bg-primary-container' : 'bg-primary'} opacity-60`} />
+                        </div>
+                     ))}
+                  </div>
+               </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      <section className="py-24 bg-background">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-3xl mb-16">
-            <h2 className="text-3xl font-bold text-primary mb-6">Open Positions</h2>
-            <p className="text-lg text-muted-foreground">
-              We are highly selective, but we move fast. If you are exceptionally competent in your domain, we want to talk to you.
+      <section className="py-32 bg-surface-container-lowest border-y border-border">
+        <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
+          <div className="mb-20">
+            <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Engineering Roster</p>
+            <h2 className="text-4xl font-bold tracking-tight text-primary mb-6">Current Vacancies</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              We operate with high selectivity but high velocity. If you possess exceptional structural competence, deploy an application below.
             </p>
           </div>
 
-          <div className="space-y-6 max-w-4xl">
+          <div className="space-y-6 max-w-5xl">
             {roles.map((role, i) => (
-              <div key={i} className="flex flex-col md:flex-row md:items-center justify-between p-8 bg-card border border-border rounded-2xl hover:border-primary/30 transition-colors gap-6">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                key={i} 
+                className="flex flex-col lg:flex-row lg:items-center justify-between p-10 bg-surface ghost-border rounded-xl hover:-translate-y-1 hover:shadow-xl transition-all gap-8 group"
+              >
                 <div>
-                  <h3 className="text-2xl font-bold text-primary mb-3">{role.title}</h3>
-                  <div className="flex flex-wrap gap-4 text-sm font-medium text-muted-foreground mb-4">
-                    <span className="flex items-center gap-1.5"><MapPin size={16} /> {role.location}</span>
-                    <span className="flex items-center gap-1.5"><Briefcase size={16} /> {role.type}</span>
+                  <h3 className="text-2xl font-bold text-primary mb-4 group-hover:text-primary-container transition-colors tracking-tight">{role.title}</h3>
+                  <div className="flex flex-wrap gap-6 text-xs font-bold uppercase tracking-wider text-muted-foreground mb-6">
+                    <span className="flex items-center gap-2"><MapPin size={14} className="stroke-[2]" /> {role.location}</span>
+                    <span className="flex items-center gap-2"><Briefcase size={14} className="stroke-[2]" /> {role.type}</span>
                   </div>
-                  <p className="text-muted-foreground text-sm max-w-2xl">{role.desc}</p>
+                  <p className="text-muted-foreground text-base leading-relaxed max-w-2xl">{role.desc}</p>
                 </div>
-                <div className="shrink-0">
-                  <Button variant="outline" className="w-full md:w-auto rounded-full border-primary text-primary hover:bg-primary hover:text-white">
-                    Apply Now
-                  </Button>
+                <div className="shrink-0 mt-4 lg:mt-0">
+                  <button className="bg-surface-container-high text-primary font-bold rounded-lg px-8 py-4 hover:bg-primary-container hover:text-white transition-colors btn-press w-full lg:w-auto">
+                    Submit Credentials
+                  </button>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
 
-          <div className="mt-20 p-10 bg-secondary/5 rounded-3xl border border-secondary/20 max-w-4xl">
-            <h3 className="text-2xl font-bold text-primary mb-4">Don't see your role?</h3>
-            <p className="text-muted-foreground mb-6">
-              We are always looking for exceptional talent. If you believe you belong here, send us your resume and a brief note about what you can build.
+          <div className="mt-24 p-12 bg-primary rounded-xl text-white max-w-5xl">
+            <h3 className="text-3xl font-bold tracking-tight mb-4">Structural anomaly detected?</h3>
+            <p className="text-white/70 mb-8 max-w-2xl leading-relaxed text-lg">
+              If your expertise doesn't map to an active vacancy but you believe you belong in this architecture, transmit your credentials and a brief dossier on what you are capable of engineering.
             </p>
-            <Button className="bg-secondary hover:bg-secondary/90 text-white rounded-full">
-              Send an Open Application
-            </Button>
+            <button className="bg-white text-primary font-bold rounded-lg px-10 py-4 btn-press text-lg">
+              Transmit Open Application
+            </button>
           </div>
         </div>
       </section>

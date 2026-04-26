@@ -1,21 +1,35 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { AlertCircle } from "lucide-react";
+import { Link } from "wouter";
+import { motion } from "framer-motion";
+import { Seo } from "@/components/seo";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md mx-4">
-        <CardContent className="pt-6">
-          <div className="flex mb-4 gap-2">
-            <AlertCircle className="h-8 w-8 text-red-500" />
-            <h1 className="text-2xl font-bold text-gray-900">404 Page Not Found</h1>
-          </div>
-
-          <p className="mt-4 text-sm text-gray-600">
-            Did you forget to add the page to the router?
+    <>
+      <Seo 
+        title="404 - Vector Not Found | Precisefect" 
+        description="The requested operational vector does not exist in the current architecture."
+      />
+      <div className="min-h-[70vh] flex items-center justify-center bg-surface relative overflow-hidden">
+        <div className="absolute -inset-4 bg-primary-container/10 rounded-full blur-[120px] -z-10" />
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center max-w-xl px-8"
+        >
+          <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-6">Error 404</p>
+          <h1 className="text-6xl font-bold tracking-tight text-primary mb-6">
+            Vector Not Found.
+          </h1>
+          <p className="text-lg text-muted-foreground mb-12 leading-relaxed">
+            The requested operational vector does not exist within the current systemic architecture. Return to the root node.
           </p>
-        </CardContent>
-      </Card>
-    </div>
+          <Link href="/">
+            <button className="signature-gradient text-white font-bold rounded-lg px-10 py-4 shadow-md btn-press text-lg inline-flex items-center">
+              Initialize Root Node
+            </button>
+          </Link>
+        </motion.div>
+      </div>
+    </>
   );
 }

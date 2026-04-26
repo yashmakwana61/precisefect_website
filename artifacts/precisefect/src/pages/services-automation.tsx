@@ -1,5 +1,4 @@
 import { Seo } from "@/components/seo";
-import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { GitBranch, Workflow, Cpu, Zap, ArrowRight, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -29,65 +28,73 @@ export default function ServicesAutomation() {
   return (
     <>
       <Seo 
-        title="Business Automation Services" 
-        description="Eliminate manual chaos. We build intelligent workflows and integrations that connect your tools and automate repeatable processes."
+        title="Middleware Automation Architecture | Precisefect" 
+        description="Eradicate manual chaos. We build intelligent workflows and integrations that connect your tools and automate repeatable processes."
       />
       
-      <section className="py-24 bg-primary text-white overflow-hidden relative">
-        <div className="absolute inset-0 opacity-10 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,.2)_50%,transparent_75%,transparent_100%)] bg-[length:20px_20px]" />
-        <div className="container relative mx-auto px-4 md:px-6">
-          <div className="max-w-4xl">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/20 text-accent text-sm font-medium mb-8 border border-accent/20"
-            >
-              <Zap className="w-4 h-4" /> Stop doing robot work
-            </motion.div>
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-4xl md:text-6xl font-bold mb-6"
-            >
-              Business Automation
-            </motion.h1>
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-xl text-primary-foreground/80 mb-8 leading-relaxed"
-            >
+      <section className="py-24 md:py-32 bg-surface relative overflow-hidden">
+        <div className="max-w-[1440px] mx-auto px-8 lg:px-16 grid lg:grid-cols-2 gap-16 items-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-tertiary-container text-on-tertiary-container text-xs font-bold uppercase tracking-widest mb-8">
+              <span className="w-1.5 h-1.5 rounded-full bg-on-tertiary-container" />
+              Autonomous Orchestration
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary mb-8 leading-[0.95]">
+              Middleware <br />
+              <span className="text-on-primary-container">Automation.</span>
+            </h1>
+            <p className="text-lg text-muted-foreground leading-relaxed mb-12 max-w-xl">
               If a human is copying data from one screen to another, your business is leaking margin. We engineer flawless, automated data pipelines that run quietly in the background, 24/7.
-            </motion.p>
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <Link href="/contact">
-                <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground rounded-full">
-                  Discuss Your Automation Strategy
-                </Button>
-              </Link>
-            </motion.div>
-          </div>
+            </p>
+            <Link href="/contact">
+              <button className="signature-gradient text-white font-bold rounded-lg px-10 py-5 shadow-md btn-press text-lg">
+                Submit RFP
+              </button>
+            </Link>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="relative w-full aspect-video lg:aspect-square max-w-[600px] ml-auto"
+          >
+            <div className="absolute -inset-4 bg-primary-container/20 rounded-full blur-[120px] -z-10" />
+            <div className="w-full h-full bg-surface-container-lowest ghost-border p-4 rounded-xl shadow-xl flex flex-col items-center justify-center relative overflow-hidden group">
+               <div className="w-full h-full bg-surface-container-high rounded-lg border border-border p-8 flex flex-col justify-center gap-6 items-center grayscale group-hover:grayscale-0 transition-all duration-700">
+                  <div className="w-48 h-12 bg-primary rounded shadow-sm flex items-center justify-center text-xs font-bold text-white uppercase tracking-widest">Trigger</div>
+                  <div className="h-8 w-0.5 border-l-2 border-dashed border-on-primary-container" />
+                  <div className="flex gap-4">
+                     <div className="w-32 h-12 bg-primary-container rounded shadow-sm flex items-center justify-center text-xs font-bold text-white uppercase tracking-widest">Router A</div>
+                     <div className="w-32 h-12 bg-on-primary-container rounded shadow-sm flex items-center justify-center text-xs font-bold text-white uppercase tracking-widest">Router B</div>
+                  </div>
+                  <div className="h-8 w-0.5 border-l-2 border-dashed border-on-primary-container" />
+                  <div className="w-48 h-12 bg-tertiary-container rounded shadow-sm flex items-center justify-center text-xs font-bold text-on-tertiary-container uppercase tracking-widest">Execute</div>
+               </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      <section className="py-24 bg-background">
-        <div className="container mx-auto px-4 md:px-6">
+      <section className="py-32 bg-surface-container-lowest border-y border-border">
+        <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
+          <div className="mb-20">
+            <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Structural Capabilities</p>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-primary">Integration Vectors</h2>
+          </div>
+          
           <div className="grid md:grid-cols-3 gap-8">
             {automations.map((auto, i) => (
-              <div key={i} className="bg-card border border-border p-8 rounded-3xl">
-                <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary mb-6">
-                  <auto.icon size={24} />
-                </div>
+              <div key={i} className="bg-surface ghost-border p-10 rounded-xl hover:shadow-xl hover:-translate-y-1 transition-all flex flex-col group">
+                <auto.icon className="w-10 h-10 text-primary mb-8 stroke-[1.5]" />
                 <h3 className="text-2xl font-bold text-primary mb-4">{auto.title}</h3>
-                <p className="text-muted-foreground mb-6">{auto.desc}</p>
+                <p className="text-muted-foreground mb-8 flex-grow leading-relaxed">{auto.desc}</p>
                 <div className="pt-6 border-t border-border mt-auto">
-                  <p className="text-sm font-semibold text-primary mb-2">Common Deployments:</p>
-                  <p className="text-sm text-muted-foreground">{auto.examples}</p>
+                  <p className="text-xs font-bold text-on-primary-container uppercase tracking-widest mb-2">Common Deployments</p>
+                  <p className="text-sm text-muted-foreground font-medium">{auto.examples}</p>
                 </div>
               </div>
             ))}
@@ -95,67 +102,39 @@ export default function ServicesAutomation() {
         </div>
       </section>
 
-      <section className="py-24 bg-muted/30 border-y border-border">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-3xl mb-16 text-center mx-auto">
-            <h2 className="text-3xl md:text-5xl font-bold text-primary mb-6">Anatomy of a Perfect Automation</h2>
+      <section className="py-32 bg-surface">
+        <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
+          <div className="mb-20 text-center mx-auto max-w-3xl">
+            <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">System Resilience</p>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-primary mb-6">Anatomy of a Perfect Automation</h2>
             <p className="text-lg text-muted-foreground">
-              We don't just connect tools; we architect resilient systems that handle errors gracefully and scale infinitely.
+              We don't just connect tools; we architect resilient middleware that handles errors gracefully and scales infinitely.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              {[
-                { title: "Audit & Process Mapping", desc: "We document every manual touchpoint, system dependency, and edge case before writing a single script." },
-                { title: "Middleware Architecture", desc: "We select the right integration layer—whether Zapier, Make, n8n, or a custom Node.js service—based on volume and security requirements." },
-                { title: "Error Handling & Logging", desc: "Our automations don't silently fail. We build robust error catching and alerts so you know exactly when an API goes down." },
-                { title: "Testing & Handover", desc: "Rigorous testing in sandbox environments, followed by comprehensive documentation handed over to your team." }
-              ].map((step, i) => (
-                <div key={i} className="flex gap-4">
-                  <div className="mt-1">
-                    <CheckCircle2 className="text-secondary w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-primary mb-1">{step.title}</h3>
-                    <p className="text-muted-foreground">{step.desc}</p>
-                  </div>
+          <div className="max-w-4xl mx-auto space-y-12">
+            {[
+              { step: "1", title: "Audit & Process Mapping", desc: "We document every manual touchpoint, system dependency, and edge case before writing a single script or configuring a node." },
+              { step: "2", title: "Middleware Architecture", desc: "We select the right integration layer—whether Make, n8n, or a custom Node.js microservice—based on volume, compliance, and security." },
+              { step: "3", title: "Error Handling & Telemetry", desc: "Our automations don't silently fail. We build robust error catching and alerts so you know exactly when a 3rd-party API degrades." },
+              { step: "4", title: "Testing & Handover", desc: "Rigorous testing in sandbox environments, followed by comprehensive documentation handed over to your internal stakeholders." }
+            ].map((phase, i) => (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                key={i} 
+                className="flex gap-8"
+              >
+                <div className="flex-shrink-0 w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-bold">{phase.step}</div>
+                <div>
+                  <h3 className="text-2xl font-bold text-primary mb-3">{phase.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed text-lg">{phase.desc}</p>
                 </div>
-              ))}
-            </div>
-
-            <div className="bg-card border border-border p-8 rounded-3xl relative overflow-hidden shadow-sm h-full flex flex-col justify-center">
-               {/* Abstract Flow Diagram Placeholder */}
-               <div className="flex flex-col gap-6 items-center w-full">
-                  <div className="w-full max-w-[200px] p-4 bg-primary text-white text-center rounded-lg font-medium border border-primary-foreground/20 shadow-md z-10">New Closed Won Deal</div>
-                  <div className="h-8 w-0.5 bg-border border-dashed relative">
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rotate-45 border-b border-r border-border"></div>
-                  </div>
-                  
-                  <div className="w-full flex gap-4 justify-center items-center relative">
-                    <div className="w-full absolute top-1/2 left-0 h-0.5 bg-border border-dashed -z-0"></div>
-                    <div className="flex-1 max-w-[160px] p-4 bg-card text-primary text-center rounded-lg font-medium border border-border shadow-sm z-10 text-sm">Create Invoice in ERP</div>
-                    <div className="flex-1 max-w-[160px] p-4 bg-card text-primary text-center rounded-lg font-medium border border-border shadow-sm z-10 text-sm">Provision Client Account</div>
-                  </div>
-
-                  <div className="h-8 w-0.5 bg-border border-dashed relative">
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rotate-45 border-b border-r border-border"></div>
-                  </div>
-                  <div className="w-full max-w-[200px] p-4 bg-secondary text-white text-center rounded-lg font-medium border border-secondary/20 shadow-md z-10">Send Onboarding Welcome</div>
-               </div>
-            </div>
+              </motion.div>
+            ))}
           </div>
-        </div>
-      </section>
-
-      <section className="py-24 text-center">
-        <div className="container mx-auto px-4 md:px-6">
-          <h2 className="text-3xl font-bold text-primary mb-8">Ready to automate your operations?</h2>
-          <Link href="/contact">
-            <Button size="lg" className="bg-primary text-white rounded-full">
-              Get Started <ArrowRight className="ml-2 w-4 h-4" />
-            </Button>
-          </Link>
         </div>
       </section>
     </>

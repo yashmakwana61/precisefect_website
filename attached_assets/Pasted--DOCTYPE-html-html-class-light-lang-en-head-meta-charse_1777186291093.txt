@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Axiom Precision | Architect of Precision</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed": "#001b3d",
+                    "inverse-on-surface": "#f1f0f5",
+                    "on-error-container": "#93000a",
+                    "on-background": "#1a1c1f",
+                    "on-tertiary-fixed-variant": "#005313",
+                    "on-tertiary-fixed": "#002204",
+                    "surface-tint": "#405f91",
+                    "surface-variant": "#e3e2e7",
+                    "inverse-surface": "#2f3034",
+                    "outline-variant": "#c4c6d0",
+                    "tertiary-container": "#003408",
+                    "primary-fixed": "#d6e3ff",
+                    "background": "#faf9fe",
+                    "tertiary-fixed": "#94f990",
+                    "primary-fixed-dim": "#a9c7ff",
+                    "outline": "#747780",
+                    "on-secondary-fixed-variant": "#3c475c",
+                    "surface-container-high": "#e8e7ec",
+                    "tertiary-fixed-dim": "#78dc77",
+                    "secondary-container": "#d5e0f9",
+                    "surface": "#faf9fe",
+                    "surface-dim": "#dad9de",
+                    "on-primary-container": "#7594ca",
+                    "primary-container": "#002b5b",
+                    "surface-container-low": "#f4f3f8",
+                    "secondary-fixed-dim": "#bcc7e0",
+                    "secondary": "#545f74",
+                    "on-tertiary-container": "#43a649",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#586379",
+                    "on-surface": "#1a1c1f",
+                    "on-surface-variant": "#43474f",
+                    "on-tertiary": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed": "#d8e3fc",
+                    "inverse-primary": "#a9c7ff",
+                    "primary": "#001736",
+                    "on-secondary-fixed": "#101c2e",
+                    "tertiary": "#001d03",
+                    "error-container": "#ffdad6",
+                    "surface-container": "#eeedf2",
+                    "surface-bright": "#faf9fe",
+                    "on-primary-fixed-variant": "#264778",
+                    "surface-container-highest": "#e3e2e7",
+                    "error": "#ba1a1a",
+                    "on-error": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Inter", "sans-serif"],
+                    "body": ["Inter", "sans-serif"],
+                    "label": ["Inter", "sans-serif"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .signature-gradient {
+            background: linear-gradient(135deg, #001736 0%, #002b5b 100%);
+        }
+        .ghost-border {
+            border: 1px solid rgba(196, 198, 208, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-[#faf9fe]/80 backdrop-blur-[24px] dark:bg-[#1a1c1f]/80">
+<div class="flex justify-between items-center w-full px-8 lg:px-16 py-6 max-w-[1440px] mx-auto">
+<div class="text-xl font-black text-blue-950 dark:text-white tracking-tighter uppercase">
+                Axiom Precision
+            </div>
+<div class="hidden md:flex items-center gap-10">
+<a class="text-blue-900 dark:text-white font-bold border-b-2 border-blue-900 dark:border-blue-400 pb-1 font-inter tracking-[-0.02em] text-lg transition-all duration-300" href="#">Approach</a>
+<a class="text-slate-500 dark:text-slate-400 font-medium pb-1 font-inter tracking-[-0.02em] text-lg hover:text-blue-700 dark:hover:text-blue-300 transition-all duration-300" href="#">Services</a>
+<a class="text-slate-500 dark:text-slate-400 font-medium pb-1 font-inter tracking-[-0.02em] text-lg hover:text-blue-700 dark:hover:text-blue-300 transition-all duration-300" href="#">Case Studies</a>
+<a class="text-slate-500 dark:text-slate-400 font-medium pb-1 font-inter tracking-[-0.02em] text-lg hover:text-blue-700 dark:hover:text-blue-300 transition-all duration-300" href="#">Insights</a>
+<a class="text-slate-500 dark:text-slate-400 font-medium pb-1 font-inter tracking-[-0.02em] text-lg hover:text-blue-700 dark:hover:text-blue-300 transition-all duration-300" href="#">Contact</a>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-slate-500 dark:text-slate-400 font-medium hover:text-blue-700 transition-colors">Login</button>
+<button class="signature-gradient text-white px-8 py-3 rounded-lg font-bold hover:scale-[0.98] transition-transform duration-200">Consultation</button>
+</div>
+</div>
+</nav>
+<main>
+<!-- Hero Section -->
+<section class="pt-40 pb-24 px-8 lg:px-16 max-w-[1440px] mx-auto overflow-hidden">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div class="space-y-8">
+<div class="inline-flex items-center px-3 py-1 rounded-full bg-tertiary-container text-on-tertiary-fixed text-xs font-bold tracking-[0.05em] uppercase">
+<span class="mr-2 flex h-2 w-2 rounded-full bg-on-tertiary-container"></span>
+                        Operational Alpha Achieved
+                    </div>
+<h1 class="text-6xl lg:text-8xl font-bold text-primary tracking-[-0.03em] leading-[0.95]">
+                        Architecting Operational <span class="text-on-primary-container">Perfection</span>
+</h1>
+<p class="text-xl text-on-surface-variant max-w-lg leading-relaxed">
+                        We transform fragmented ERP systems into high-precision engines of growth. Axiom Precision engineers the digital infrastructure required for sovereign market dominance.
+                    </p>
+<div class="flex items-center gap-6 pt-4">
+<button class="signature-gradient text-white px-10 py-5 rounded-lg font-bold text-lg hover:scale-[0.98] transition-transform shadow-2xl shadow-primary/20">Schedule a Consultation</button>
+<button class="flex items-center gap-2 text-primary font-bold hover:gap-4 transition-all">
+                            View Methodology <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="relative">
+<div class="absolute -inset-4 bg-primary-fixed/30 rounded-full blur-[120px] -z-10"></div>
+<div class="bg-surface-container-lowest p-4 rounded-xl ghost-border overflow-hidden shadow-sm">
+<img alt="high-end 3D technical blueprint" class="w-full h-auto rounded-lg grayscale hover:grayscale-0 transition-all duration-700" data-alt="Intricate 3D architectural blueprint of a complex industrial facility with glowing blue grid lines and precise technical annotations in a clean studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsABgBgLdColvFvYldyH6eriQWeyzZd8yBYy5jUH0Geq0ssE1_oHfhw09GiT0zKkbzyawTpM351105GPZM4lGuARTUTZ62Yr9FebP0CLTuW2CPOMRNjZljftyKVbsOEDgMUF1_XEbeocNckchgBJsYHSWVeFq0k1ro4tvNLAilklNvCLOBrBpBPLNBg_QZJUBdT7BIp1AAa6VaVNG8FdcztH8OXgaORodj7o6p13HxZDY8KFzcwpe6oceEQpW3JpezgkB9jMCOfWY"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Problem Section -->
+<section class="bg-surface-container-low py-32">
+<div class="max-w-[1440px] mx-auto px-8 lg:px-16 text-center space-y-24">
+<div class="max-w-2xl mx-auto space-y-4">
+<h2 class="text-sm font-bold text-on-primary-container tracking-[0.2em] uppercase">The Entropy Crisis</h2>
+<p class="text-4xl font-bold text-primary tracking-tight">Inefficiency is the silent killer of enterprise scale.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-16">
+<div class="space-y-6 text-left">
+<span class="material-symbols-outlined text-4xl text-primary" data-icon="account_tree">account_tree</span>
+<h3 class="text-2xl font-bold text-primary">Fragmented Systems</h3>
+<p class="text-on-surface-variant leading-relaxed">Disconnected software stacks create friction, leading to human error and delayed decision-making cycles.</p>
+</div>
+<div class="space-y-6 text-left">
+<span class="material-symbols-outlined text-4xl text-primary" data-icon="database">database</span>
+<h3 class="text-2xl font-bold text-primary">Data Silos</h3>
+<p class="text-on-surface-variant leading-relaxed">Critical information locked in department-specific containers prevents a unified view of your operational health.</p>
+</div>
+<div class="space-y-6 text-left">
+<span class="material-symbols-outlined text-4xl text-primary" data-icon="bolt">bolt</span>
+<h3 class="text-2xl font-bold text-primary">Manual Inefficiency</h3>
+<p class="text-on-surface-variant leading-relaxed">High-value talent wasted on repetitive data entry. Scaling becomes a linear cost rather than an exponential gain.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Solution Section -->
+<section class="py-32 px-8 lg:px-16 max-w-[1440px] mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+<div class="bg-surface-container shadow-sm p-2 rounded-xl">
+<img alt="sleek modern office space" class="w-full h-[600px] object-cover rounded-lg" data-alt="Ultra-modern minimalist office interior with floor to ceiling windows, sleek glass desks, and clean geometric architecture in cool blue tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqiGyU9qWkMqzhaIXjfMZ116zm--s4-ND2-nFLMEZtsAWC3X52ReovVTjH7pAEx-iSDUk4Ta-DY6v_B7eb6P_Z25SnB2EM1okak_MFMuIZxa2DSgyzRZ4mULnhyUuzpho4HdDBR_-jyxebVTw7Ow4m3wNAsJrUjFVLb_HXlJOx2rawJtbn7gssDT8MoR-BGllpuny_7q2YlV2TEptof4oIU51QVxjE3lbUn7LpPKCQi3rLPYu_3eS_ybosayEq6kJV_X2qKnHZDKg"/>
+</div>
+<div class="space-y-10">
+<h2 class="text-5xl font-bold text-primary tracking-tighter leading-tight">The Axiom Method: <br/>Symmetry in Motion</h2>
+<div class="space-y-8">
+<div class="flex gap-6">
+<div class="flex-shrink-0 h-10 w-10 bg-primary rounded-full flex items-center justify-center text-white font-bold">1</div>
+<div>
+<h4 class="text-xl font-bold text-primary mb-2">Audit &amp; Decouple</h4>
+<p class="text-on-surface-variant">We strip away legacy complexity to identify core data flows and operational bottlenecks.</p>
+</div>
+</div>
+<div class="flex gap-6">
+<div class="flex-shrink-0 h-10 w-10 bg-primary rounded-full flex items-center justify-center text-white font-bold">2</div>
+<div>
+<h4 class="text-xl font-bold text-primary mb-2">Unified Core Design</h4>
+<p class="text-on-surface-variant">Engineering a single source of truth using tiered ERP architecture and robust data lakes.</p>
+</div>
+</div>
+<div class="flex gap-6">
+<div class="flex-shrink-0 h-10 w-10 bg-primary rounded-full flex items-center justify-center text-white font-bold">3</div>
+<div>
+<h4 class="text-xl font-bold text-primary mb-2">Autonomous Orchestration</h4>
+<p class="text-on-surface-variant">Deploying bespoke automation layers that connect every touchpoint into a self-optimizing loop.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Services Section -->
+<section class="bg-surface-container-low py-32 px-8 lg:px-16">
+<div class="max-w-[1440px] mx-auto">
+<div class="flex justify-between items-end mb-20">
+<div class="space-y-4">
+<h2 class="text-sm font-bold text-on-primary-container tracking-[0.2em] uppercase">Core Competencies</h2>
+<p class="text-4xl font-bold text-primary tracking-tight">Precision Consulting Services</p>
+</div>
+<button class="text-primary font-bold pb-2 border-b-2 border-primary-fixed">Download Service Catalog</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Service Cards -->
+<div class="bg-surface-container-lowest p-10 rounded-xl ghost-border hover:shadow-xl hover:-translate-y-1 transition-all group">
+<span class="material-symbols-outlined text-4xl text-on-primary-container mb-6 block" data-icon="settings_suggest">settings_suggest</span>
+<h3 class="text-2xl font-bold text-primary mb-4">ERP Implementation</h3>
+<p class="text-on-surface-variant">Seamless migration to Tier-1 ERP platforms with zero-downtime transition protocols.</p>
+</div>
+<div class="bg-surface-container-lowest p-10 rounded-xl ghost-border hover:shadow-xl hover:-translate-y-1 transition-all group">
+<span class="material-symbols-outlined text-4xl text-on-primary-container mb-6 block" data-icon="model_training">model_training</span>
+<h3 class="text-2xl font-bold text-primary mb-4">Process Automation</h3>
+<p class="text-on-surface-variant">End-to-end workflow orchestration using high-end robotic process automation frameworks.</p>
+</div>
+<div class="bg-surface-container-lowest p-10 rounded-xl ghost-border hover:shadow-xl hover:-translate-y-1 transition-all group">
+<span class="material-symbols-outlined text-4xl text-on-primary-container mb-6 block" data-icon="insights">insights</span>
+<h3 class="text-2xl font-bold text-primary mb-4">Data Analytics</h3>
+<p class="text-on-surface-variant">Predictive modeling and real-time dashboarding for crystalline operational clarity.</p>
+</div>
+<div class="bg-surface-container-lowest p-10 rounded-xl ghost-border hover:shadow-xl hover:-translate-y-1 transition-all group">
+<span class="material-symbols-outlined text-4xl text-on-primary-container mb-6 block" data-icon="cloud_sync">cloud_sync</span>
+<h3 class="text-2xl font-bold text-primary mb-4">Cloud Migration</h3>
+<p class="text-on-surface-variant">Secure, scalable cloud-native infrastructure design for global enterprise accessibility.</p>
+</div>
+<div class="bg-surface-container-lowest p-10 rounded-xl ghost-border hover:shadow-xl hover:-translate-y-1 transition-all group">
+<span class="material-symbols-outlined text-4xl text-on-primary-container mb-6 block" data-icon="developer_mode">developer_mode</span>
+<h3 class="text-2xl font-bold text-primary mb-4">Custom Software</h3>
+<p class="text-on-surface-variant">Precision-engineered software solutions for unique operational requirements.</p>
+</div>
+<div class="bg-surface-container-lowest p-10 rounded-xl ghost-border hover:shadow-xl hover:-translate-y-1 transition-all group">
+<span class="material-symbols-outlined text-4xl text-on-primary-container mb-6 block" data-icon="strategy">strategy</span>
+<h3 class="text-2xl font-bold text-primary mb-4">Strategic Consulting</h3>
+<p class="text-on-surface-variant">High-level digital transformation roadmaps designed for long-term equity growth.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Case Studies Section -->
+<section class="py-32 px-8 lg:px-16 max-w-[1440px] mx-auto">
+<div class="text-center mb-24 space-y-4">
+<h2 class="text-sm font-bold text-on-primary-container tracking-[0.2em] uppercase">Proven Outcomes</h2>
+<p class="text-4xl font-bold text-primary tracking-tight">The Precision Record</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+<!-- Case Study 1 -->
+<div class="group cursor-pointer">
+<div class="relative h-[400px] rounded-xl overflow-hidden mb-8">
+<img alt="Manufacturing Global Leader case study" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" data-alt="Aerial shot of a high-tech automated manufacturing facility with robotic arms and sleek blue lighting at night" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5E-kz__4shdDjV-DKJ9JvT4Yvr1RpYkF2UAqX7JIf8hefUbeIdMxGo77qu2RzGp04nRTlQcxFFc5nnIWWkGZzc0mgWhni_dWDi90WiwXML-TdFF0-6ZJie1bg7j59Xy1jZ5zn0ZWqz1WjIafDsDGBXJWpaHxlKinedGoVWILhHBDzWf_ms2q1qAWFXGj0WzL5YQDHLMSfXbQCciU7fhRdRLP4s88R78Lm4WF7RXo8FN7922C_RdaQa7iz__CppY4n2Pf7_1RD4j0"/>
+<div class="absolute inset-0 bg-primary/40 group-hover:bg-primary/20 transition-colors"></div>
+<div class="absolute bottom-8 left-8">
+<span class="bg-tertiary-container text-on-tertiary-fixed px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest">+42% Efficiency</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-8 border-t-[1px] border-outline-variant/30 pt-8">
+<div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Problem</p>
+<h4 class="text-xl font-bold text-primary">Manufacturing Global Leader</h4>
+<p class="text-sm text-on-surface-variant mt-2 italic">Fragmented logistics across 4 continents causing 12% annual waste.</p>
+</div>
+<div class="text-right">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Result</p>
+<h4 class="text-xl font-bold text-on-tertiary-container">Sovereign Orchestration</h4>
+<p class="text-sm text-on-surface-variant mt-2">Unified ERP deployment reduced lead times by 35 days.</p>
+</div>
+</div>
+</div>
+<!-- Case Study 2 -->
+<div class="group cursor-pointer">
+<div class="relative h-[400px] rounded-xl overflow-hidden mb-8">
+<img alt="Fintech Innovator case study" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" data-alt="Digital abstract visualization of financial data flow with glowing particles and intricate network connections in deep navy space" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA74Nh3PhpC3x_gvXd_TGV3DK22vexuk5zXNHUGH4h3pDoMSqL-f83aapnhK_NPbbZAafdzcitK8S2OULEdNMvCEnZCuPbqsfmIdQzDiodT38-4SqRFGPCxNGDYqXAsQQ3nlxgJHhAIJsqxyrqd8KnclA0voo6cygqrjWhilZ9VxyHArhu1LBtCIFGizOcM6pYblPAoH3vRZ3YMA0C3tqkmd8V4YpgbASUePUYb_MUx98d8IsHLTYofqwwAlKBt9fFrHiDDm75X_yE"/>
+<div class="absolute inset-0 bg-primary/40 group-hover:bg-primary/20 transition-colors"></div>
+<div class="absolute bottom-8 left-8">
+<span class="bg-tertiary-container text-on-tertiary-fixed px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest">99.9% Data Accuracy</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-8 border-t-[1px] border-outline-variant/30 pt-8">
+<div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Problem</p>
+<h4 class="text-xl font-bold text-primary">Fintech Innovator</h4>
+<p class="text-sm text-on-surface-variant mt-2 italic">Scale-prohibitive manual compliance reporting workflows.</p>
+</div>
+<div class="text-right">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Result</p>
+<h4 class="text-xl font-bold text-on-tertiary-container">Automated Compliance</h4>
+<p class="text-sm text-on-surface-variant mt-2">Custom automation layer saved 14,000 human-hours annually.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-32 px-8">
+<div class="max-w-[1000px] mx-auto signature-gradient rounded-2xl p-20 text-center space-y-10 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2"></div>
+<h2 class="text-5xl font-bold text-white tracking-tight leading-tight relative z-10">Ready to Transform Your <br/>Operations?</h2>
+<p class="text-xl text-primary-fixed leading-relaxed max-w-xl mx-auto relative z-10">
+                    Connect with our lead architects to discuss how precision engineering can redefine your enterprise capacity.
+                </p>
+<div class="relative z-10">
+<button class="bg-white text-primary px-12 py-5 rounded-lg font-bold text-xl hover:scale-[1.02] transition-transform">Begin Consultation</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-50 dark:bg-[#1a1c1f] w-full py-16 border-t-[1px] border-slate-200/15 dark:border-slate-800/15">
+<div class="flex flex-col md:flex-row justify-between items-center gap-8 max-w-[1440px] mx-auto px-8 lg:px-16">
+<div class="space-y-4">
+<div class="font-black text-blue-950 dark:text-white text-xl tracking-tighter uppercase">Axiom Precision</div>
+<p class="font-inter text-xs tracking-[0.05em] uppercase text-slate-500">© 2024 Sovereign Symmetry Consulting. Precision by Design.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-10">
+<a class="font-inter text-xs tracking-[0.05em] uppercase text-slate-500 hover:text-blue-600 transition-colors" href="#">Privacy Policy</a>
+<a class="font-inter text-xs tracking-[0.05em] uppercase text-slate-500 hover:text-blue-600 transition-colors" href="#">Terms of Service</a>
+<a class="font-inter text-xs tracking-[0.05em] uppercase text-slate-500 hover:text-blue-600 transition-colors" href="#">Global Operations</a>
+<a class="font-inter text-xs tracking-[0.05em] uppercase text-slate-500 hover:text-blue-600 transition-colors" href="#">LinkedIn</a>
+</div>
+</div>
+</footer>
+</body></html>

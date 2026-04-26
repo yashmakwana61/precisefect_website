@@ -1,5 +1,4 @@
 import { Seo } from "@/components/seo";
-import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { ArrowRight, BarChart, TrendingUp, Clock } from "lucide-react";
 import { motion } from "framer-motion";
@@ -9,7 +8,7 @@ export default function CaseStudies() {
     {
       client: "Nexus Manufacturing",
       industry: "Industrial Equipment",
-      title: "Eliminating 40 Hours of Weekly Data Entry with ERPNext",
+      title: "Eliminating 40 Hours of Weekly Data Entry with ERP Architecture",
       metrics: [
         { label: "Inventory Accuracy", value: "99.8%", icon: TrendingUp },
         { label: "Order Processing Time", value: "-47%", icon: Clock },
@@ -54,19 +53,47 @@ export default function CaseStudies() {
         description="Read how we helped manufacturing, logistics, and retail companies scale operations and save millions through ERP and automation."
       />
       
-      <section className="py-24 bg-primary text-white">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">The Engineering <br />Behind the Outcomes.</h1>
-            <p className="text-xl text-primary-foreground/80 mb-8">
-              We don't measure success by lines of code written or hours billed. We measure it by the operational capacity we unlock for our clients.
+      <section className="py-24 md:py-32 bg-surface relative overflow-hidden">
+        <div className="max-w-[1440px] mx-auto px-8 lg:px-16 grid lg:grid-cols-2 gap-16 items-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">The Proof</p>
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary mb-8 leading-[0.95]">
+              Outcomes, <br />
+              <span className="text-on-primary-container">Engineered.</span>
+            </h1>
+            <p className="text-lg text-muted-foreground leading-relaxed mb-12 max-w-xl">
+              We don't measure success by lines of code written or hours billed. We measure it by the operational capacity we unlock for our clients. Examine the metrics.
             </p>
-          </div>
+            <Link href="/contact">
+              <button className="signature-gradient text-white font-bold rounded-lg px-10 py-5 shadow-md btn-press text-lg">
+                Submit RFP
+              </button>
+            </Link>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="relative w-full aspect-video lg:aspect-square max-w-[600px] ml-auto"
+          >
+            <div className="absolute -inset-4 bg-primary-container/20 rounded-full blur-[120px] -z-10" />
+            <div className="w-full h-full bg-surface-container-lowest ghost-border p-4 rounded-xl shadow-xl flex flex-col items-center justify-center relative overflow-hidden group">
+               <div className="w-full h-full bg-surface-container-high rounded-lg border border-border p-8 flex items-end gap-4 justify-center grayscale group-hover:grayscale-0 transition-all duration-700">
+                  <div className="w-16 bg-on-primary-container rounded-t-sm" style={{ height: '30%' }} />
+                  <div className="w-16 bg-primary-container rounded-t-sm" style={{ height: '60%' }} />
+                  <div className="w-16 bg-primary rounded-t-sm" style={{ height: '90%' }} />
+               </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      <section className="py-24 bg-background">
-        <div className="container mx-auto px-4 md:px-6 space-y-32">
+      <section className="py-32 bg-surface-container-lowest border-y border-border">
+        <div className="max-w-[1440px] mx-auto px-8 lg:px-16 space-y-32">
           {studies.map((study, i) => (
             <motion.div 
               initial={{ opacity: 0, y: 40 }}
@@ -76,27 +103,27 @@ export default function CaseStudies() {
               className="flex flex-col gap-12"
             >
               <div className="border-b border-border pb-8">
-                <div className="flex items-center gap-4 mb-4">
-                  <span className="text-sm font-bold text-secondary uppercase tracking-wider">{study.client}</span>
+                <div className="flex items-center gap-4 mb-6">
+                  <span className="text-xs font-bold text-on-primary-container uppercase tracking-[0.2em]">{study.client}</span>
                   <span className="w-1.5 h-1.5 rounded-full bg-border" />
-                  <span className="text-sm text-muted-foreground">{study.industry}</span>
+                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em]">{study.industry}</span>
                 </div>
-                <h2 className="text-3xl md:text-5xl font-bold text-primary">{study.title}</h2>
+                <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-primary max-w-4xl">{study.title}</h2>
               </div>
 
-              <div className="grid md:grid-cols-12 gap-12">
-                <div className="md:col-span-4 space-y-6">
-                  <div className="bg-muted/50 p-6 rounded-2xl border border-border">
-                    <h3 className="font-bold text-primary mb-6 uppercase tracking-wider text-xs">The Metrics</h3>
-                    <div className="space-y-6">
+              <div className="grid lg:grid-cols-12 gap-16">
+                <div className="lg:col-span-4 space-y-6">
+                  <div className="bg-surface ghost-border p-8 rounded-xl">
+                    <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-8">The Metrics</p>
+                    <div className="space-y-8">
                       {study.metrics.map((metric, idx) => (
-                        <div key={idx} className="flex items-center gap-4">
-                          <div className="w-10 h-10 bg-white dark:bg-black rounded-lg border border-border flex items-center justify-center text-primary">
-                            <metric.icon size={20} />
+                        <div key={idx} className="flex items-center gap-6">
+                          <div className="w-12 h-12 bg-surface-container-high rounded-lg flex items-center justify-center text-primary">
+                            <metric.icon size={24} className="stroke-[1.5]" />
                           </div>
                           <div>
-                            <div className="text-2xl font-bold text-primary">{metric.value}</div>
-                            <div className="text-sm text-muted-foreground">{metric.label}</div>
+                            <div className="text-3xl font-bold text-primary tracking-tight">{metric.value}</div>
+                            <div className="text-sm font-medium text-muted-foreground">{metric.label}</div>
                           </div>
                         </div>
                       ))}
@@ -104,37 +131,23 @@ export default function CaseStudies() {
                   </div>
                 </div>
 
-                <div className="md:col-span-8 space-y-8">
+                <div className="lg:col-span-8 space-y-12">
                   <div>
-                    <h3 className="text-xl font-bold text-primary mb-3">The Problem</h3>
+                    <h3 className="text-xl font-bold text-primary mb-4">The Entropy</h3>
                     <p className="text-lg text-muted-foreground leading-relaxed">{study.problem}</p>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-primary mb-3">The Solution</h3>
+                    <h3 className="text-xl font-bold text-primary mb-4">The Architecture</h3>
                     <p className="text-lg text-muted-foreground leading-relaxed">{study.solution}</p>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-primary mb-3">The Result</h3>
-                    <p className="text-lg text-foreground font-medium leading-relaxed border-l-4 border-accent pl-4 py-1">{study.results}</p>
+                    <h3 className="text-xl font-bold text-primary mb-4">The Result</h3>
+                    <p className="text-lg font-medium text-foreground leading-relaxed border-l-4 border-on-primary-container pl-6 py-2">{study.results}</p>
                   </div>
                 </div>
               </div>
             </motion.div>
           ))}
-        </div>
-      </section>
-
-      <section className="py-24 bg-muted/30 text-center border-t border-border">
-        <div className="container mx-auto px-4 md:px-6">
-          <h2 className="text-3xl font-bold text-primary mb-6">Your business could be next.</h2>
-          <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
-            Stop letting broken processes dictate your growth ceiling. Let's build a system that scales.
-          </p>
-          <Link href="/contact">
-            <Button size="lg" className="bg-primary text-white rounded-full px-8">
-              Book a Consultation
-            </Button>
-          </Link>
         </div>
       </section>
     </>
