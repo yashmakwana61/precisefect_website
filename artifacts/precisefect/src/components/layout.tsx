@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import logoUrl from "@assets/Website_Logo_1777187773694.png";
+import logoUrl from "@/assets/logo.png";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -41,7 +41,7 @@ export function Navbar() {
           <img
             src={logoUrl}
             alt="Precisefect"
-            className="h-16 md:h-20 w-auto -my-4"
+            className="h-20 md:h-24 w-auto -my-6"
           />
         </Link>
 
@@ -125,7 +125,7 @@ export function Footer() {
               <img
                 src={logoUrl}
                 alt="Precisefect"
-                className="h-14 w-auto brightness-0 invert"
+                className="h-20 w-auto brightness-0 invert"
               />
             </Link>
             <p className="text-white/70 mb-6 max-w-sm text-sm leading-relaxed">
