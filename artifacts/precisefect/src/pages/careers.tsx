@@ -1,46 +1,25 @@
 import { Seo } from "@/components/seo";
-import { Link } from "wouter";
-import { MapPin, Briefcase, ArrowRight } from "lucide-react";
+import { MapPin, Briefcase } from "lucide-react";
 import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { cmsApi, type JobOpening } from "@/lib/cms-api";
 
 export default function Careers() {
-  const roles = [
-    {
-      title: "ERP Implementation Architect",
-      location: "Remote (US/Canada)",
-      type: "Full-time",
-      desc: "Lead end-to-end deployments of ERPNext and Odoo. Deep understanding of supply chain physics and database schema design required."
-    },
-    {
-      title: "Middleware Automation Engineer",
-      location: "San Francisco, CA or Remote",
-      type: "Full-time",
-      desc: "Engineer resilient integrations using Node.js, Python, and enterprise middleware. Masterful API design and data ETL experience mandatory."
-    },
-    {
-      title: "Principal Solutions Architect",
-      location: "Bangalore, India",
-      type: "Full-time",
-      desc: "Translate complex business entropy into structural blueprints. Design database schemas and map enterprise data flow before any code is written."
-    },
-    {
-      title: "Systems Success Manager",
-      location: "Remote (Global)",
-      type: "Full-time",
-      desc: "Command the post-launch hypercare phase. Drive adoption of new ERP structures via rigorous training and continuous systemic optimization."
-    }
-  ];
+  const { data: roles = [], isLoading } = useQuery({
+    queryKey: ["public", "job-openings"],
+    queryFn: () => cmsApi.list<JobOpening>("job-openings"),
+  });
 
   return (
     <>
-      <Seo 
-        title="Careers & Engineering Roles | Precisefect" 
+      <Seo
+        title="Careers & Engineering Roles | Precisefect"
         description="Join Precisefect. We are hiring engineers, architects, and structural consultants who want to solve complex operational problems."
       />
-      
+
       <section className="py-24 md:py-32 bg-surface relative overflow-hidden">
         <div className="max-w-[1440px] mx-auto px-8 lg:px-16 grid lg:grid-cols-2 gap-16 items-center">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
@@ -62,17 +41,17 @@ export default function Careers() {
           >
             <div className="absolute -inset-4 bg-primary-container/20 rounded-full blur-[120px] -z-10" />
             <div className="w-full h-full bg-surface-container-lowest ghost-border p-4 rounded-xl shadow-xl flex flex-col items-center justify-center relative overflow-hidden group">
-               <div className="w-full h-full bg-surface-container-high rounded-lg border border-border flex items-center justify-center grayscale group-hover:grayscale-0 transition-all duration-700">
-                  <div className="flex flex-col gap-3">
-                     {[...Array(6)].map((_, i) => (
-                        <div key={i} className="flex gap-3">
-                           <div className={`w-8 h-8 rounded-sm ${i % 2 === 0 ? 'bg-primary' : 'bg-primary-container'} opacity-80`} />
-                           <div className={`w-8 h-8 rounded-sm ${i % 3 === 0 ? 'bg-on-primary-container' : 'bg-primary'} opacity-70`} />
-                           <div className={`w-8 h-8 rounded-sm ${i % 2 !== 0 ? 'bg-primary-container' : 'bg-primary'} opacity-60`} />
-                        </div>
-                     ))}
-                  </div>
-               </div>
+              <div className="w-full h-full bg-surface-container-high rounded-lg border border-border flex items-center justify-center grayscale group-hover:grayscale-0 transition-all duration-700">
+                <div className="flex flex-col gap-3">
+                  {[...Array(6)].map((_, i) => (
+                    <div key={i} className="flex gap-3">
+                      <div className={`w-8 h-8 rounded-sm ${i % 2 === 0 ? "bg-primary" : "bg-primary-container"} opacity-80`} />
+                      <div className={`w-8 h-8 rounded-sm ${i % 3 === 0 ? "bg-on-primary-container" : "bg-primary"} opacity-70`} />
+                      <div className={`w-8 h-8 rounded-sm ${i % 2 !== 0 ? "bg-primary-container" : "bg-primary"} opacity-60`} />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -88,32 +67,46 @@ export default function Careers() {
             </p>
           </div>
 
-          <div className="space-y-6 max-w-5xl">
-            {roles.map((role, i) => (
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                key={i} 
-                className="flex flex-col lg:flex-row lg:items-center justify-between p-10 bg-surface ghost-border rounded-xl hover:-translate-y-1 hover:shadow-xl transition-all gap-8 group"
-              >
-                <div>
-                  <h3 className="text-2xl font-bold text-primary mb-4 group-hover:text-primary-container transition-colors tracking-tight">{role.title}</h3>
-                  <div className="flex flex-wrap gap-6 text-xs font-bold uppercase tracking-wider text-muted-foreground mb-6">
-                    <span className="flex items-center gap-2"><MapPin size={14} className="stroke-[2]" /> {role.location}</span>
-                    <span className="flex items-center gap-2"><Briefcase size={14} className="stroke-[2]" /> {role.type}</span>
+          {isLoading ? (
+            <div className="text-muted-foreground">Loading…</div>
+          ) : roles.length === 0 ? (
+            <div className="bg-surface ghost-border rounded-xl p-12 text-center max-w-5xl">
+              <p className="text-muted-foreground">No vacancies open at the moment. Check back soon.</p>
+            </div>
+          ) : (
+            <div className="space-y-6 max-w-5xl">
+              {roles.map((role, i) => (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.05 }}
+                  key={role.id}
+                  data-testid={`card-job-${role.id}`}
+                  className="flex flex-col lg:flex-row lg:items-center justify-between p-10 bg-surface ghost-border rounded-xl hover:-translate-y-1 hover:shadow-xl transition-all gap-8 group"
+                >
+                  <div>
+                    <h3 className="text-2xl font-bold text-primary mb-4 group-hover:text-primary-container transition-colors tracking-tight">{role.title}</h3>
+                    <div className="flex flex-wrap gap-6 text-xs font-bold uppercase tracking-wider text-muted-foreground mb-6">
+                      <span className="flex items-center gap-2"><MapPin size={14} className="stroke-[2]" /> {role.location}</span>
+                      <span className="flex items-center gap-2"><Briefcase size={14} className="stroke-[2]" /> {role.employmentType}</span>
+                    </div>
+                    <p className="text-muted-foreground text-base leading-relaxed max-w-2xl">{role.description}</p>
                   </div>
-                  <p className="text-muted-foreground text-base leading-relaxed max-w-2xl">{role.desc}</p>
-                </div>
-                <div className="shrink-0 mt-4 lg:mt-0">
-                  <button className="bg-surface-container-high text-primary font-bold rounded-lg px-8 py-4 hover:bg-primary-container hover:text-white transition-colors btn-press w-full lg:w-auto">
-                    Submit Credentials
-                  </button>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+                  <div className="shrink-0 mt-4 lg:mt-0">
+                    <a
+                      href={role.applyUrl || "/contact"}
+                      target={role.applyUrl ? "_blank" : undefined}
+                      rel={role.applyUrl ? "noreferrer" : undefined}
+                      className="inline-block bg-surface-container-high text-primary font-bold rounded-lg px-8 py-4 hover:bg-primary-container hover:text-white transition-colors btn-press w-full lg:w-auto text-center"
+                    >
+                      Submit Credentials
+                    </a>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
 
           <div className="mt-24 p-12 bg-primary rounded-xl text-white max-w-5xl">
             <h3 className="text-3xl font-bold tracking-tight mb-4">Structural anomaly detected?</h3>

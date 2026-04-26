@@ -1,4 +1,4 @@
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,10 +17,11 @@ import Contact from "@/pages/contact";
 import Faq from "@/pages/faq";
 import Careers from "@/pages/careers";
 import NotFound from "@/pages/not-found";
+import AdminRouter from "@/pages/admin";
 
 const queryClient = new QueryClient();
 
-function Router() {
+function PublicSite() {
   return (
     <Layout>
       <Switch>
@@ -40,6 +41,14 @@ function Router() {
       </Switch>
     </Layout>
   );
+}
+
+function Router() {
+  const [location] = useLocation();
+  if (location.startsWith("/admin")) {
+    return <AdminRouter />;
+  }
+  return <PublicSite />;
 }
 
 function App() {
