@@ -12,3 +12,9 @@ id = "Ms4Zhfr0cufSjo5eldrZv"
 uri = "file://exports/precisefect-project.tar.gz"
 type = "unspecified"
 title = "Precisefect Project (tar.gz)"
+
+[[outputs]]
+id = "8M8IdZMEuYcZ9AC1BoxgM"
+uri = "file://exports/precisefect-source.tar.gz"
+type = "unspecified"
+title = "Precisefect — Complete Source Code"
