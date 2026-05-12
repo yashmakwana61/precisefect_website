@@ -16,6 +16,7 @@ import Blog from "@/pages/blog";
 import Contact from "@/pages/contact";
 import Faq from "@/pages/faq";
 import Careers from "@/pages/careers";
+import CustomPageRenderer from "@/pages/custom-page";
 import NotFound from "@/pages/not-found";
 import AdminRouter from "@/pages/admin";
 
@@ -37,6 +38,7 @@ function PublicSite() {
         <Route path="/contact" component={Contact} />
         <Route path="/faq" component={Faq} />
         <Route path="/careers" component={Careers} />
+        <Route path="/p/:slug" component={CustomPageRenderer} />
         <Route component={NotFound} />
       </Switch>
     </Layout>
@@ -45,9 +47,7 @@ function PublicSite() {
 
 function Router() {
   const [location] = useLocation();
-  if (location.startsWith("/admin")) {
-    return <AdminRouter />;
-  }
+  if (location.startsWith("/admin")) return <AdminRouter />;
   return <PublicSite />;
 }
 

@@ -4,3 +4,6 @@ export * from "./faqs";
 export * from "./team-members";
 export * from "./job-openings";
 export * from "./testimonials";
+export * from "./seo-pages";
+export * from "./site-settings";
+export * from "./custom-pages";

@@ -4,6 +4,7 @@ import { BarChart, TrendingUp, Clock, Zap, Shield, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { cmsApi, type CaseStudy } from "@/lib/cms-api";
+import MetricRise from "@/components/canvas/MetricRise";
 
 const ICON_MAP = { TrendingUp, Clock, BarChart, Zap, Shield, Users };
 
@@ -18,18 +19,16 @@ export default function CaseStudies() {
       <Seo
         title="Case Studies & Results | Precisefect"
         description="Read how we helped manufacturing, logistics, and retail companies scale operations and save millions through ERP and automation."
+        slug="/case-studies"
       />
 
+      {/* Hero with Metric Rise Canvas */}
       <section className="py-24 md:py-32 bg-surface relative overflow-hidden">
         <div className="max-w-[1440px] mx-auto px-8 lg:px-16 grid lg:grid-cols-2 gap-16 items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">The Proof</p>
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary mb-8 leading-[0.95]">
-              Outcomes, <br />
-              <span className="text-on-primary-container">Engineered.</span>
+              Outcomes, <br /><span className="text-on-primary-container">Engineered.</span>
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed mb-12 max-w-xl">
               We don't measure success by lines of code written or hours billed. We measure it by the operational capacity we unlock for our clients. Examine the metrics.
@@ -41,24 +40,28 @@ export default function CaseStudies() {
             </Link>
           </motion.div>
 
+          {/* Animated Metric Rise Canvas */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="relative w-full aspect-video lg:aspect-square max-w-[600px] ml-auto"
+            className="relative w-full max-w-[600px] ml-auto"
           >
             <div className="absolute -inset-4 bg-primary-container/20 rounded-full blur-[120px] -z-10" />
-            <div className="w-full h-full bg-surface-container-lowest ghost-border p-4 rounded-xl shadow-xl flex flex-col items-center justify-center relative overflow-hidden group">
-              <div className="w-full h-full bg-surface-container-high rounded-lg border border-border p-8 flex items-end gap-4 justify-center grayscale group-hover:grayscale-0 transition-all duration-700">
-                <div className="w-16 bg-on-primary-container rounded-t-sm" style={{ height: "30%" }} />
-                <div className="w-16 bg-primary-container rounded-t-sm" style={{ height: "60%" }} />
-                <div className="w-16 bg-primary rounded-t-sm" style={{ height: "90%" }} />
+            <div className="w-full bg-surface-container-lowest ghost-border rounded-xl shadow-xl overflow-hidden">
+              <div className="px-6 pt-6 pb-2 border-b border-border flex items-center justify-between">
+                <span className="text-xs font-bold text-primary uppercase tracking-widest">Live Outcome Metrics</span>
+                <span className="w-2 h-2 rounded-full bg-on-primary-container animate-pulse" />
+              </div>
+              <div className="h-56">
+                <MetricRise />
               </div>
             </div>
           </motion.div>
         </div>
       </section>
 
+      {/* Case study detail sections */}
       <section className="py-32 bg-surface-container-lowest border-y border-border">
         <div className="max-w-[1440px] mx-auto px-8 lg:px-16 space-y-32">
           {isLoading ? (

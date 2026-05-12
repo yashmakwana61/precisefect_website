@@ -7,6 +7,10 @@ import AdminLogin from "./login";
 import AdminDashboard from "./dashboard";
 import CollectionList from "./collection-list";
 import CollectionEdit from "./collection-edit";
+import SeoManager from "./seo-manager";
+import AdminSettings from "./settings";
+import PagesList from "./pages-list";
+import PageEdit from "./page-edit";
 
 function AdminShell({ children }: { children: React.ReactNode }) {
   const qc = useQueryClient();
@@ -20,18 +24,11 @@ function AdminShell({ children }: { children: React.ReactNode }) {
             <span className="text-sm font-bold text-primary">Precisefect Console</span>
           </Link>
           <div className="flex items-center gap-6">
-            <Link
-              href="/"
-              className="text-xs font-bold text-muted-foreground hover:text-primary uppercase tracking-[0.15em]"
-              data-testid="link-view-site"
-            >
+            <Link href="/" className="text-xs font-bold text-muted-foreground hover:text-primary uppercase tracking-[0.15em]" data-testid="link-view-site">
               View Site
             </Link>
             <button
-              onClick={async () => {
-                await cmsApi.logout();
-                await qc.invalidateQueries({ queryKey: ["auth", "me"] });
-              }}
+              onClick={async () => { await cmsApi.logout(); await qc.invalidateQueries({ queryKey: ["auth", "me"] }); }}
               data-testid="button-logout"
               className="text-xs font-bold text-muted-foreground hover:text-destructive uppercase tracking-[0.15em] inline-flex items-center"
             >
@@ -49,11 +46,7 @@ export default function AdminRouter() {
   const { isAdmin, isLoading } = useAdmin();
 
   if (isLoading) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center text-muted-foreground">
-        Authenticating…
-      </div>
-    );
+    return <div className="min-h-[60vh] flex items-center justify-center text-muted-foreground">Authenticating…</div>;
   }
 
   return (
@@ -67,11 +60,27 @@ export default function AdminRouter() {
       <Route path="/admin">
         <AdminShell><AdminDashboard /></AdminShell>
       </Route>
-      <Route path="/admin/:collection">
-        {(p) => <AdminShell><CollectionList /></AdminShell>}
+
+      {/* Site management */}
+      <Route path="/admin/seo">
+        <AdminShell><SeoManager /></AdminShell>
       </Route>
+      <Route path="/admin/settings">
+        <AdminShell><AdminSettings /></AdminShell>
+      </Route>
+      <Route path="/admin/pages">
+        <AdminShell><PagesList /></AdminShell>
+      </Route>
+      <Route path="/admin/pages/:id">
+        <AdminShell><PageEdit /></AdminShell>
+      </Route>
+
+      {/* Collections */}
       <Route path="/admin/:collection/:id">
-        {(p) => <AdminShell><CollectionEdit /></AdminShell>}
+        <AdminShell><CollectionEdit /></AdminShell>
+      </Route>
+      <Route path="/admin/:collection">
+        <AdminShell><CollectionList /></AdminShell>
       </Route>
     </Switch>
   );
