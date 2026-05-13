@@ -1,7 +1,11 @@
 # See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
-# compiled output
+# compiled output (CI publishes Hostinger artifacts under artifacts/*/dist)
 dist
+!artifacts/precisefect/dist/
+!artifacts/precisefect/dist/**
+!artifacts/api-server/dist/
+!artifacts/api-server/dist/**
 tmp
 out-tsc
 *.tsbuildinfo
