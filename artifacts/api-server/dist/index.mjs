@@ -85385,36 +85385,13 @@ var selectSitePageSchema = createSelectSchema(sitePagesTable);
 
 // ../../lib/db/src/index.ts
 var { Pool: Pool3 } = esm_default;
-var poolInstance;
-var dbInstance;
-function getPool() {
-  if (!poolInstance) {
-    const connectionString = process.env.DATABASE_URL;
-    if (!connectionString) {
-      throw new Error(
-        "DATABASE_URL must be set. Use your Supabase Postgres URI (Dashboard \u2192 Project Settings \u2192 Database)."
-      );
-    }
-    poolInstance = new Pool3({ connectionString });
-  }
-  return poolInstance;
+if (!process.env.DATABASE_URL) {
+  throw new Error(
+    "DATABASE_URL must be set. Use your Supabase Postgres URI (Dashboard \u2192 Project Settings \u2192 Database)."
+  );
 }
-function getDb() {
-  if (!dbInstance) {
-    dbInstance = drizzle(getPool(), { schema: schema_exports });
-  }
-  return dbInstance;
-}
-var pool = new Proxy({}, {
-  get(_target, prop, receiver) {
-    return Reflect.get(getPool(), prop, receiver);
-  }
-});
-var db = new Proxy({}, {
-  get(_target, prop, receiver) {
-    return Reflect.get(getDb(), prop, receiver);
-  }
-});
+var pool = new Pool3({ connectionString: process.env.DATABASE_URL });
+var db = drizzle(pool, { schema: schema_exports });
 
 // src/lib/crud.ts
 var import_express3 = __toESM(require_express2(), 1);
@@ -94656,6 +94633,22 @@ var assets_default = router8;
 
 // src/routes/site-blocks.ts
 var import_express10 = __toESM(require_express2(), 1);
+
+// src/lib/contact-info.ts
+var CONTACT_INFO = {
+  email: "info@precisefect.com",
+  phone: "+91 6353564970",
+  phoneHref: "tel:+916353564970",
+  address: "Ahmedabad, India"
+};
+var CONTACT_FOOTER_ITEMS = [
+  { label: CONTACT_INFO.email, href: `mailto:${CONTACT_INFO.email}` },
+  { label: CONTACT_INFO.phone, href: CONTACT_INFO.phoneHref },
+  { label: CONTACT_INFO.address, href: "" },
+  { label: "Submit RFP \u2192", href: "/contact" }
+];
+
+// src/routes/site-blocks.ts
 var router9 = (0, import_express10.Router)();
 var DEFAULT_NAVBAR = {
   links: [
@@ -94689,11 +94682,7 @@ var DEFAULT_FOOTER = {
     },
     {
       title: "Contact",
-      items: [
-        { label: "hello@precisefect.com", href: "mailto:hello@precisefect.com" },
-        { label: "San Francisco \xB7 Bangalore", href: "" },
-        { label: "Submit RFP \u2192", href: "/contact" }
-      ]
+      items: CONTACT_FOOTER_ITEMS
     }
   ],
   legalLinks: [
@@ -94715,6 +94704,20 @@ async function ensureDefaults() {
         content: d.content,
         isPublished: true
       });
+    }
+  }
+  const [footer] = await db.select().from(siteBlocksTable).where(eq(siteBlocksTable.blockType, "footer")).limit(1);
+  if (footer?.content && typeof footer.content === "object") {
+    const content = { ...footer.content };
+    const columns = Array.isArray(content.columns) ? [...content.columns] : [];
+    const contactIdx = columns.findIndex((col) => col.title === "Contact");
+    if (contactIdx >= 0) {
+      columns[contactIdx] = {
+        ...columns[contactIdx],
+        items: CONTACT_FOOTER_ITEMS
+      };
+      content.columns = columns;
+      await db.update(siteBlocksTable).set({ content, updatedAt: /* @__PURE__ */ new Date() }).where(eq(siteBlocksTable.blockType, "footer"));
     }
   }
 }

@@ -44,6 +44,16 @@ const FALLBACK_FOOTER: FooterContent = {
   copyright: "Precisefect Consulting. Proprietary & Confidential.",
 };
 
+function withContactFooter(footer: FooterContent): FooterContent {
+  if (!footer.columns?.length) return footer;
+  return {
+    ...footer,
+    columns: footer.columns.map((col) =>
+      col.title === "Contact" ? { ...col, items: [...CONTACT_FOOTER_ITEMS] } : col,
+    ),
+  };
+}
+
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -122,7 +132,9 @@ export function Footer() {
     queryKey: ["site-blocks", "footer", preview],
     queryFn: () => cmsApi.getSiteBlocks(["footer"], preview ? "preview" : undefined),
   });
-  const footer = (blocks.find((b) => b.blockType === "footer")?.content as unknown as FooterContent) ?? FALLBACK_FOOTER;
+  const footer = withContactFooter(
+    (blocks.find((b) => b.blockType === "footer")?.content as unknown as FooterContent) ?? FALLBACK_FOOTER,
+  );
 
   return (
     <footer className="bg-primary text-white py-24">
@@ -140,7 +152,11 @@ export function Footer() {
               <ul className="space-y-4">
                 {(col.links ?? col.items ?? []).map((item) => (
                   <li key={item.label}>
-                    {item.href ? (
+                    {item.href?.startsWith("mailto:") || item.href?.startsWith("tel:") ? (
+                      <a href={item.href} className="text-sm text-white/70 hover:text-white transition-colors">
+                        {item.label}
+                      </a>
+                    ) : item.href ? (
                       <Link href={item.href} className="text-sm text-white/70 hover:text-white transition-colors">{item.label}</Link>
                     ) : (
                       <span className="text-sm text-white/70">{item.label}</span>

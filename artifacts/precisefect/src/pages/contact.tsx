@@ -43,6 +43,11 @@ export default function Contact() {
     setTimeout(() => setIsSubmitted(true), 800);
   };
 
+  const legacyBodyContent =
+    content.bodyContent?.includes("San Francisco") ||
+    content.bodyContent?.includes("Bangalore") ||
+    content.bodyContent?.includes("hello@precisefect.com");
+
   return (
     <>
       <Seo 
@@ -245,7 +250,7 @@ export default function Contact() {
         </div>
       </section>
 
-      {content.bodyContent && (
+      {content.bodyContent && !legacyBodyContent && (
         <section className="py-16 bg-surface-container-lowest border-t border-border">
           <div className="max-w-[1440px] mx-auto px-8 lg:px-16 max-w-3xl">
             <HtmlSafe html={content.bodyContent} className="prose prose-lg text-muted-foreground leading-relaxed" />

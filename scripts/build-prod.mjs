@@ -20,10 +20,13 @@ function copyPublicAssets() {
   console.log("[build:prod] Copied frontend assets to artifacts/api-server/dist/public");
 }
 
-if (existsSync(frontendIndex) && existsSync(apiBundle)) {
-  if (!existsSync(bundledPublicIndex)) {
-    copyPublicAssets();
-  }
+const skipCompile =
+  !process.env.CI &&
+  existsSync(frontendIndex) &&
+  existsSync(apiBundle) &&
+  existsSync(bundledPublicIndex);
+
+if (skipCompile) {
   console.log(
     "[build:prod] CI-built artifacts found; skipping compile (required on Hostinger shared hosting).",
   );

@@ -83,28 +83,15 @@ async function ensureDefaults(): Promise<void> {
       : [];
     const contactIdx = columns.findIndex((col) => col.title === "Contact");
     if (contactIdx >= 0) {
-      const items = columns[contactIdx].items;
-      const legacyContact =
-        Array.isArray(items) &&
-        items.some(
-          (item) =>
-            typeof item === "object" &&
-            item !== null &&
-            ("label" in item) &&
-            (String((item as { label?: string }).label).includes("hello@precisefect.com") ||
-              String((item as { label?: string }).label).includes("San Francisco")),
-        );
-      if (legacyContact) {
-        columns[contactIdx] = {
-          ...columns[contactIdx],
-          items: CONTACT_FOOTER_ITEMS,
-        };
-        content.columns = columns;
-        await db
-          .update(siteBlocksTable)
-          .set({ content, updatedAt: new Date() })
-          .where(eq(siteBlocksTable.blockType, "footer"));
-      }
+      columns[contactIdx] = {
+        ...columns[contactIdx],
+        items: CONTACT_FOOTER_ITEMS,
+      };
+      content.columns = columns;
+      await db
+        .update(siteBlocksTable)
+        .set({ content, updatedAt: new Date() })
+        .where(eq(siteBlocksTable.blockType, "footer"));
     }
   }
 }
