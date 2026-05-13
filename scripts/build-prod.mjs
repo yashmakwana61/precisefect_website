@@ -17,7 +17,17 @@ function copyPublicAssets() {
     throw new Error(`Missing frontend build at ${publicSrc}`);
   }
   cpSync(publicSrc, publicDest, { recursive: true });
+  syncRootPublicFiles(publicDest);
   console.log("[build:prod] Copied frontend assets to artifacts/api-server/dist/public");
+}
+
+function syncRootPublicFiles(...destRoots) {
+  const rootPublic = path.join(precisefectDir, "public");
+  if (!existsSync(rootPublic)) return;
+  for (const destRoot of destRoots) {
+    if (!existsSync(destRoot)) continue;
+    cpSync(rootPublic, destRoot, { recursive: true });
+  }
 }
 
 const skipCompile =
@@ -27,6 +37,10 @@ const skipCompile =
   existsSync(bundledPublicIndex);
 
 if (skipCompile) {
+  syncRootPublicFiles(
+    path.join(precisefectDir, "dist", "public"),
+    path.join(apiDistDir, "public"),
+  );
   console.log(
     "[build:prod] CI-built artifacts found; skipping compile (required on Hostinger shared hosting).",
   );
