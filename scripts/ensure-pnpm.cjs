@@ -6,10 +6,8 @@ for (const f of ["package-lock.json", "yarn.lock"]) {
   } catch {}
 }
 
-const ua = process.env.npm_config_user_agent || "";
 const execpath = process.env.npm_execpath || "";
 const isPnpm =
-  ua.includes("pnpm") ||
   execpath.includes("pnpm") ||
   Boolean(process.env.PNPM_VERSION) ||
   Boolean(process.env.PNPM_HOME);
