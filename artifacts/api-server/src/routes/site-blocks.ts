@@ -3,6 +3,7 @@ import { eq, and, lte, sql, inArray } from "drizzle-orm";
 import { db, siteBlocksTable } from "@workspace/db";
 import { requireAdmin } from "../middlewares/authMiddleware";
 import { recordRevision } from "../lib/revisions";
+import { CONTACT_FOOTER_ITEMS } from "../lib/contact-info";
 
 const router: IRouter = Router();
 
@@ -40,11 +41,7 @@ const DEFAULT_FOOTER = {
     },
     {
       title: "Contact",
-      items: [
-        { label: "hello@precisefect.com", href: "mailto:hello@precisefect.com" },
-        { label: "San Francisco · Bangalore", href: "" },
-        { label: "Submit RFP →", href: "/contact" },
-      ],
+      items: CONTACT_FOOTER_ITEMS,
     },
   ],
   legalLinks: [
@@ -71,6 +68,43 @@ async function ensureDefaults(): Promise<void> {
         content: d.content,
         isPublished: true,
       });
+    }
+  }
+
+  const [footer] = await db
+    .select()
+    .from(siteBlocksTable)
+    .where(eq(siteBlocksTable.blockType, "footer"))
+    .limit(1);
+  if (footer?.content && typeof footer.content === "object") {
+    const content = { ...(footer.content as Record<string, unknown>) };
+    const columns = Array.isArray(content.columns)
+      ? [...(content.columns as Array<Record<string, unknown>>)]
+      : [];
+    const contactIdx = columns.findIndex((col) => col.title === "Contact");
+    if (contactIdx >= 0) {
+      const items = columns[contactIdx].items;
+      const legacyContact =
+        Array.isArray(items) &&
+        items.some(
+          (item) =>
+            typeof item === "object" &&
+            item !== null &&
+            ("label" in item) &&
+            (String((item as { label?: string }).label).includes("hello@precisefect.com") ||
+              String((item as { label?: string }).label).includes("San Francisco")),
+        );
+      if (legacyContact) {
+        columns[contactIdx] = {
+          ...columns[contactIdx],
+          items: CONTACT_FOOTER_ITEMS,
+        };
+        content.columns = columns;
+        await db
+          .update(siteBlocksTable)
+          .set({ content, updatedAt: new Date() })
+          .where(eq(siteBlocksTable.blockType, "footer"));
+      }
     }
   }
 }

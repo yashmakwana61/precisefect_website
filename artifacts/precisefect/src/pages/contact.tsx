@@ -11,6 +11,7 @@ import { Mail, Phone, MapPin, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSitePage } from "@/hooks/use-site-page";
 import { HtmlSafe } from "@/components/html-safe";
+import { CONTACT_INFO } from "@/lib/contact-info";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -74,7 +75,7 @@ export default function Contact() {
                   <div>
                     <h3 className="font-bold text-primary text-lg mb-2">Direct Channel</h3>
                     <p className="text-muted-foreground mb-2 text-sm leading-relaxed">For RFPs, vendor assessments, and technical inquiries.</p>
-                    <a href="mailto:info@precisefect.com" className="text-primary-container font-bold hover:underline">info@precisefect.com</a>
+                    <a href={`mailto:${CONTACT_INFO.email}`} className="text-primary-container font-bold hover:underline">{CONTACT_INFO.email}</a>
                   </div>
                 </div>
                 
@@ -84,8 +85,8 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="font-bold text-primary text-lg mb-2">Voice Comms</h3>
-                    <p className="text-muted-foreground mb-2 text-sm leading-relaxed">Mon-Fri, 0900 - 1800 PST.</p>
-                    <p className="font-bold text-primary">+91 6353564970</p>
+                    <p className="text-muted-foreground mb-2 text-sm leading-relaxed">Mon-Fri, 09:00 - 18:00 IST.</p>
+                    <a href={CONTACT_INFO.phoneHref} className="font-bold text-primary hover:underline">{CONTACT_INFO.phone}</a>
                   </div>
                 </div>
 
@@ -95,8 +96,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="font-bold text-primary text-lg mb-2">Coordinates</h3>
-                    <p className="text-muted-foreground text-sm mb-1 font-medium">San Francisco, CA</p>
-                    <p className="text-muted-foreground text-sm font-medium">Bangalore, IN</p>
+                    <p className="text-muted-foreground text-sm font-medium">{CONTACT_INFO.address}</p>
                   </div>
                 </div>
               </div>

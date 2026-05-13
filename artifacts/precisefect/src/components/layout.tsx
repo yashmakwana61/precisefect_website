@@ -8,6 +8,7 @@ import logoUrl from "@/assets/logo.png";
 import { WhatsAppWidget } from "@/components/whatsapp-widget";
 import { cmsApi, type NavbarContent, type FooterContent } from "@/lib/cms-api";
 import { usePreviewMode } from "@/hooks/use-preview";
+import { CONTACT_FOOTER_ITEMS } from "@/lib/contact-info";
 
 const FALLBACK_NAV: NavbarContent = {
   links: [
@@ -34,11 +35,7 @@ const FALLBACK_FOOTER: FooterContent = {
       { label: "The Proof", href: "/case-studies" },
       { label: "Careers", href: "/careers" },
     ]},
-    { title: "Contact", items: [
-      { label: "hello@precisefect.com", href: "mailto:hello@precisefect.com" },
-      { label: "San Francisco · Bangalore", href: "" },
-      { label: "Submit RFP →", href: "/contact" },
-    ]},
+    { title: "Contact", items: [...CONTACT_FOOTER_ITEMS] },
   ],
   legalLinks: [
     { label: "Privacy Policy", href: "/privacy" },
