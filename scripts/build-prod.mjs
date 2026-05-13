@@ -1,9 +1,25 @@
 import { spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const precisefectDir = path.join(root, "artifacts", "precisefect");
+const frontendIndex = path.join(
+  precisefectDir,
+  "dist",
+  "public",
+  "index.html",
+);
+const apiBundle = path.join(root, "artifacts", "api-server", "dist", "index.mjs");
+
+if (existsSync(frontendIndex) && existsSync(apiBundle)) {
+  console.log(
+    "[build:prod] CI-built artifacts found; skipping compile (required on Hostinger shared hosting).",
+  );
+  process.exit(0);
+}
+
 const env = {
   ...process.env,
   PORT: process.env.PORT ?? "3000",
