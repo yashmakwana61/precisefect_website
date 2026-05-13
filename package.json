@@ -5,7 +5,7 @@
   "packageManager": "pnpm@11.1.1",
   "scripts": {
     "preinstall": "node scripts/ensure-pnpm.cjs",
-    "build:prod": "pnpm --filter @workspace/precisefect run build && pnpm --filter @workspace/api-server run build",
+    "build:prod": "node scripts/build-prod.mjs",
     "start:prod": "node artifacts/api-server/dist/index.mjs",
     "build": "pnpm run typecheck && pnpm -r --if-present run build",
     "typecheck:libs": "tsc --build",

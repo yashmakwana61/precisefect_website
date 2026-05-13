@@ -9,7 +9,7 @@ echo "Installing dependencies..."
 pnpm install --frozen-lockfile
 
 echo "Building frontend and API..."
-pnpm run build:prod
+node scripts/build-prod.mjs
 
 echo "Done. Start with: pnpm run start:prod"
 echo "Or with PM2: pm2 start ecosystem.config.cjs"
