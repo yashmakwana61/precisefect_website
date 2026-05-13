@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { ArrowRight, FileText, Briefcase, HelpCircle, Users, Building2, Quote, Search, Settings, LayoutTemplate } from "lucide-react";
+import { ArrowRight, FileText, Briefcase, HelpCircle, Users, Building2, Quote, Search, Settings, LayoutTemplate, Navigation } from "lucide-react";
 import type { CollectionName } from "@/lib/cms-api";
 
 const COLLECTIONS: { slug: CollectionName; name: string; description: string; icon: typeof FileText }[] = [
@@ -12,7 +12,8 @@ const COLLECTIONS: { slug: CollectionName; name: string; description: string; ic
 ];
 
 const TOOLS: { href: string; name: string; description: string; icon: typeof Search; badge?: string }[] = [
-  { href: "/admin/pages", name: "Custom Pages", description: "Create new pages from design templates and publish them at /p/slug.", icon: LayoutTemplate },
+  { href: "/admin/site-blocks", name: "Navigation & Footer", description: "Edit navbar links, CTA button, and footer columns.", icon: Navigation },
+  { href: "/admin/pages", name: "All Pages", description: "Search and edit every site page by URL—including /contact, /about, and custom /p/slug pages.", icon: LayoutTemplate },
   { href: "/admin/seo", name: "SEO Management", description: "Override meta tags, Open Graph data, and indexing rules per page.", icon: Search },
   { href: "/admin/settings", name: "Site Settings", description: "WhatsApp chat, GA4 analytics, Search Console verification, and site URL.", icon: Settings },
 ];

@@ -16,6 +16,7 @@ export const customPagesTable = pgTable("custom_pages", {
   metaTitle: text("meta_title").notNull().default(""),
   metaDescription: text("meta_description").notNull().default(""),
   sortOrder: integer("sort_order").notNull().default(0),
+  publishedAt: timestamp("published_at", { withTimezone: true }).notNull().defaultNow(),
   isPublished: boolean("is_published").notNull().default(false),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),

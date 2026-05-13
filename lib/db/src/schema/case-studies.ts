@@ -20,6 +20,7 @@ export const caseStudiesTable = pgTable("case_studies", {
   results: text("results").notNull(),
   metrics: jsonb("metrics").$type<CaseStudyMetric[]>().notNull().default([]),
   sortOrder: serial("sort_order"),
+  publishedAt: timestamp("published_at", { withTimezone: true }).notNull().defaultNow(),
   isPublished: boolean("is_published").notNull().default(true),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),

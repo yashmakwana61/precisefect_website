@@ -4,11 +4,13 @@ export type FieldType =
   | "text"
   | "textarea"
   | "longtext"
+  | "html"
   | "number"
   | "boolean"
   | "datetime"
   | "select"
-  | "metrics";
+  | "metrics"
+  | "image";
 
 export interface FieldDef {
   key: string;
@@ -44,7 +46,7 @@ export const collectionConfigs: Record<CollectionName, CollectionConfig> = {
       { key: "author", label: "Author", type: "text", required: true },
       { key: "readTime", label: "Read Time", type: "text", required: true, helpText: "e.g. \"6 min read\"" },
       { key: "excerpt", label: "Excerpt", type: "textarea", required: true },
-      { key: "body", label: "Body", type: "longtext" },
+      { key: "body", label: "Body", type: "html" },
       { key: "publishedAt", label: "Publish Date", type: "datetime", required: true },
       { key: "isPublished", label: "Published", type: "boolean" },
     ],
@@ -71,10 +73,11 @@ export const collectionConfigs: Record<CollectionName, CollectionConfig> = {
       { key: "industry", label: "Industry", type: "text", required: true },
       { key: "title", label: "Headline", type: "text", required: true },
       { key: "slug", label: "URL Slug", type: "text", required: true },
-      { key: "problem", label: "The Entropy (Problem)", type: "longtext", required: true },
-      { key: "solution", label: "The Architecture (Solution)", type: "longtext", required: true },
-      { key: "results", label: "The Result", type: "longtext", required: true },
+      { key: "problem", label: "The Entropy (Problem)", type: "html", required: true },
+      { key: "solution", label: "The Architecture (Solution)", type: "html", required: true },
+      { key: "results", label: "The Result", type: "html", required: true },
       { key: "metrics", label: "Metrics", type: "metrics", helpText: "3 key numerical outcomes." },
+      { key: "publishedAt", label: "Publish Date", type: "datetime" },
       { key: "isPublished", label: "Published", type: "boolean" },
     ],
     defaults: {
@@ -86,6 +89,7 @@ export const collectionConfigs: Record<CollectionName, CollectionConfig> = {
       solution: "",
       results: "",
       metrics: [],
+      publishedAt: new Date().toISOString(),
       isPublished: true,
     },
   },
@@ -97,11 +101,12 @@ export const collectionConfigs: Record<CollectionName, CollectionConfig> = {
     listSubLabel: (i) => `Order: ${i.sortOrder ?? 0}`,
     fields: [
       { key: "question", label: "Question", type: "text", required: true },
-      { key: "answer", label: "Answer", type: "textarea", required: true },
+      { key: "answer", label: "Answer", type: "html", required: true },
       { key: "sortOrder", label: "Sort Order", type: "number", helpText: "Lower numbers appear first." },
+      { key: "publishedAt", label: "Publish Date", type: "datetime" },
       { key: "isPublished", label: "Published", type: "boolean" },
     ],
-    defaults: { question: "", answer: "", sortOrder: 100, isPublished: true },
+    defaults: { question: "", answer: "", sortOrder: 100, publishedAt: new Date().toISOString(), isPublished: true },
   },
   "team-members": {
     name: "Team Members",
@@ -112,13 +117,14 @@ export const collectionConfigs: Record<CollectionName, CollectionConfig> = {
     fields: [
       { key: "name", label: "Name", type: "text", required: true },
       { key: "role", label: "Role / Title", type: "text", required: true },
-      { key: "bio", label: "Bio", type: "textarea" },
-      { key: "imageUrl", label: "Photo URL", type: "text" },
+      { key: "bio", label: "Bio", type: "html" },
+      { key: "imageUrl", label: "Photo URL", type: "image" },
       { key: "linkedinUrl", label: "LinkedIn URL", type: "text" },
       { key: "sortOrder", label: "Sort Order", type: "number" },
+      { key: "publishedAt", label: "Publish Date", type: "datetime" },
       { key: "isPublished", label: "Published", type: "boolean" },
     ],
-    defaults: { name: "", role: "", bio: "", imageUrl: "", linkedinUrl: "", sortOrder: 100, isPublished: true },
+    defaults: { name: "", role: "", bio: "", imageUrl: "", linkedinUrl: "", sortOrder: 100, publishedAt: new Date().toISOString(), isPublished: true },
   },
   "job-openings": {
     name: "Job Openings",
@@ -135,12 +141,13 @@ export const collectionConfigs: Record<CollectionName, CollectionConfig> = {
         type: "select",
         options: ["Full-time", "Part-time", "Contract", "Internship"],
       },
-      { key: "description", label: "Description", type: "textarea", required: true },
+      { key: "description", label: "Description", type: "html", required: true },
       { key: "applyUrl", label: "Apply URL", type: "text", helpText: "Where the Submit Credentials button links to." },
       { key: "sortOrder", label: "Sort Order", type: "number" },
+      { key: "publishedAt", label: "Publish Date", type: "datetime" },
       { key: "isPublished", label: "Published", type: "boolean" },
     ],
-    defaults: { title: "", location: "", employmentType: "Full-time", description: "", applyUrl: "", sortOrder: 100, isPublished: true },
+    defaults: { title: "", location: "", employmentType: "Full-time", description: "", applyUrl: "", sortOrder: 100, publishedAt: new Date().toISOString(), isPublished: true },
   },
   testimonials: {
     name: "Testimonials",
@@ -149,13 +156,14 @@ export const collectionConfigs: Record<CollectionName, CollectionConfig> = {
     listLabel: (i) => `"${String(i.quote ?? "").slice(0, 80)}"`,
     listSubLabel: (i) => `${i.authorName ?? ""} \u2014 ${i.authorCompany ?? ""}`,
     fields: [
-      { key: "quote", label: "Quote", type: "textarea", required: true },
+      { key: "quote", label: "Quote", type: "html", required: true },
       { key: "authorName", label: "Author Name", type: "text", required: true },
       { key: "authorRole", label: "Author Role", type: "text", required: true },
       { key: "authorCompany", label: "Author Company", type: "text", required: true },
       { key: "sortOrder", label: "Sort Order", type: "number" },
+      { key: "publishedAt", label: "Publish Date", type: "datetime" },
       { key: "isPublished", label: "Published", type: "boolean" },
     ],
-    defaults: { quote: "", authorName: "", authorRole: "", authorCompany: "", sortOrder: 100, isPublished: true },
+    defaults: { quote: "", authorName: "", authorRole: "", authorCompany: "", sortOrder: 100, publishedAt: new Date().toISOString(), isPublished: true },
   },
 };

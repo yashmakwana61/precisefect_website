@@ -9,11 +9,14 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { cmsApi, type Faq } from "@/lib/cms-api";
+import { HtmlSafe } from "@/components/html-safe";
+import { usePreviewMode } from "@/hooks/use-preview";
 
 export default function FaqPage() {
+  const preview = usePreviewMode();
   const { data: faqs = [], isLoading } = useQuery({
-    queryKey: ["public", "faqs"],
-    queryFn: () => cmsApi.list<Faq>("faqs"),
+    queryKey: ["public", "faqs", preview],
+    queryFn: () => cmsApi.list<Faq>("faqs", preview ? "preview" : undefined),
   });
 
   return (
@@ -62,7 +65,7 @@ export default function FaqPage() {
                       {faq.question}
                     </AccordionTrigger>
                     <AccordionContent className="text-muted-foreground text-lg leading-relaxed pt-4 pb-8">
-                      {faq.answer}
+                      <HtmlSafe html={faq.answer} />
                     </AccordionContent>
                   </AccordionItem>
                 ))}

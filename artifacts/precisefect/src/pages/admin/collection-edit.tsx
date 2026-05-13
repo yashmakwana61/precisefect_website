@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, Plus, Trash2, Save } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Save, ExternalLink } from "lucide-react";
 import { cmsApi, type CollectionName, type CaseStudyMetric } from "@/lib/cms-api";
 import { collectionConfigs, type FieldDef } from "./collection-config";
 import { useToast } from "@/hooks/use-toast";
+import { HtmlEditor } from "@/components/admin/html-editor";
+import { RevisionsPanel } from "@/components/admin/revisions-panel";
+import { AssetPicker } from "@/components/admin/asset-picker";
+import { withPreviewQuery } from "@/hooks/use-preview";
 
 const METRIC_ICONS: CaseStudyMetric["icon"][] = ["TrendingUp", "Clock", "BarChart", "Zap", "Shield", "Users"];
 
@@ -61,6 +65,16 @@ function FieldInput({
           className={`${inputBase} resize-y min-h-[280px] font-mono text-sm`}
         />
       );
+    case "html":
+      return (
+        <HtmlEditor
+          value={(value as string) ?? ""}
+          onChange={(v) => onChange(v)}
+          testId={`input-${field.key}`}
+        />
+      );
+    case "image":
+      return <ImageUrlField value={(value as string) ?? ""} onChange={onChange} testId={`input-${field.key}`} />;
     case "number":
       return (
         <input
@@ -179,6 +193,28 @@ function FieldInput({
   }
 }
 
+function ImageUrlField({ value, onChange, testId }: { value: string; onChange: (v: string) => void; testId?: string }) {
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const inputBase = "w-full px-4 py-3 rounded-lg bg-surface border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary-container font-medium";
+  return (
+    <div className="space-y-3">
+      <input type="text" value={value} onChange={(e) => onChange(e.target.value)} data-testid={testId} className={inputBase} placeholder="https://..." />
+      <button type="button" onClick={() => setPickerOpen(true)} className="text-xs font-bold text-primary hover:text-primary-container">Choose from library</button>
+      {value && <img src={value} alt="" className="max-h-32 rounded-lg border border-border" />}
+      <AssetPicker open={pickerOpen} onClose={() => setPickerOpen(false)} onSelect={onChange} />
+    </div>
+  );
+}
+
+function previewPath(collection: CollectionName, form: Record<string, unknown>): string | null {
+  const slug = String(form.slug ?? "");
+  if (collection === "blog-posts" && slug) return withPreviewQuery(`/blog/${slug}`);
+  if (collection === "case-studies") return withPreviewQuery("/case-studies");
+  if (collection === "faqs") return withPreviewQuery("/faq");
+  if (collection === "job-openings") return withPreviewQuery("/careers");
+  return null;
+}
+
 export default function CollectionEdit() {
   const params = useParams<{ collection: string; id?: string }>();
   const collection = params.collection as CollectionName;
@@ -221,6 +257,21 @@ export default function CollectionEdit() {
       setLocation(`/admin/${collection}`);
     },
     onError: (e) => toast({ title: "Save failed", description: String(e), variant: "destructive" }),
+  });
+
+  const restore = useMutation({
+    mutationFn: async (snapshot: Record<string, unknown>) => {
+      const payload: Record<string, unknown> = {};
+      for (const f of config.fields) payload[f.key] = snapshot[f.key];
+      if (isNew || !id) return;
+      return cmsApi.update(collection, id, payload);
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["collection", collection] });
+      qc.invalidateQueries({ queryKey: ["revisions", collection, id] });
+      toast({ title: "Revision restored" });
+    },
+    onError: (e) => toast({ title: "Restore failed", description: String(e), variant: "destructive" }),
   });
 
   if (!config) return <div className="p-12">Unknown collection</div>;
@@ -266,7 +317,18 @@ export default function CollectionEdit() {
           </div>
         ))}
 
-        <div className="flex items-center gap-4 pt-4 border-t border-border">
+        {!isNew && id && (
+          <RevisionsPanel
+            entityType={collection}
+            entityId={id}
+            onRestore={(snapshot) => {
+              setForm((f) => ({ ...f, ...snapshot }));
+              restore.mutate(snapshot);
+            }}
+          />
+        )}
+
+        <div className="flex items-center gap-4 pt-4 border-t border-border flex-wrap">
           <button
             type="submit"
             disabled={save.isPending}
@@ -276,6 +338,11 @@ export default function CollectionEdit() {
             <Save className="w-4 h-4 mr-2" />
             {save.isPending ? "Saving…" : isNew ? "Create" : "Save Changes"}
           </button>
+          {previewPath(collection, form) && (
+            <a href={previewPath(collection, form)!} target="_blank" rel="noreferrer" className="inline-flex items-center text-sm font-medium text-primary gap-1.5">
+              <ExternalLink className="w-3.5 h-3.5" /> Preview
+            </a>
+          )}
           <Link
             href={`/admin/${collection}`}
             className="text-sm font-medium text-muted-foreground hover:text-primary"

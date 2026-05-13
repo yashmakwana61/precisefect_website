@@ -1,9 +1,19 @@
 import { Link, useParams } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, Plus, Pencil, Trash2, EyeOff, Eye } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, EyeOff, Eye, ExternalLink } from "lucide-react";
 import { cmsApi, type CollectionName } from "@/lib/cms-api";
 import { collectionConfigs } from "./collection-config";
 import { useToast } from "@/hooks/use-toast";
+import { withPreviewQuery } from "@/hooks/use-preview";
+
+function collectionPreviewUrl(collection: CollectionName, item: Record<string, unknown>): string | null {
+  const slug = String(item.slug ?? "");
+  if (collection === "blog-posts" && slug) return withPreviewQuery(`/blog/${slug}`);
+  if (collection === "case-studies") return withPreviewQuery("/case-studies");
+  if (collection === "faqs") return withPreviewQuery("/faq");
+  if (collection === "job-openings") return withPreviewQuery("/careers");
+  return null;
+}
 
 export default function CollectionList() {
   const params = useParams<{ collection: string }>();
@@ -101,6 +111,17 @@ export default function CollectionList() {
                   )}
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
+                  {collectionPreviewUrl(collection, item) && (
+                    <a
+                      href={collectionPreviewUrl(collection, item)!}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="p-2.5 rounded-lg bg-surface-container-high text-muted-foreground hover:text-primary transition-colors"
+                      title="Preview"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
+                  )}
                   <Link
                     href={`/admin/${collection}/${id}`}
                     data-testid={`link-edit-${id}`}

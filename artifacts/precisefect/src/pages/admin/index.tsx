@@ -11,6 +11,8 @@ import SeoManager from "./seo-manager";
 import AdminSettings from "./settings";
 import PagesList from "./pages-list";
 import PageEdit from "./page-edit";
+import SitePageEdit from "./site-page-edit";
+import SiteBlocksEditor from "./site-blocks";
 
 function AdminShell({ children }: { children: React.ReactNode }) {
   const qc = useQueryClient();
@@ -67,6 +69,12 @@ export default function AdminRouter() {
       </Route>
       <Route path="/admin/settings">
         <AdminShell><AdminSettings /></AdminShell>
+      </Route>
+      <Route path="/admin/site-blocks">
+        <AdminShell><SiteBlocksEditor /></AdminShell>
+      </Route>
+      <Route path="/admin/site-page">
+        <AdminShell><SitePageEdit /></AdminShell>
       </Route>
       <Route path="/admin/pages">
         <AdminShell><PagesList /></AdminShell>

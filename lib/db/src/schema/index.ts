@@ -7,3 +7,7 @@ export * from "./testimonials";
 export * from "./seo-pages";
 export * from "./site-settings";
 export * from "./custom-pages";
+export * from "./content-revisions";
+export * from "./assets";
+export * from "./site-blocks";
+export * from "./site-pages";

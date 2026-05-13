@@ -13,6 +13,7 @@ import Industries from "@/pages/industries";
 import CaseStudies from "@/pages/case-studies";
 import Pricing from "@/pages/pricing";
 import Blog from "@/pages/blog";
+import BlogPostPage from "@/pages/blog-post";
 import Contact from "@/pages/contact";
 import Faq from "@/pages/faq";
 import Careers from "@/pages/careers";
@@ -35,6 +36,7 @@ function PublicSite() {
         <Route path="/case-studies" component={CaseStudies} />
         <Route path="/pricing" component={Pricing} />
         <Route path="/blog" component={Blog} />
+        <Route path="/blog/:slug" component={BlogPostPage} />
         <Route path="/contact" component={Contact} />
         <Route path="/faq" component={Faq} />
         <Route path="/careers" component={Careers} />

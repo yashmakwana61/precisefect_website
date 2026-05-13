@@ -4,14 +4,17 @@ import { BarChart, TrendingUp, Clock, Zap, Shield, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { cmsApi, type CaseStudy } from "@/lib/cms-api";
+import { HtmlSafe } from "@/components/html-safe";
+import { usePreviewMode } from "@/hooks/use-preview";
 import MetricRise from "@/components/canvas/MetricRise";
 
 const ICON_MAP = { TrendingUp, Clock, BarChart, Zap, Shield, Users };
 
 export default function CaseStudies() {
+  const preview = usePreviewMode();
   const { data: studies = [], isLoading } = useQuery({
-    queryKey: ["public", "case-studies"],
-    queryFn: () => cmsApi.list<CaseStudy>("case-studies"),
+    queryKey: ["public", "case-studies", preview],
+    queryFn: () => cmsApi.list<CaseStudy>("case-studies", preview ? "preview" : undefined),
   });
 
   return (
@@ -113,15 +116,17 @@ export default function CaseStudies() {
                   <div className="lg:col-span-8 space-y-12">
                     <div>
                       <h3 className="text-xl font-bold text-primary mb-4">The Entropy</h3>
-                      <p className="text-lg text-muted-foreground leading-relaxed">{study.problem}</p>
+                      <HtmlSafe html={study.problem} className="text-lg text-muted-foreground leading-relaxed" />
                     </div>
                     <div>
                       <h3 className="text-xl font-bold text-primary mb-4">The Architecture</h3>
-                      <p className="text-lg text-muted-foreground leading-relaxed">{study.solution}</p>
+                      <HtmlSafe html={study.solution} className="text-lg text-muted-foreground leading-relaxed" />
                     </div>
                     <div>
                       <h3 className="text-xl font-bold text-primary mb-4">The Result</h3>
-                      <p className="text-lg font-medium text-foreground leading-relaxed border-l-4 border-on-primary-container pl-6 py-2">{study.results}</p>
+                      <div className="text-lg font-medium text-foreground leading-relaxed border-l-4 border-on-primary-container pl-6 py-2">
+                        <HtmlSafe html={study.results} />
+                      </div>
                     </div>
                   </div>
                 </div>

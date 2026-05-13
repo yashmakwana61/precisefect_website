@@ -3,11 +3,14 @@ import { MapPin, Briefcase } from "lucide-react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { cmsApi, type JobOpening } from "@/lib/cms-api";
+import { HtmlSafe } from "@/components/html-safe";
+import { usePreviewMode } from "@/hooks/use-preview";
 
 export default function Careers() {
+  const preview = usePreviewMode();
   const { data: roles = [], isLoading } = useQuery({
-    queryKey: ["public", "job-openings"],
-    queryFn: () => cmsApi.list<JobOpening>("job-openings"),
+    queryKey: ["public", "job-openings", preview],
+    queryFn: () => cmsApi.list<JobOpening>("job-openings", preview ? "preview" : undefined),
   });
 
   return (
@@ -91,7 +94,7 @@ export default function Careers() {
                       <span className="flex items-center gap-2"><MapPin size={14} className="stroke-[2]" /> {role.location}</span>
                       <span className="flex items-center gap-2"><Briefcase size={14} className="stroke-[2]" /> {role.employmentType}</span>
                     </div>
-                    <p className="text-muted-foreground text-base leading-relaxed max-w-2xl">{role.description}</p>
+                    <HtmlSafe html={role.description} className="text-base leading-relaxed max-w-2xl" />
                   </div>
                   <div className="shrink-0 mt-4 lg:mt-0">
                     <a

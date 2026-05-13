@@ -27,7 +27,7 @@ router.put("/settings/:key", requireAdmin, async (req: Request, res: Response) =
   try {
     const [row] = await db
       .insert(siteSettingsTable)
-      .values({ key, value: String(value), label: key, description: "" })
+      .values({ key, value: String(value), label: key, description: "" } as typeof siteSettingsTable.$inferInsert)
       .onConflictDoUpdate({
         target: siteSettingsTable.key,
         set: { value: String(value), updatedAt: new Date() },

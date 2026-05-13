@@ -29,7 +29,7 @@ router.post("/auth/login", (req, res) => {
   const token = createSessionToken();
   res.cookie(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
     maxAge: SESSION_TTL,

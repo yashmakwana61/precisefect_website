@@ -9,6 +9,7 @@ export const testimonialsTable = pgTable("testimonials", {
   authorRole: text("author_role").notNull(),
   authorCompany: text("author_company").notNull(),
   sortOrder: integer("sort_order").notNull().default(0),
+  publishedAt: timestamp("published_at", { withTimezone: true }).notNull().defaultNow(),
   isPublished: boolean("is_published").notNull().default(true),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),

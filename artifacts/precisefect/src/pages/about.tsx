@@ -2,13 +2,16 @@ import { Seo } from "@/components/seo";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Network, Database, ShieldCheck, ArrowRight } from "lucide-react";
+import { useSitePage } from "@/hooks/use-site-page";
 
 export default function About() {
+  const { content } = useSitePage("/about");
+
   return (
     <>
       <Seo 
-        title="About Us | Precisefect" 
-        description="Learn about Precisefect's mission to architect perfect operational systems for scaling enterprises."
+        title={content.metaTitle || "About Us | Precisefect"} 
+        description={content.metaDescription || "Learn about Precisefect's mission to architect perfect operational systems for scaling enterprises."}
       />
       
       <section className="py-24 md:py-32 bg-surface relative overflow-hidden">
@@ -17,12 +20,12 @@ export default function About() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Firm Profile</p>
+            <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">{content.heroEyebrow}</p>
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary mb-8 leading-[0.95]">
-              We engineer <span className="text-on-primary-container">scale.</span>
+              {content.heroHeadline}
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-8">
-              Precisefect was born from a simple observation: great businesses are often bottlenecked by terrible systems. We exist to remove those bottlenecks through precision engineering and perfect execution.
+              {content.heroSubheadline}
             </p>
             <Link href="/contact" className="group flex items-center text-primary font-bold text-lg hover:text-primary-container transition-colors">
               Submit RFP <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-2" />

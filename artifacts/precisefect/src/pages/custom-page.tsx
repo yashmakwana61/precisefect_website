@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Seo } from "@/components/seo";
 import { cmsApi, type CustomPage } from "@/lib/cms-api";
+import { HtmlSafe } from "@/components/html-safe";
+import { usePreviewMode } from "@/hooks/use-preview";
 
 type ListItem = { title: string; description: string };
 
@@ -34,7 +36,7 @@ function LandingTemplate({ page }: { page: CustomPage }) {
       {page.bodyContent && (
         <section className="py-24 bg-surface-container-lowest border-y border-border">
           <div className="max-w-[1440px] mx-auto px-8 lg:px-16 max-w-3xl">
-            <div className="prose prose-lg text-muted-foreground leading-relaxed whitespace-pre-wrap">{page.bodyContent}</div>
+            <div className="prose prose-lg text-muted-foreground leading-relaxed"><HtmlSafe html={page.bodyContent} /></div>
           </div>
         </section>
       )}
@@ -59,7 +61,7 @@ function ContentTemplate({ page }: { page: CustomPage }) {
       {page.bodyContent && (
         <section className="py-16 pb-32 bg-surface">
           <div className="max-w-[1440px] mx-auto px-8 lg:px-16 max-w-3xl">
-            <div className="text-lg text-muted-foreground leading-relaxed whitespace-pre-wrap">{page.bodyContent}</div>
+            <div className="text-lg text-muted-foreground leading-relaxed"><HtmlSafe html={page.bodyContent} /></div>
           </div>
         </section>
       )}
@@ -115,9 +117,10 @@ function ListTemplate({ page }: { page: CustomPage }) {
 
 export default function CustomPageRenderer() {
   const params = useParams<{ slug: string }>();
+  const preview = usePreviewMode();
   const { data: page, isLoading, isError } = useQuery({
-    queryKey: ["custom-page", "slug", params.slug],
-    queryFn: () => cmsApi.getCustomPageBySlug(params.slug),
+    queryKey: ["custom-page", "slug", params.slug, preview],
+    queryFn: () => cmsApi.getCustomPageBySlug(params.slug, preview ? "preview" : undefined),
   });
 
   if (isLoading) return <div className="min-h-[60vh] flex items-center justify-center text-muted-foreground">Loading…</div>;

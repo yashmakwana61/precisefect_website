@@ -3,22 +3,10 @@ import { Link } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Save, ExternalLink } from "lucide-react";
 import { cmsApi, type SeoPage } from "@/lib/cms-api";
+import { SITE_PAGE_REGISTRY } from "@/lib/site-page-registry";
 import { useToast } from "@/hooks/use-toast";
 
-const PAGE_SLUGS = [
-  { slug: "/", label: "Homepage" },
-  { slug: "/about", label: "About" },
-  { slug: "/services", label: "Services" },
-  { slug: "/services/erp", label: "Services — ERP" },
-  { slug: "/services/automation", label: "Services — Automation" },
-  { slug: "/industries", label: "Industries" },
-  { slug: "/case-studies", label: "Case Studies" },
-  { slug: "/pricing", label: "Pricing" },
-  { slug: "/blog", label: "Blog" },
-  { slug: "/faq", label: "FAQ" },
-  { slug: "/careers", label: "Careers" },
-  { slug: "/contact", label: "Contact" },
-];
+const PAGE_SLUGS = SITE_PAGE_REGISTRY.map((p) => ({ slug: p.path, label: p.title }));
 
 const inputBase = "w-full px-4 py-3 rounded-lg bg-surface border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary-container font-medium text-sm";
 

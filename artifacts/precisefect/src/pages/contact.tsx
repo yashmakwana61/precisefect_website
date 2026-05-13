@@ -9,6 +9,8 @@ import { z } from "zod";
 import { useState } from "react";
 import { Mail, Phone, MapPin, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSitePage } from "@/hooks/use-site-page";
+import { HtmlSafe } from "@/components/html-safe";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -22,6 +24,7 @@ type ContactFormValues = z.infer<typeof contactSchema>;
 
 export default function Contact() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { content } = useSitePage("/contact");
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
@@ -42,8 +45,8 @@ export default function Contact() {
   return (
     <>
       <Seo 
-        title="Submit RFP | Precisefect Consulting" 
-        description="Schedule an architectural review with Precisefect to discuss your ERP implementation or business automation needs."
+        title={content.metaTitle || "Submit RFP | Precisefect Consulting"} 
+        description={content.metaDescription || "Schedule an architectural review with Precisefect to discuss your ERP implementation or business automation needs."}
       />
       
       <section className="py-24 md:py-32 bg-surface relative overflow-hidden">
@@ -55,12 +58,12 @@ export default function Contact() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Begin The Dialogue</p>
+              <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">{content.heroEyebrow}</p>
               <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary mb-8 leading-[0.95]">
-                Submit <br/> <span className="text-on-primary-container">RFP.</span>
+                {content.heroHeadline}
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed mb-16 max-w-md">
-                Detail your current structural bottlenecks. Our principal architects review every technical inquiry directly.
+                {content.heroSubheadline}
               </p>
 
               <div className="space-y-12">
@@ -71,7 +74,7 @@ export default function Contact() {
                   <div>
                     <h3 className="font-bold text-primary text-lg mb-2">Direct Channel</h3>
                     <p className="text-muted-foreground mb-2 text-sm leading-relaxed">For RFPs, vendor assessments, and technical inquiries.</p>
-                    <a href="mailto:hello@precisefect.com" className="text-primary-container font-bold hover:underline">hello@precisefect.com</a>
+                    <a href="mailto:info@precisefect.com" className="text-primary-container font-bold hover:underline">info@precisefect.com</a>
                   </div>
                 </div>
                 
@@ -82,7 +85,7 @@ export default function Contact() {
                   <div>
                     <h3 className="font-bold text-primary text-lg mb-2">Voice Comms</h3>
                     <p className="text-muted-foreground mb-2 text-sm leading-relaxed">Mon-Fri, 0900 - 1800 PST.</p>
-                    <p className="font-bold text-primary">+1 (555) 123-4567</p>
+                    <p className="font-bold text-primary">+91 6353564970</p>
                   </div>
                 </div>
 
@@ -241,6 +244,14 @@ export default function Contact() {
           </div>
         </div>
       </section>
+
+      {content.bodyContent && (
+        <section className="py-16 bg-surface-container-lowest border-t border-border">
+          <div className="max-w-[1440px] mx-auto px-8 lg:px-16 max-w-3xl">
+            <HtmlSafe html={content.bodyContent} className="prose prose-lg text-muted-foreground leading-relaxed" />
+          </div>
+        </section>
+      )}
     </>
   );
 }

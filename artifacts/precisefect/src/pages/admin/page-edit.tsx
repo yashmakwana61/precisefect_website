@@ -1,9 +1,20 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useParams } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, Save, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, Save, Plus, Trash2, ExternalLink } from "lucide-react";
 import { cmsApi, type CustomPage } from "@/lib/cms-api";
 import { useToast } from "@/hooks/use-toast";
+import { HtmlEditor } from "@/components/admin/html-editor";
+import { RevisionsPanel } from "@/components/admin/revisions-panel";
+import { withPreviewQuery } from "@/hooks/use-preview";
+
+function toDateTimeLocal(iso: string): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
 
 const PAGE_TYPES = [
   { value: "landing", label: "Landing Page", description: "Hero + feature highlights + CTA. Best for service or product pages." },
@@ -31,7 +42,7 @@ export default function PageEdit() {
 
   const [form, setForm] = useState<Partial<CustomPage>>({
     title: "", slug: "", pageType: "landing", isPublished: false, sortOrder: 0,
-    metaTitle: "", metaDescription: "",
+    metaTitle: "", metaDescription: "", publishedAt: new Date().toISOString(),
     ...DEFAULT_BLOCKS.landing,
   });
 
@@ -58,6 +69,18 @@ export default function PageEdit() {
     const next = [...listItems]; next[i] = { ...next[i], ...patch }; set("listItems", next);
   };
   const removeItem = (i: number) => set("listItems", listItems.filter((_, idx) => idx !== i));
+
+  const restore = useMutation({
+    mutationFn: (snapshot: Partial<CustomPage>) => cmsApi.updateCustomPage(id!, snapshot),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["custom-page", id] });
+      qc.invalidateQueries({ queryKey: ["revisions", "custom-pages", id] });
+      toast({ title: "Revision restored" });
+    },
+    onError: (e) => toast({ title: "Restore failed", description: String(e), variant: "destructive" }),
+  });
+
+  const previewUrl = form.slug ? withPreviewQuery(`/p/${form.slug}`) : null;
 
   const save = useMutation({
     mutationFn: () => isNew ? cmsApi.createCustomPage(form) : cmsApi.updateCustomPage(id!, form),
@@ -141,10 +164,10 @@ export default function PageEdit() {
         </div>
 
         {/* Content section based on type */}
-        {form.pageType === "content" && (
+        {(form.pageType === "content" || form.pageType === "landing") && (
           <div>
             <label className="block text-xs font-bold text-primary tracking-[0.15em] uppercase mb-3">Body Content</label>
-            <textarea value={form.bodyContent ?? ""} onChange={e => set("bodyContent", e.target.value)} rows={12} className={`${inputBase} resize-y min-h-[320px] font-mono`} placeholder="Write your full page content here..." />
+            <HtmlEditor value={form.bodyContent ?? ""} onChange={(v) => set("bodyContent", v)} />
           </div>
         )}
 
@@ -182,6 +205,16 @@ export default function PageEdit() {
           </div>
         </div>
 
+        <div>
+          <label className="block text-xs font-bold text-primary tracking-[0.15em] uppercase mb-3">Publish Date</label>
+          <input
+            type="datetime-local"
+            value={toDateTimeLocal(form.publishedAt ?? "")}
+            onChange={(e) => set("publishedAt", e.target.value ? new Date(e.target.value).toISOString() : "")}
+            className={inputBase}
+          />
+        </div>
+
         {/* Visibility */}
         <label className="flex items-center gap-3 cursor-pointer">
           <input type="checkbox" checked={Boolean(form.isPublished)} onChange={e => set("isPublished", e.target.checked)} className="w-5 h-5 rounded" />
@@ -191,11 +224,27 @@ export default function PageEdit() {
           </div>
         </label>
 
-        <div className="flex items-center gap-4 pt-4 border-t border-border">
+        {!isNew && id && (
+          <RevisionsPanel
+            entityType="custom-pages"
+            entityId={id}
+            onRestore={(snapshot) => {
+              setForm((f) => ({ ...f, ...snapshot }));
+              restore.mutate(snapshot as Partial<CustomPage>);
+            }}
+          />
+        )}
+
+        <div className="flex items-center gap-4 pt-4 border-t border-border flex-wrap">
           <button type="submit" disabled={save.isPending} className="signature-gradient text-white font-bold rounded-lg px-8 py-4 btn-press inline-flex items-center disabled:opacity-50">
             <Save className="w-4 h-4 mr-2" />
             {save.isPending ? "Saving…" : isNew ? "Create Page" : "Save Changes"}
           </button>
+          {previewUrl && (
+            <a href={previewUrl} target="_blank" rel="noreferrer" className="inline-flex items-center text-sm font-medium text-primary gap-1.5">
+              <ExternalLink className="w-3.5 h-3.5" /> Preview
+            </a>
+          )}
           <Link href="/admin/pages" className="text-sm font-medium text-muted-foreground hover:text-primary">Cancel</Link>
         </div>
       </form>

@@ -10,6 +10,7 @@ export const teamMembersTable = pgTable("team_members", {
   imageUrl: text("image_url").notNull().default(""),
   linkedinUrl: text("linkedin_url").notNull().default(""),
   sortOrder: integer("sort_order").notNull().default(0),
+  publishedAt: timestamp("published_at", { withTimezone: true }).notNull().defaultNow(),
   isPublished: boolean("is_published").notNull().default(true),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),

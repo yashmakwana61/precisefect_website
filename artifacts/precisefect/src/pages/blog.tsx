@@ -1,13 +1,16 @@
 import { Seo } from "@/components/seo";
 import { Calendar } from "lucide-react";
 import { motion } from "framer-motion";
+import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { cmsApi, type BlogPost } from "@/lib/cms-api";
+import { usePreviewMode } from "@/hooks/use-preview";
 
 export default function Blog() {
+  const preview = usePreviewMode();
   const { data: posts = [], isLoading } = useQuery({
-    queryKey: ["public", "blog-posts"],
-    queryFn: () => cmsApi.list<BlogPost>("blog-posts"),
+    queryKey: ["public", "blog-posts", preview],
+    queryFn: () => cmsApi.list<BlogPost>("blog-posts", preview ? "preview" : undefined),
   });
 
   return (
@@ -43,14 +46,14 @@ export default function Blog() {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {posts.map((post, i) => (
+                <Link key={post.id} href={`/blog/${post.slug}`}>
                 <motion.article
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.05 }}
-                  key={post.id}
                   data-testid={`card-blog-post-${post.id}`}
-                  className="flex flex-col bg-surface-container-lowest ghost-border rounded-xl p-10 hover:-translate-y-1 hover:shadow-xl transition-all group cursor-pointer"
+                  className="flex flex-col bg-surface-container-lowest ghost-border rounded-xl p-10 hover:-translate-y-1 hover:shadow-xl transition-all group cursor-pointer h-full"
                 >
                   <div className="mb-8">
                     <span className="text-xs font-bold text-primary uppercase tracking-[0.2em] border-b-2 border-primary-container pb-1">
@@ -73,6 +76,7 @@ export default function Blog() {
                     </div>
                   </div>
                 </motion.article>
+                </Link>
               ))}
             </div>
           )}
