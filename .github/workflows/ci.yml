@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+env:
+  PORT: "5173"
+  BASE_PATH: "/"
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck libraries
+        run: pnpm run typecheck:libs
+
+      - name: Typecheck scripts and frontends
+        run: |
+          pnpm --filter @workspace/scripts run typecheck
+          pnpm --filter @workspace/precisefect run typecheck
+          pnpm --filter @workspace/mockup-sandbox run typecheck
+
+      - name: Build Precisefect
+        run: pnpm --filter @workspace/precisefect run build
+
+      - name: Build mockup-sandbox
+        env:
+          BASE_PATH: "/__mockup"
+          PORT: "5174"
+        run: pnpm --filter @workspace/mockup-sandbox run build
+
+      - name: Build API server
+        run: pnpm --filter @workspace/api-server run build
