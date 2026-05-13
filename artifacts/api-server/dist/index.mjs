@@ -21983,7 +21983,7 @@ var require_request = __commonJS({
     defineGetter(req, "path", function path2() {
       return parse3(this).pathname;
     });
-    defineGetter(req, "host", function host() {
+    defineGetter(req, "host", function host2() {
       var trust = this.app.get("trust proxy fn");
       var val = this.get("X-Forwarded-Host");
       if (!val || !trust(this.socket.remoteAddress, 0)) {
@@ -21994,11 +21994,11 @@ var require_request = __commonJS({
       return val || void 0;
     });
     defineGetter(req, "hostname", function hostname2() {
-      var host = this.host;
-      if (!host) return;
-      var offset = host[0] === "[" ? host.indexOf("]") + 1 : 0;
-      var index = host.indexOf(":", offset);
-      return index !== -1 ? host.substring(0, index) : host;
+      var host2 = this.host;
+      if (!host2) return;
+      var offset = host2[0] === "[" ? host2.indexOf("]") + 1 : 0;
+      var index = host2.indexOf(":", offset);
+      return index !== -1 ? host2.substring(0, index) : host2;
     });
     defineGetter(req, "fresh", function() {
       var method = this.method;
@@ -31656,11 +31656,11 @@ var require_connection = __commonJS({
           }
         });
       }
-      connect(port2, host) {
+      connect(port2, host2) {
         const self2 = this;
         this._connecting = true;
         this.stream.setNoDelay(true);
-        this.stream.connect(port2, host);
+        this.stream.connect(port2, host2);
         this.stream.once("connect", function() {
           if (self2._keepAlive) {
             self2.stream.setKeepAlive(true, self2._keepAliveInitialDelayMillis);
@@ -31702,8 +31702,8 @@ var require_connection = __commonJS({
             }
           }
           const net = __require("net");
-          if (net.isIP && net.isIP(host) === 0) {
-            options.servername = host;
+          if (net.isIP && net.isIP(host2) === 0) {
+            options.servername = host2;
           }
           try {
             self2.stream = getSecureStream(options);
@@ -94955,22 +94955,18 @@ if (fs.existsSync(staticIndex)) {
 var app_default = app;
 
 // src/index.ts
-var rawPort = process.env["PORT"];
-if (!rawPort) {
-  throw new Error(
-    "PORT environment variable is required but was not provided."
-  );
-}
+var rawPort = process.env["PORT"] ?? "3000";
 var port = Number(rawPort);
 if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
 }
-app_default.listen(port, (err) => {
+var host = process.env["HOST"] ?? "0.0.0.0";
+app_default.listen(port, host, (err) => {
   if (err) {
     logger.error({ err }, "Error listening on port");
     process.exit(1);
   }
-  logger.info({ port }, "Server listening");
+  logger.info({ port, host }, "Server listening");
 });
 /*! Bundled license information:
 

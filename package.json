@@ -5,10 +5,11 @@
   "packageManager": "pnpm@11.1.1",
   "scripts": {
     "preinstall": "node scripts/ensure-pnpm.cjs",
+    "start": "node server.mjs",
     "build:prod": "node scripts/build-prod.mjs",
     "hostinger:install": "node scripts/hostinger-noop.mjs",
     "hostinger:build": "node scripts/hostinger-noop.mjs",
-    "start:prod": "node artifacts/api-server/dist/index.mjs",
+    "start:prod": "node server.mjs",
     "build": "pnpm run typecheck && pnpm -r --if-present run build",
     "typecheck:libs": "tsc --build",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"

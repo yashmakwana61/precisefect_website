@@ -1,1 +1,1 @@
-console.log("Using CI-built artifacts from GitHub Actions. Install skipped.");
+console.log("Hostinger: install skipped (pre-built CI artifacts).");
