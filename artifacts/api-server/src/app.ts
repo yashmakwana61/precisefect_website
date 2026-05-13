@@ -40,15 +40,21 @@ app.use(authMiddleware);
 app.use("/api", router);
 
 const staticRoot =
-  process.env.STATIC_ROOT ??
-  path.resolve(moduleDir, "../../precisefect/dist/public");
+  process.env.STATIC_ROOT ?? path.join(moduleDir, "public");
 
-if (fs.existsSync(path.join(staticRoot, "index.html"))) {
+const staticIndex = path.join(staticRoot, "index.html");
+
+if (fs.existsSync(staticIndex)) {
   logger.info({ staticRoot }, "Serving Precisefect static build");
   app.use(express.static(staticRoot, { index: false }));
   app.get(/^(?!\/api).*/, (_req, res) => {
-    res.sendFile(path.join(staticRoot, "index.html"));
+    res.sendFile(staticIndex);
   });
+} else {
+  logger.warn(
+    { staticRoot, staticIndex },
+    "Precisefect static build not found; only /api routes are available",
+  );
 }
 
 export default app;

@@ -1,19 +1,29 @@
 import { spawnSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { cpSync, existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const precisefectDir = path.join(root, "artifacts", "precisefect");
-const frontendIndex = path.join(
-  precisefectDir,
-  "dist",
-  "public",
-  "index.html",
-);
-const apiBundle = path.join(root, "artifacts", "api-server", "dist", "index.mjs");
+const apiDistDir = path.join(root, "artifacts", "api-server", "dist");
+const frontendIndex = path.join(precisefectDir, "dist", "public", "index.html");
+const bundledPublicIndex = path.join(apiDistDir, "public", "index.html");
+const apiBundle = path.join(apiDistDir, "index.mjs");
+
+function copyPublicAssets() {
+  const publicSrc = path.join(precisefectDir, "dist", "public");
+  const publicDest = path.join(apiDistDir, "public");
+  if (!existsSync(path.join(publicSrc, "index.html"))) {
+    throw new Error(`Missing frontend build at ${publicSrc}`);
+  }
+  cpSync(publicSrc, publicDest, { recursive: true });
+  console.log("[build:prod] Copied frontend assets to artifacts/api-server/dist/public");
+}
 
 if (existsSync(frontendIndex) && existsSync(apiBundle)) {
+  if (!existsSync(bundledPublicIndex)) {
+    copyPublicAssets();
+  }
   console.log(
     "[build:prod] CI-built artifacts found; skipping compile (required on Hostinger shared hosting).",
   );
@@ -44,3 +54,4 @@ run(
   precisefectDir,
 );
 run("api-server", ["./artifacts/api-server/build.mjs"]);
+copyPublicAssets();
