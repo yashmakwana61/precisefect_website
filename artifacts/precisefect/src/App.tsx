@@ -1,8 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
-import { AnimatePresence, motion } from "framer-motion";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { pageTransition } from "@/lib/motion-presets";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Layout } from "@/components/layout";
@@ -27,8 +25,8 @@ const AdminRouter = lazy(() => import("@/pages/admin"));
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 60_000,
-      gcTime: 5 * 60_000,
+      staleTime: 5 * 60_000,
+      gcTime: 30 * 60_000,
       refetchOnWindowFocus: false,
       retry: 1,
     },
@@ -37,13 +35,9 @@ const queryClient = new QueryClient({
 
 function PageFallback() {
   return (
-    <motion.div
-      className="flex-grow min-h-[40vh] flex items-center justify-center text-muted-foreground"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-    >
+    <div className="flex-grow min-h-[40vh] flex items-center justify-center text-muted-foreground animate-pulse">
       Loading…
-    </motion.div>
+    </div>
   );
 }
 
@@ -52,29 +46,27 @@ function PublicSite() {
 
   return (
     <Layout>
-      <AnimatePresence mode="wait">
-        <motion.div key={location} className="flex flex-col flex-grow" {...pageTransition}>
-          <Suspense fallback={<PageFallback />}>
-            <Switch location={location}>
-              <Route path="/" component={Home} />
-              <Route path="/about" component={About} />
-              <Route path="/services" component={Services} />
-              <Route path="/services/erp" component={ServicesErp} />
-              <Route path="/services/automation" component={ServicesAutomation} />
-              <Route path="/industries" component={Industries} />
-              <Route path="/case-studies" component={CaseStudies} />
-              <Route path="/pricing" component={Pricing} />
-              <Route path="/blog" component={Blog} />
-              <Route path="/blog/:slug" component={BlogPostPage} />
-              <Route path="/contact" component={Contact} />
-              <Route path="/faq" component={Faq} />
-              <Route path="/careers" component={Careers} />
-              <Route path="/p/:slug" component={CustomPageRenderer} />
-              <Route component={NotFound} />
-            </Switch>
-          </Suspense>
-        </motion.div>
-      </AnimatePresence>
+      <div key={location} className="route-fade flex flex-col flex-grow">
+        <Suspense fallback={<PageFallback />}>
+          <Switch location={location}>
+            <Route path="/" component={Home} />
+            <Route path="/about" component={About} />
+            <Route path="/services" component={Services} />
+            <Route path="/services/erp" component={ServicesErp} />
+            <Route path="/services/automation" component={ServicesAutomation} />
+            <Route path="/industries" component={Industries} />
+            <Route path="/case-studies" component={CaseStudies} />
+            <Route path="/pricing" component={Pricing} />
+            <Route path="/blog" component={Blog} />
+            <Route path="/blog/:slug" component={BlogPostPage} />
+            <Route path="/contact" component={Contact} />
+            <Route path="/faq" component={Faq} />
+            <Route path="/careers" component={Careers} />
+            <Route path="/p/:slug" component={CustomPageRenderer} />
+            <Route component={NotFound} />
+          </Switch>
+        </Suspense>
+      </div>
     </Layout>
   );
 }

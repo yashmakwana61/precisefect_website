@@ -2,7 +2,7 @@ import { Seo } from "@/components/seo";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { ArrowRight, Database } from "lucide-react";
-import CoreStack from "@/components/canvas/CoreStack";
+import { LazyCoreStack } from "@/components/canvas/lazy";
 import { HeroCanvasFrame } from "@/components/motion/hero-canvas-frame";
 import { SectionHeading } from "@/components/motion/section-heading";
 import { heroCopy, heroVisualCentered, itemReveal, sectionReveal } from "@/lib/motion-presets";
@@ -40,7 +40,7 @@ export default function ServicesErp() {
             className="relative w-full aspect-video lg:aspect-square max-w-[600px] ml-auto min-h-[280px]"
           >
             <HeroCanvasFrame>
-              <CoreStack />            </HeroCanvasFrame>
+              <LazyCoreStack />            </HeroCanvasFrame>
           </motion.div>
         </div>
       </section>

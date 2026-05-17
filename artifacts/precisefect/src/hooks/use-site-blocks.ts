@@ -1,12 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { cmsApi, type FooterContent, type NavbarContent } from "@/lib/cms-api";
+import { cmsPublic } from "@/lib/cms-public";
+import type { FooterContent, NavbarContent } from "@/lib/cms-api";
 import { usePreviewMode } from "@/hooks/use-preview";
 
 export function useSiteBlocks() {
   const preview = usePreviewMode();
   return useQuery({
     queryKey: ["site-blocks", preview],
-    queryFn: () => cmsApi.getSiteBlocks(["navbar", "footer"], preview ? "preview" : undefined),
+    queryFn: () => cmsPublic.getSiteBlocks(["navbar", "footer"], preview ? "preview" : undefined),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });

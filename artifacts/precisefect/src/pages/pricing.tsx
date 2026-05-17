@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { Check, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { SectionHeading } from "@/components/motion/section-heading";
-import NodeGraph from "@/components/canvas/NodeGraph";
+import { LazyNodeGraph } from "@/components/canvas/lazy";
 import { HeroCanvasFrame } from "@/components/motion/hero-canvas-frame";
 import { heroCopy, heroVisualCentered, mountReveal, sectionReveal } from "@/lib/motion-presets";
 
@@ -82,7 +82,7 @@ export default function Pricing() {
             </motion.div>
             <motion.div {...heroVisualCentered} className="relative w-full aspect-video lg:aspect-square max-w-[600px] ml-auto min-h-[280px]">
               <HeroCanvasFrame>
-                <NodeGraph variant="hub" className="opacity-95" />              </HeroCanvasFrame>
+                <LazyNodeGraph variant="hub" className="opacity-95" />              </HeroCanvasFrame>
             </motion.div>
           </div>
 

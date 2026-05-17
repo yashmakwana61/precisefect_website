@@ -266,26 +266,7 @@ export const COLLECTIONS = [
 ] as const;
 export type CollectionName = (typeof COLLECTIONS)[number];
 
-const API_BASE = "/api";
-
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, {
-    credentials: "include",
-    headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
-    ...init,
-  });
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(`${res.status}: ${text || res.statusText}`);
-  }
-  return res.json() as Promise<T>;
-}
-
-function scopeQuery(scope?: "admin" | "preview"): string {
-  if (scope === "admin") return "?scope=admin";
-  if (scope === "preview") return "?preview=1";
-  return "";
-}
+import { cmsRequest as request, scopeQuery } from "./cms-http";
 
 export const cmsApi = {
   me: () => request<AuthMe>("/auth/me"),
@@ -334,7 +315,7 @@ export const cmsApi = {
   uploadAsset: async (file: File): Promise<Asset> => {
     const form = new FormData();
     form.append("file", file);
-    const res = await fetch(`${API_BASE}/assets/upload`, {
+    const res = await fetch(`/api/assets/upload`, {
       method: "POST",
       credentials: "include",
       body: form,

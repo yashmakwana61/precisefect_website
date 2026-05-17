@@ -4,7 +4,8 @@ import { motion } from "framer-motion";
 import { heroCopy } from "@/lib/motion-presets";
 import { Calendar, ArrowLeft } from "lucide-react";
 import { Seo } from "@/components/seo";
-import { cmsApi, type BlogPost } from "@/lib/cms-api";
+import { cmsPublic } from "@/lib/cms-public";
+import type { BlogPost } from "@/lib/cms-api";
 import { HtmlSafe } from "@/components/html-safe";
 import { usePreviewMode } from "@/hooks/use-preview";
 
@@ -14,7 +15,7 @@ export default function BlogPostPage() {
 
   const { data: post, isLoading, isError } = useQuery({
     queryKey: ["blog-post", params.slug, preview],
-    queryFn: () => cmsApi.getBlogPostBySlug(params.slug, preview ? "preview" : undefined),
+    queryFn: () => cmsPublic.getBlogPostBySlug(params.slug, preview ? "preview" : undefined),
   });
 
   if (isLoading) return <div className="min-h-[60vh] flex items-center justify-center text-muted-foreground">Loading…</div>;

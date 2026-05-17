@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { cmsApi, type SitePage } from "@/lib/cms-api";
+import { cmsPublic } from "@/lib/cms-public";
+import type { SitePage } from "@/lib/cms-api";
 import { getSitePageDefaults, type SitePageDefaults } from "@/lib/site-page-registry";
 import { usePreviewMode } from "@/hooks/use-preview";
 
@@ -48,7 +49,7 @@ export function useSitePage(path: string) {
     queryKey: ["site-page", path, preview],
     queryFn: async () => {
       try {
-        return await cmsApi.getSitePageContent(path, preview ? "preview" : undefined);
+        return await cmsPublic.getSitePageContent(path, preview ? "preview" : undefined);
       } catch {
         return null;
       }

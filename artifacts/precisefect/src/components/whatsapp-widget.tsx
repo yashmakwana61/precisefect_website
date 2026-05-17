@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
-import { cmsApi } from "@/lib/cms-api";
+import { cmsPublic } from "@/lib/cms-public";
 import { X, MessageCircle } from "lucide-react";
 
 function WhatsAppIcon({ size = 28 }: { size?: number }) {
@@ -19,7 +19,7 @@ export function WhatsAppWidget() {
 
   const { data: settings = [] } = useQuery({
     queryKey: ["site-settings"],
-    queryFn: () => cmsApi.getSettings(),
+    queryFn: () => cmsPublic.getSettings(),
     staleTime: 1000 * 60 * 5,
   });
 

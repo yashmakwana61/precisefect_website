@@ -1,8 +1,8 @@
-import { Seo } from "@/components/seo";
+﻿import { Seo } from "@/components/seo";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Database, ShieldCheck, ArrowRight, Target } from "lucide-react";
-import NodeGraph from "@/components/canvas/NodeGraph";
+import { LazyNodeGraph } from "@/components/canvas/lazy";
 import { PageHero } from "@/components/motion/page-hero";
 import { HeroCanvasFrame } from "@/components/motion/hero-canvas-frame";
 import { SectionHeading } from "@/components/motion/section-heading";
@@ -23,7 +23,7 @@ export default function About() {
         visualCentered
         visual={
           <HeroCanvasFrame>
-            <NodeGraph variant="hub" className="opacity-95" />          </HeroCanvasFrame>
+            <LazyNodeGraph variant="hub" className="opacity-95" />          </HeroCanvasFrame>
         }
       >
         <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">{content.heroEyebrow}</p>

@@ -2,7 +2,7 @@ import { Seo } from "@/components/seo";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Database, Zap, Code, Network, ArrowRight } from "lucide-react";
-import DataStream from "@/components/canvas/DataStream";
+import { LazyDataStream } from "@/components/canvas/lazy";
 import { HeroCanvasFrame } from "@/components/motion/hero-canvas-frame";
 import { CtaSection } from "@/components/motion/cta-section";
 import { heroCopy, heroVisual, mountReveal } from "@/lib/motion-presets";
@@ -45,7 +45,7 @@ export default function Services() {
             {/* Animated Data Stream Canvas */}
             <motion.div {...heroVisual} className="relative w-full aspect-video lg:aspect-[4/3] max-w-[600px] ml-auto min-h-[260px]">
               <HeroCanvasFrame>
-                <DataStream intensity="normal" />              </HeroCanvasFrame>
+                <LazyDataStream intensity="normal" />              </HeroCanvasFrame>
             </motion.div>
           </div>
 

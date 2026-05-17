@@ -1,19 +1,20 @@
 import { Seo } from "@/components/seo";
 import { Calendar } from "lucide-react";
 import { motion } from "framer-motion";
-import DataStream from "@/components/canvas/DataStream";
+import { LazyDataStream } from "@/components/canvas/lazy";
 import { HeroCanvasFrame } from "@/components/motion/hero-canvas-frame";
 import { heroCopy, heroVisualCentered, itemReveal, sectionReveal } from "@/lib/motion-presets";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-import { cmsApi, type BlogPost } from "@/lib/cms-api";
+import { cmsPublic } from "@/lib/cms-public";
+import type { BlogPost } from "@/lib/cms-api";
 import { usePreviewMode } from "@/hooks/use-preview";
 
 export default function Blog() {
   const preview = usePreviewMode();
   const { data: posts = [], isLoading } = useQuery({
     queryKey: ["public", "blog-posts", preview],
-    queryFn: () => cmsApi.list<BlogPost>("blog-posts", preview ? "preview" : undefined),
+    queryFn: () => cmsPublic.list<BlogPost>("blog-posts", preview ? "preview" : undefined),
   });
 
   return (
@@ -38,7 +39,7 @@ export default function Blog() {
             </motion.div>
             <motion.div {...heroVisualCentered} className="relative w-full aspect-video lg:aspect-square max-w-[600px] ml-auto min-h-[280px]">
               <HeroCanvasFrame>
-                <DataStream intensity="light" />              </HeroCanvasFrame>
+                <LazyDataStream intensity="light" />              </HeroCanvasFrame>
             </motion.div>
           </motion.div>
 

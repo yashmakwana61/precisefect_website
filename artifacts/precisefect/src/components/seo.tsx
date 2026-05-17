@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { cmsApi } from "@/lib/cms-api";
+import { cmsPublic } from "@/lib/cms-public";
 
 interface SeoProps {
   title: string;
@@ -58,7 +58,7 @@ export function Seo({
   // Fetch live CMS SEO override for this page slug
   const { data: seoOverride } = useQuery({
     queryKey: ["seo", slug ?? ""],
-    queryFn: () => cmsApi.getSeo(slug ?? ""),
+    queryFn: () => cmsPublic.getSeo(slug ?? ""),
     enabled: !!slug,
     staleTime: 1000 * 60 * 5,
   });
@@ -66,7 +66,7 @@ export function Seo({
   // Fetch site settings (GA4 ID, Search Console verification tag)
   const { data: settings = [] } = useQuery({
     queryKey: ["site-settings"],
-    queryFn: () => cmsApi.getSettings(),
+    queryFn: () => cmsPublic.getSettings(),
     staleTime: 1000 * 60 * 5,
   });
 

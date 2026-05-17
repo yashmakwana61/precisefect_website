@@ -2,7 +2,7 @@ import { Seo } from "@/components/seo";
 import { Link } from "wouter";
 import { ArrowRight, Database, Zap, Network, LayoutGrid } from "lucide-react";
 import { motion } from "framer-motion";
-import NodeGraph from "@/components/canvas/NodeGraph";
+import { LazyNodeGraph } from "@/components/canvas/lazy";
 import { HeroCanvasFrame } from "@/components/motion/hero-canvas-frame";
 import { SectionHeading } from "@/components/motion/section-heading";
 import { CtaSection } from "@/components/motion/cta-section";
@@ -49,7 +49,7 @@ export default function Home() {
 
           <motion.div {...heroVisualCentered} className="relative w-full aspect-square max-w-[600px] mx-auto lg:ml-auto min-h-[280px]">
             <HeroCanvasFrame>
-              <NodeGraph variant="rich" />
+              <LazyNodeGraph variant="rich" />
             </HeroCanvasFrame>
           </motion.div>
         </div>

@@ -3,7 +3,8 @@ import { MapPin, Briefcase } from "lucide-react";
 import { motion } from "framer-motion";
 import { heroCopy, heroVisualCentered, sectionReveal } from "@/lib/motion-presets";
 import { useQuery } from "@tanstack/react-query";
-import { cmsApi, type JobOpening } from "@/lib/cms-api";
+import { cmsPublic } from "@/lib/cms-public";
+import type { JobOpening } from "@/lib/cms-api";
 import { HtmlSafe } from "@/components/html-safe";
 import { usePreviewMode } from "@/hooks/use-preview";
 
@@ -11,7 +12,7 @@ export default function Careers() {
   const preview = usePreviewMode();
   const { data: roles = [], isLoading } = useQuery({
     queryKey: ["public", "job-openings", preview],
-    queryFn: () => cmsApi.list<JobOpening>("job-openings", preview ? "preview" : undefined),
+    queryFn: () => cmsPublic.list<JobOpening>("job-openings", preview ? "preview" : undefined),
   });
 
   return (

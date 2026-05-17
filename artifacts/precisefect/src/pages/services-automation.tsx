@@ -1,7 +1,7 @@
 import { Seo } from "@/components/seo";
 import { Link } from "wouter";
 import { GitBranch, Workflow, Cpu, Zap, ArrowRight, CheckCircle2 } from "lucide-react";
-import DataStream from "@/components/canvas/DataStream";
+import { LazyDataStream } from "@/components/canvas/lazy";
 import { HeroCanvasFrame } from "@/components/motion/hero-canvas-frame";
 import { motion } from "framer-motion";
 import { SectionHeading } from "@/components/motion/section-heading";
@@ -62,7 +62,7 @@ export default function ServicesAutomation() {
             className="relative w-full aspect-video lg:aspect-square max-w-[600px] ml-auto min-h-[280px]"
           >
             <HeroCanvasFrame>
-              <DataStream intensity="light" />            </HeroCanvasFrame>
+              <LazyDataStream intensity="light" />            </HeroCanvasFrame>
           </motion.div>
         </div>
       </section>

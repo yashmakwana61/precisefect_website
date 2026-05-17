@@ -2,9 +2,8 @@ import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import logoUrl from "@/assets/logo.png";
-import { WhatsAppWidget } from "@/components/whatsapp-widget";
+import { DeferredWhatsAppWidget } from "@/components/whatsapp-widget-lazy";
 import type { FooterContent, NavbarContent } from "@/lib/cms-api";
 import { useNavbarContent, useFooterContent } from "@/hooks/use-site-blocks";
 import { CONTACT_FOOTER_ITEMS } from "@/lib/contact-info";
@@ -98,22 +97,17 @@ export function Navbar() {
         </button>
       </div>
 
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
-            className="absolute top-full left-0 w-full bg-background border-b border-border shadow-lg py-6 md:hidden flex flex-col px-8 gap-4"
-          >
-            {navLinks.map((link) => (
-              <Link key={link.href} href={link.href} className="text-base font-bold py-2 text-foreground/80 hover:text-primary border-b border-border/50">{link.label}</Link>
-            ))}
-            <Link href="/admin" className="text-base font-bold py-2 text-foreground/80">Admin</Link>
-            <Link href={navContent.ctaHref || "/contact"} className="pt-4">
-              <button className="w-full signature-gradient text-white font-bold rounded-lg px-8 py-3 btn-press">{navContent.ctaLabel || "Consultation"}</button>
-            </Link>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {mobileMenuOpen && (
+        <div className="mobile-nav-panel absolute top-full left-0 w-full bg-background border-b border-border shadow-lg py-6 md:hidden flex flex-col px-8 gap-4">
+          {navLinks.map((link) => (
+            <Link key={link.href} href={link.href} className="text-base font-bold py-2 text-foreground/80 hover:text-primary border-b border-border/50">{link.label}</Link>
+          ))}
+          <Link href="/admin" className="text-base font-bold py-2 text-foreground/80">Admin</Link>
+          <Link href={navContent.ctaHref || "/contact"} className="pt-4">
+            <button className="w-full signature-gradient text-white font-bold rounded-lg px-8 py-3 btn-press">{navContent.ctaLabel || "Consultation"}</button>
+          </Link>
+        </div>
+      )}
     </header>
   );
 }
@@ -171,7 +165,7 @@ export function Layout({ children }: { children: ReactNode }) {
       <Navbar />
       <main className="flex-grow flex flex-col pt-[88px]">{children}</main>
       <Footer />
-      <WhatsAppWidget />
+      <DeferredWhatsAppWidget />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { Seo } from "@/components/seo";
 import { Link } from "wouter";
 import { Factory, ShoppingBag, Truck, TestTube, ArrowRight } from "lucide-react";
-import SectorMesh from "@/components/canvas/SectorMesh";
+import { LazySectorMesh } from "@/components/canvas/lazy";
 import { HeroCanvasFrame } from "@/components/motion/hero-canvas-frame";
 import { motion } from "framer-motion";
 import { heroCopy, heroVisualCentered, itemReveal } from "@/lib/motion-presets";
@@ -67,7 +67,7 @@ export default function Industries() {
 
           <motion.div {...heroVisualCentered} className="relative w-full aspect-video lg:aspect-square max-w-[600px] ml-auto min-h-[280px]">
             <HeroCanvasFrame>
-              <SectorMesh />            </HeroCanvasFrame>
+              <LazySectorMesh />            </HeroCanvasFrame>
           </motion.div>
         </div>
       </section>

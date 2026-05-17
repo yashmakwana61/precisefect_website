@@ -43,15 +43,17 @@ export default defineConfig({
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
     target: "es2022",
+    modulePreload: { polyfill: false },
     rollupOptions: {
       output: {
         manualChunks(id) {
           if (!id.includes("node_modules")) {
-            if (id.includes("/src/pages/admin/")) return "admin";
             if (id.includes("/src/components/canvas/")) return "canvas";
+            if (id.includes("/src/lib/cms-api")) return "cms-admin";
             return undefined;
           }
           if (id.includes("framer-motion")) return "motion";
+          if (id.includes("dompurify")) return "sanitize";
           if (id.includes("@tanstack/react-query")) return "query";
           if (id.includes("react-dom") || id.includes("/react/")) return "vendor";
         },

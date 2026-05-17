@@ -2,7 +2,7 @@ import { Seo } from "@/components/seo";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { FadeInView } from "@/components/motion/fade-in-view";
-import NodeGraph from "@/components/canvas/NodeGraph";
+import { LazyNodeGraph } from "@/components/canvas/lazy";
 import { HeroCanvasFrame } from "@/components/motion/hero-canvas-frame";
 import { heroCopy, heroVisualCentered, sectionReveal } from "@/lib/motion-presets";
 import { useQuery } from "@tanstack/react-query";
@@ -12,7 +12,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { cmsApi, type Faq } from "@/lib/cms-api";
+import { cmsPublic } from "@/lib/cms-public";
+import type { Faq } from "@/lib/cms-api";
 import { HtmlSafe } from "@/components/html-safe";
 import { usePreviewMode } from "@/hooks/use-preview";
 
@@ -20,7 +21,7 @@ export default function FaqPage() {
   const preview = usePreviewMode();
   const { data: faqs = [], isLoading } = useQuery({
     queryKey: ["public", "faqs", preview],
-    queryFn: () => cmsApi.list<Faq>("faqs", preview ? "preview" : undefined),
+    queryFn: () => cmsPublic.list<Faq>("faqs", preview ? "preview" : undefined),
   });
 
   return (
@@ -45,7 +46,7 @@ export default function FaqPage() {
             </motion.div>
             <motion.div {...heroVisualCentered} className="relative w-full aspect-video lg:aspect-square max-w-[600px] ml-auto min-h-[280px]">
               <HeroCanvasFrame>
-                <NodeGraph variant="hub" className="opacity-95" />              </HeroCanvasFrame>
+                <LazyNodeGraph variant="hub" className="opacity-95" />              </HeroCanvasFrame>
             </motion.div>
           </div>
 

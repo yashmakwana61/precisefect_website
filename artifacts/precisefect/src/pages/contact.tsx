@@ -9,13 +9,13 @@ import { z } from "zod";
 import { useState } from "react";
 import { Mail, Phone, MapPin, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import NodeGraph from "@/components/canvas/NodeGraph";
+import { LazyNodeGraph } from "@/components/canvas/lazy";
 import { HeroCanvasFrame } from "@/components/motion/hero-canvas-frame";
 import { heroCopy, heroVisualCentered, mountReveal } from "@/lib/motion-presets";
 import { useSitePage } from "@/hooks/use-site-page";
 import { HtmlSafe } from "@/components/html-safe";
 import { CONTACT_INFO } from "@/lib/contact-info";
-import { cmsApi } from "@/lib/cms-api";
+import { cmsPublic } from "@/lib/cms-public";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -49,7 +49,7 @@ export default function Contact() {
     setSubmitError(null);
     setSubmitting(true);
     try {
-      await cmsApi.createLead({
+      await cmsPublic.createLead({
         ...data,
         source: "contact_form",
         sourceDetail: typeof window !== "undefined" ? window.location.pathname : "/contact",
@@ -136,7 +136,7 @@ export default function Contact() {
             <div className="space-y-8">
             <motion.div {...heroVisualCentered} className="relative w-full min-h-[220px] lg:min-h-[240px] hidden lg:block">
               <HeroCanvasFrame>
-                <NodeGraph variant="hub" className="opacity-95" />              </HeroCanvasFrame>
+                <LazyNodeGraph variant="hub" className="opacity-95" />              </HeroCanvasFrame>
             </motion.div>
 
             {/* Form */}

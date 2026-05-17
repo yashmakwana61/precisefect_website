@@ -4,10 +4,11 @@ import { BarChart, TrendingUp, Clock, Zap, Shield, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import { heroCopy, heroVisual, sectionReveal } from "@/lib/motion-presets";
 import { useQuery } from "@tanstack/react-query";
-import { cmsApi, type CaseStudy } from "@/lib/cms-api";
+import { cmsPublic } from "@/lib/cms-public";
+import type { CaseStudy } from "@/lib/cms-api";
 import { HtmlSafe } from "@/components/html-safe";
 import { usePreviewMode } from "@/hooks/use-preview";
-import MetricRise from "@/components/canvas/MetricRise";
+import { LazyMetricRise } from "@/components/canvas/lazy";
 import { HeroCanvasFrame } from "@/components/motion/hero-canvas-frame";
 
 const ICON_MAP = { TrendingUp, Clock, BarChart, Zap, Shield, Users };
@@ -16,7 +17,7 @@ export default function CaseStudies() {
   const preview = usePreviewMode();
   const { data: studies = [], isLoading } = useQuery({
     queryKey: ["public", "case-studies", preview],
-    queryFn: () => cmsApi.list<CaseStudy>("case-studies", preview ? "preview" : undefined),
+    queryFn: () => cmsPublic.list<CaseStudy>("case-studies", preview ? "preview" : undefined),
   });
 
   return (
@@ -48,7 +49,7 @@ export default function CaseStudies() {
           {/* Animated Metric Rise Canvas */}
           <motion.div {...heroVisual} className="relative w-full max-w-[600px] ml-auto min-h-[280px]">
             <HeroCanvasFrame>
-              <MetricRise />
+              <LazyMetricRise />
             </HeroCanvasFrame>
           </motion.div>
         </div>
