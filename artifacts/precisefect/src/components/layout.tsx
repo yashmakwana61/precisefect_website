@@ -3,11 +3,10 @@ import { Link, useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
 import logoUrl from "@/assets/logo.png";
 import { WhatsAppWidget } from "@/components/whatsapp-widget";
-import { cmsApi, type NavbarContent, type FooterContent } from "@/lib/cms-api";
-import { usePreviewMode } from "@/hooks/use-preview";
+import type { FooterContent, NavbarContent } from "@/lib/cms-api";
+import { useNavbarContent, useFooterContent } from "@/hooks/use-site-blocks";
 import { CONTACT_FOOTER_ITEMS } from "@/lib/contact-info";
 
 const FALLBACK_NAV: NavbarContent = {
@@ -58,14 +57,7 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [location] = useLocation();
-  const preview = usePreviewMode();
-
-  const { data: blocks = [] } = useQuery({
-    queryKey: ["site-blocks", "navbar", preview],
-    queryFn: () => cmsApi.getSiteBlocks(["navbar"], preview ? "preview" : undefined),
-  });
-
-  const navContent = (blocks.find((b) => b.blockType === "navbar")?.content as unknown as NavbarContent) ?? FALLBACK_NAV;
+  const navContent = useNavbarContent(FALLBACK_NAV);
   const navLinks = navContent.links ?? FALLBACK_NAV.links;
 
   useEffect(() => {
@@ -127,14 +119,7 @@ export function Navbar() {
 }
 
 export function Footer() {
-  const preview = usePreviewMode();
-  const { data: blocks = [] } = useQuery({
-    queryKey: ["site-blocks", "footer", preview],
-    queryFn: () => cmsApi.getSiteBlocks(["footer"], preview ? "preview" : undefined),
-  });
-  const footer = withContactFooter(
-    (blocks.find((b) => b.blockType === "footer")?.content as unknown as FooterContent) ?? FALLBACK_FOOTER,
-  );
+  const footer = withContactFooter(useFooterContent(FALLBACK_FOOTER));
 
   return (
     <footer className="bg-primary text-white py-24">

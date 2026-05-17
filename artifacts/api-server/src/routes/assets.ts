@@ -4,6 +4,8 @@ import { eq, ilike, desc } from "drizzle-orm";
 import { db, assetsTable } from "@workspace/db";
 import { requireAdmin } from "../middlewares/authMiddleware";
 import { getSupabase, getStorageBucket, getPublicAssetUrl } from "../lib/supabase";
+import { logActivity } from "../domains/system/activity.service";
+import { isAllowedUpload } from "../lib/upload-policy";
 
 const router: IRouter = Router();
 const upload = multer({
@@ -13,13 +15,15 @@ const upload = multer({
 
 router.get("/assets", requireAdmin, async (req: Request, res: Response) => {
   const query = String(req.query.query ?? "").trim();
+  const limit = Math.min(200, Math.max(1, Number(req.query.limit) || 50));
   try {
     const base = db.select().from(assetsTable).$dynamic();
     const rows = query
       ? await base
           .where(ilike(assetsTable.filename, `%${query}%`))
           .orderBy(desc(assetsTable.createdAt))
-      : await base.orderBy(desc(assetsTable.createdAt));
+          .limit(limit)
+      : await base.orderBy(desc(assetsTable.createdAt)).limit(limit);
     res.json(rows);
   } catch (err) {
     req.log.error({ err }, "assets list failed");
@@ -37,10 +41,14 @@ router.post(
       res.status(400).json({ error: "file required" });
       return;
     }
+    const safeName = file.originalname.replace(/[^a-zA-Z0-9._-]/g, "_");
+    if (!isAllowedUpload(safeName, file.mimetype)) {
+      res.status(400).json({ error: "File type not allowed" });
+      return;
+    }
     try {
       const supabase = getSupabase();
       const bucket = getStorageBucket();
-      const safeName = file.originalname.replace(/[^a-zA-Z0-9._-]/g, "_");
       const storagePath = `${Date.now()}-${safeName}`;
 
       const { error } = await supabase.storage.from(bucket).upload(storagePath, file.buffer, {
@@ -65,6 +73,13 @@ router.post(
         })
         .returning();
 
+      await logActivity({
+        actorUserId: req.userId,
+        action: "create",
+        entityType: "assets",
+        entityId: row.id,
+        metadata: { filename: safeName },
+      });
       res.status(201).json(row);
     } catch (err) {
       req.log.error({ err }, "asset upload failed");

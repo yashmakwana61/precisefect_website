@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams, Link } from "wouter";
 import { motion } from "framer-motion";
+import { heroCopy, itemReveal } from "@/lib/motion-presets";
 import { ArrowRight } from "lucide-react";
 import { Seo } from "@/components/seo";
 import { cmsApi, type CustomPage } from "@/lib/cms-api";
@@ -15,7 +16,7 @@ function LandingTemplate({ page }: { page: CustomPage }) {
       <section className="py-24 md:py-32 bg-surface relative overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(to_bottom_right,rgba(0,200,140,0.04),transparent_60%)]" />
         <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl">
+          <motion.div {...heroCopy} className="max-w-4xl">
             <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Precisefect</p>
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary mb-8 leading-[0.95]">
               {page.heroHeadline || page.title}
@@ -49,7 +50,7 @@ function ContentTemplate({ page }: { page: CustomPage }) {
     <>
       <section className="py-24 bg-surface relative overflow-hidden">
         <div className="max-w-[1440px] mx-auto px-8 lg:px-16 max-w-4xl">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <motion.div {...heroCopy}>
             <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Precisefect</p>
             <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-primary mb-8 leading-[0.95]">{page.heroHeadline || page.title}</h1>
             {page.heroSubheadline && (
@@ -75,7 +76,7 @@ function ListTemplate({ page }: { page: CustomPage }) {
     <>
       <section className="py-24 bg-surface relative overflow-hidden">
         <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl mb-20">
+          <motion.div {...heroCopy} className="max-w-3xl mb-20">
             <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Precisefect</p>
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary mb-8 leading-[0.95]">{page.heroHeadline || page.title}</h1>
             {page.heroSubheadline && <p className="text-xl text-muted-foreground leading-relaxed">{page.heroSubheadline}</p>}
@@ -85,10 +86,7 @@ function ListTemplate({ page }: { page: CustomPage }) {
               {items.map((item, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.06 }}
+                  {...itemReveal(i)}
                   className="bg-surface-container-lowest ghost-border rounded-xl p-8"
                 >
                   <div className="w-8 h-8 rounded-full bg-on-primary-container/10 flex items-center justify-center text-on-primary-container font-bold text-sm mb-5">

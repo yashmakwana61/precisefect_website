@@ -19,8 +19,13 @@ export default function AdminLogin() {
       await cmsApi.login(password);
       await qc.invalidateQueries({ queryKey: ["auth", "me"] });
       setLocation("/admin");
-    } catch {
-      setError("Incorrect password.");
+    } catch (err) {
+      const msg = String(err);
+      if (msg.includes("500") || msg.includes("not configured")) {
+        setError("Server error — check that the API is running and ADMIN_PASSWORD is set in .env.");
+      } else {
+        setError("Incorrect password. Use the value of ADMIN_PASSWORD from your .env file.");
+      }
     } finally {
       setSubmitting(false);
     }

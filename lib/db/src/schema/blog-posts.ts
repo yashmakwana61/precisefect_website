@@ -1,6 +1,8 @@
-import { pgTable, text, serial, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, timestamp, boolean, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod/v4";
+import { teamMembersTable } from "./team-members";
+import { usersTable } from "./users/users";
 
 export const blogPostsTable = pgTable("blog_posts", {
   id: serial("id").primaryKey(),
@@ -10,9 +12,12 @@ export const blogPostsTable = pgTable("blog_posts", {
   body: text("body").notNull().default(""),
   category: text("category").notNull(),
   author: text("author").notNull(),
+  authorId: integer("author_id").references(() => teamMembersTable.id, { onDelete: "set null" }),
   readTime: text("read_time").notNull(),
   publishedAt: timestamp("published_at", { withTimezone: true }).notNull().defaultNow(),
   isPublished: boolean("is_published").notNull().default(true),
+  createdById: integer("created_by_id").references(() => usersTable.id, { onDelete: "set null" }),
+  updatedById: integer("updated_by_id").references(() => usersTable.id, { onDelete: "set null" }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });

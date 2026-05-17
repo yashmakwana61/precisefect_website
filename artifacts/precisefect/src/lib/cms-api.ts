@@ -64,7 +64,171 @@ export type Asset = {
 export type ContentRevision = {
   id: number; entityType: string; entityId: number;
   snapshot: Record<string, unknown>; operation: string;
-  createdBy: string; createdAt: string;
+  createdBy: string; createdById?: number | null; createdAt: string;
+};
+
+export type ActivityEvent = {
+  id: number;
+  actorUserId: number | null;
+  action: string;
+  entityType: string | null;
+  entityId: number | null;
+  metadata: Record<string, unknown>;
+  createdAt: string;
+};
+
+export type AdminUser = {
+  id: number;
+  email: string;
+  displayName: string;
+  isActive: boolean;
+  createdAt: string;
+  roles: Array<{ key: string; label: string }>;
+};
+
+export type ModuleInfo = {
+  id: number;
+  key: string;
+  label: string;
+  isEnabled: boolean;
+  config: Record<string, unknown>;
+  updatedAt: string;
+};
+
+export type AuthMe = {
+  isAdmin: boolean;
+  userId: number | null;
+  displayName: string | null;
+  roles: string[];
+  permissions: string[];
+};
+
+export type AutomationRule = {
+  id: number;
+  name: string;
+  enabled: boolean;
+  triggerType: string;
+  triggerEvent: string;
+  triggerSchedule: string | null;
+  conditions: Record<string, unknown>;
+  actions: Array<Record<string, unknown>>;
+  moduleKey: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type AutomationRun = {
+  id: number;
+  ruleId: number | null;
+  status: string;
+  triggerPayload: Record<string, unknown>;
+  error: string | null;
+  startedAt: string;
+  finishedAt: string | null;
+};
+
+export type IntegrationConnection = {
+  id: number;
+  provider: string;
+  label: string;
+  isEnabled: boolean;
+  config: Record<string, unknown>;
+  inboundToken: string | null;
+  createdById: number | null;
+  createdAt: string;
+  updatedAt: string;
+  hasSecrets: boolean;
+  webhookUrl?: string;
+};
+
+export type IntegrationDelivery = {
+  id: number;
+  connectionId: number | null;
+  direction: string;
+  eventType: string;
+  payload: Record<string, unknown>;
+  status: string;
+  httpStatus: number | null;
+  error: string | null;
+  attempts: number;
+  createdAt: string;
+};
+
+export type LeadStatus = "new" | "contacted" | "qualified" | "proposal" | "won" | "lost";
+export type LeadSource = "contact_form" | "whatsapp" | "manual" | "referral" | "other";
+
+export type Lead = {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  businessType: string;
+  message: string;
+  source: LeadSource;
+  sourceDetail: string;
+  status: LeadStatus;
+  assignedToId: number | null;
+  priority: string;
+  score: number;
+  scoreBreakdown: Record<string, number>;
+  isRead: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CrmTask = {
+  id: number;
+  leadId: number;
+  title: string;
+  dueAt: string | null;
+  completedAt?: string | null;
+  type: "call" | "email" | "follow_up" | "custom";
+  status: "open" | "done" | "cancelled";
+  assignedToId: number | null;
+  createdAt: string;
+  assigneeName?: string | null;
+  leadName?: string;
+};
+
+export type TaskDashboard = {
+  dueToday: number;
+  overdue: number;
+  tasks: CrmTask[];
+};
+
+export type LeadNote = {
+  id: number;
+  body: string;
+  createdAt: string;
+  authorUserId: number | null;
+  authorDisplayName: string | null;
+};
+
+export type LeadStats = {
+  byStatus: Record<LeadStatus, number>;
+  unread: number;
+  last7Days: number;
+};
+
+export type LeadDetail = {
+  lead: Lead;
+  notes: LeadNote[];
+  timeline: ActivityEvent[];
+  assignee: { id: number; displayName: string } | null;
+  tasks: CrmTask[];
+};
+
+export type CreateLeadInput = {
+  name: string;
+  email: string;
+  phone: string;
+  businessType: string;
+  message: string;
+  company?: string;
+  source?: LeadSource;
+  sourceDetail?: string;
+  website?: string;
 };
 
 export type SitePage = {
@@ -124,7 +288,7 @@ function scopeQuery(scope?: "admin" | "preview"): string {
 }
 
 export const cmsApi = {
-  me: () => request<{ isAdmin: boolean }>("/auth/me"),
+  me: () => request<AuthMe>("/auth/me"),
   login: (password: string) =>
     request<{ ok: true }>("/auth/login", { method: "POST", body: JSON.stringify({ password }) }),
   logout: () => request<{ ok: true }>("/auth/logout", { method: "POST" }),
@@ -194,4 +358,126 @@ export const cmsApi = {
     request<SitePage>(`/site-pages/content?path=${encodeURIComponent(path)}${scope === "preview" ? "&preview=1" : scope === "admin" ? "&scope=admin" : ""}`),
   upsertSitePage: (data: Partial<SitePage> & { path: string; title: string }) =>
     request<SitePage>("/site-pages/content", { method: "PUT", body: JSON.stringify(data) }),
+
+  listActivity: (limit = 50) =>
+    request<ActivityEvent[]>(`/system/activity?limit=${limit}`),
+  listUsers: () => request<AdminUser[]>("/system/users"),
+  listModules: () => request<ModuleInfo[]>("/system/modules"),
+
+  createLead: (data: CreateLeadInput) =>
+    request<{ id: number; ok: true }>("/leads", { method: "POST", body: JSON.stringify(data) }),
+
+  getLeadStats: () => request<LeadStats>("/leads/stats"),
+  listLeads: (params?: {
+    status?: LeadStatus;
+    assignedTo?: string;
+    q?: string;
+    unreadOnly?: boolean;
+    limit?: number;
+    sort?: "score_desc" | "created_desc";
+  }) => {
+    const sp = new URLSearchParams();
+    if (params?.status) sp.set("status", params.status);
+    if (params?.assignedTo) sp.set("assignedTo", params.assignedTo);
+    if (params?.q) sp.set("q", params.q);
+    if (params?.unreadOnly) sp.set("unreadOnly", "true");
+    if (params?.limit) sp.set("limit", String(params.limit));
+    if (params?.sort) sp.set("sort", params.sort);
+    const qs = sp.toString();
+    return request<Lead[]>(`/leads${qs ? `?${qs}` : ""}`);
+  },
+  getLead: (id: number) => request<LeadDetail>(`/leads/${id}`),
+  updateLead: (id: number, data: Partial<Pick<Lead, "status" | "assignedToId" | "priority" | "isRead" | "company">>) =>
+    request<Lead>(`/leads/${id}`, { method: "PATCH", body: JSON.stringify(data) }),
+  addLeadNote: (id: number, body: string) =>
+    request<{ id: number }>(`/leads/${id}/notes`, { method: "POST", body: JSON.stringify({ body }) }),
+  createLeadAdmin: (data: CreateLeadInput & { source?: LeadSource }) =>
+    request<Lead>("/leads/admin", { method: "POST", body: JSON.stringify(data) }),
+
+  listAutomationRules: () => request<AutomationRule[]>("/automation/rules"),
+  getAutomationRule: (id: number) => request<AutomationRule>(`/automation/rules/${id}`),
+  createAutomationRule: (data: {
+    name: string;
+    triggerEvent: string;
+    enabled?: boolean;
+    conditions?: Record<string, unknown>;
+    actions?: Array<Record<string, unknown>>;
+    moduleKey?: string;
+  }) =>
+    request<AutomationRule>("/automation/rules", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  updateAutomationRule: (
+    id: number,
+    data: Partial<{
+      name: string;
+      enabled: boolean;
+      triggerEvent: string;
+      conditions: Record<string, unknown>;
+      actions: Array<Record<string, unknown>>;
+    }>,
+  ) =>
+    request<AutomationRule>(`/automation/rules/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+  deleteAutomationRule: (id: number) =>
+    request<{ ok: true }>(`/automation/rules/${id}`, { method: "DELETE" }),
+  listAutomationRuns: (limit = 30) =>
+    request<AutomationRun[]>(`/automation/runs?limit=${limit}`),
+
+  getTaskDashboard: () => request<TaskDashboard>("/tasks/dashboard"),
+  listLeadTasks: (leadId: number) => request<CrmTask[]>(`/leads/${leadId}/tasks`),
+  createLeadTask: (
+    leadId: number,
+    data: { title: string; dueAt?: string | null; type?: CrmTask["type"] },
+  ) =>
+    request<CrmTask>(`/leads/${leadId}/tasks`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  updateTask: (
+    id: number,
+    data: Partial<{ title: string; dueAt: string | null; status: CrmTask["status"] }>,
+  ) =>
+    request<CrmTask>(`/tasks/${id}`, { method: "PATCH", body: JSON.stringify(data) }),
+
+  listIntegrationConnections: () =>
+    request<IntegrationConnection[]>("/integrations/connections"),
+  createIntegrationConnection: (data: {
+    provider: "webhook" | "zapier" | "resend";
+    label: string;
+    isEnabled?: boolean;
+    config?: Record<string, unknown>;
+    secrets?: Record<string, string>;
+  }) =>
+    request<IntegrationConnection>("/integrations/connections", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  updateIntegrationConnection: (
+    id: number,
+    data: Partial<{
+      label: string;
+      isEnabled: boolean;
+      config: Record<string, unknown>;
+      secrets: Record<string, string>;
+    }>,
+  ) =>
+    request<IntegrationConnection>(`/integrations/connections/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+  deleteIntegrationConnection: (id: number) =>
+    request<{ ok: true }>(`/integrations/connections/${id}`, { method: "DELETE" }),
+  testIntegrationConnection: (id: number) =>
+    request<{ ok: boolean; message: string }>(`/integrations/connections/${id}/test`, {
+      method: "POST",
+    }),
+  listIntegrationDeliveries: (limit = 50, connectionId?: number) => {
+    const sp = new URLSearchParams({ limit: String(limit) });
+    if (connectionId != null) sp.set("connectionId", String(connectionId));
+    return request<IntegrationDelivery[]>(`/integrations/deliveries?${sp}`);
+  },
 };

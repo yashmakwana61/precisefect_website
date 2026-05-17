@@ -1,95 +1,121 @@
-import { Switch, Route, Redirect, Link } from "wouter";
-import { useQueryClient } from "@tanstack/react-query";
-import { LogOut } from "lucide-react";
+import { lazy, Suspense } from "react";
+import { Switch, Route, Redirect, useParams } from "wouter";
 import { useAdmin } from "@/hooks/use-admin";
-import { cmsApi } from "@/lib/cms-api";
-import AdminLogin from "./login";
-import AdminDashboard from "./dashboard";
-import CollectionList from "./collection-list";
-import CollectionEdit from "./collection-edit";
-import SeoManager from "./seo-manager";
-import AdminSettings from "./settings";
-import PagesList from "./pages-list";
-import PageEdit from "./page-edit";
-import SitePageEdit from "./site-page-edit";
-import SiteBlocksEditor from "./site-blocks";
+import { AdminShell } from "@/components/admin/admin-shell";
+import { LEGACY_COLLECTION_SLUGS, collectionAdminPath } from "@/admin/registry";
+import type { CollectionName } from "@/lib/cms-api";
 
-function AdminShell({ children }: { children: React.ReactNode }) {
-  const qc = useQueryClient();
+const AdminLogin = lazy(() => import("./login"));
+const AdminDashboard = lazy(() => import("./dashboard"));
+const CollectionList = lazy(() => import("./collection-list"));
+const CollectionEdit = lazy(() => import("./collection-edit"));
+const SeoManager = lazy(() => import("./seo-manager"));
+const AdminSettings = lazy(() => import("./settings"));
+const PagesList = lazy(() => import("./pages-list"));
+const PageEdit = lazy(() => import("./page-edit"));
+const SitePageEdit = lazy(() => import("./site-page-edit"));
+const SiteBlocksEditor = lazy(() => import("./site-blocks"));
+const AdminActivity = lazy(() => import("./activity"));
+const MediaLibrary = lazy(() => import("./media-library"));
+const AdminUsers = lazy(() => import("./users"));
+const LeadsList = lazy(() => import("./leads-list"));
+const LeadDetail = lazy(() => import("./lead-detail"));
+const LeadNew = lazy(() => import("./lead-new"));
+const LeadsKanban = lazy(() => import("./leads-kanban"));
+const AdminAutomation = lazy(() => import("./automation"));
+const AdminIntegrations = lazy(() => import("./integrations"));
+
+function AdminPageFallback() {
   return (
-    <div className="min-h-screen bg-surface">
-      <header className="border-b border-border bg-surface-container-lowest sticky top-0 z-40 backdrop-blur-md">
-        <div className="max-w-[1440px] mx-auto px-8 lg:px-16 py-4 flex items-center justify-between">
-          <Link href="/admin" className="flex items-center gap-3" data-testid="link-admin-home">
-            <span className="text-xs font-bold tracking-[0.2em] uppercase text-on-primary-container">Admin</span>
-            <span className="w-px h-4 bg-border" />
-            <span className="text-sm font-bold text-primary">Precisefect Console</span>
-          </Link>
-          <div className="flex items-center gap-6">
-            <Link href="/" className="text-xs font-bold text-muted-foreground hover:text-primary uppercase tracking-[0.15em]" data-testid="link-view-site">
-              View Site
-            </Link>
-            <button
-              onClick={async () => { await cmsApi.logout(); await qc.invalidateQueries({ queryKey: ["auth", "me"] }); }}
-              data-testid="button-logout"
-              className="text-xs font-bold text-muted-foreground hover:text-destructive uppercase tracking-[0.15em] inline-flex items-center"
-            >
-              <LogOut className="w-3.5 h-3.5 mr-1.5" /> Logout
-            </button>
-          </div>
-        </div>
-      </header>
-      {children}
+    <div className="min-h-[40vh] flex items-center justify-center text-muted-foreground">
+      Loading…
     </div>
   );
+}
+
+function isCollectionSlug(slug: string): slug is CollectionName {
+  return (LEGACY_COLLECTION_SLUGS as readonly string[]).includes(slug);
+}
+
+function LegacyCollectionRedirect() {
+  const params = useParams<{ collection: string; id?: string }>();
+  const slug = params.collection ?? "";
+  if (slug === "leads" || slug === "content" || slug === "site" || slug === "system" || slug === "media") {
+    return <Redirect to="/admin" />;
+  }
+  if (!isCollectionSlug(slug)) {
+    return <Redirect to="/admin" />;
+  }
+  const base = collectionAdminPath(slug);
+  if (params.id) {
+    return <Redirect to={`${base}/${params.id}`} />;
+  }
+  return <Redirect to={base} />;
+}
+
+function LegacyPageEditRedirect() {
+  const { id } = useParams<{ id: string }>();
+  return <Redirect to={`/admin/site/pages/${id ?? ""}`} />;
+}
+
+function wrap(page: React.ReactNode) {
+  return <AdminShell>{page}</AdminShell>;
 }
 
 export default function AdminRouter() {
   const { isAdmin, isLoading } = useAdmin();
 
   if (isLoading) {
-    return <div className="min-h-[60vh] flex items-center justify-center text-muted-foreground">Authenticating…</div>;
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center text-muted-foreground">
+        Authenticating…
+      </div>
+    );
   }
 
   return (
-    <Switch>
-      <Route path="/admin/login">
-        {isAdmin ? <Redirect to="/admin" /> : <AdminLogin />}
-      </Route>
+    <Suspense fallback={<AdminPageFallback />}>
+      <Switch>
+        <Route path="/admin/login">
+          {isAdmin ? <Redirect to="/admin" /> : <AdminLogin />}
+        </Route>
 
-      {!isAdmin && <Route><Redirect to="/admin/login" /></Route>}
+        {!isAdmin && <Route><Redirect to="/admin/login" /></Route>}
 
-      <Route path="/admin">
-        <AdminShell><AdminDashboard /></AdminShell>
-      </Route>
+        <Route path="/admin">{wrap(<AdminDashboard />)}</Route>
 
-      {/* Site management */}
-      <Route path="/admin/seo">
-        <AdminShell><SeoManager /></AdminShell>
-      </Route>
-      <Route path="/admin/settings">
-        <AdminShell><AdminSettings /></AdminShell>
-      </Route>
-      <Route path="/admin/site-blocks">
-        <AdminShell><SiteBlocksEditor /></AdminShell>
-      </Route>
-      <Route path="/admin/site-page">
-        <AdminShell><SitePageEdit /></AdminShell>
-      </Route>
-      <Route path="/admin/pages">
-        <AdminShell><PagesList /></AdminShell>
-      </Route>
-      <Route path="/admin/pages/:id">
-        <AdminShell><PageEdit /></AdminShell>
-      </Route>
+        <Route path="/admin/leads/new">{wrap(<LeadNew />)}</Route>
+        <Route path="/admin/leads/kanban">{wrap(<LeadsKanban />)}</Route>
+        <Route path="/admin/leads/:id">{wrap(<LeadDetail />)}</Route>
+        <Route path="/admin/leads">{wrap(<LeadsList />)}</Route>
 
-      {/* Collections */}
-      <Route path="/admin/:collection/:id">
-        <AdminShell><CollectionEdit /></AdminShell>
-      </Route>
-      <Route path="/admin/:collection">
-        <AdminShell><CollectionList /></AdminShell>
-      </Route>
-    </Switch>
+        <Route path="/admin/content/:collection/:id">{wrap(<CollectionEdit />)}</Route>
+        <Route path="/admin/content/:collection">{wrap(<CollectionList />)}</Route>
+
+        <Route path="/admin/site/seo">{wrap(<SeoManager />)}</Route>
+        <Route path="/admin/site/site-blocks">{wrap(<SiteBlocksEditor />)}</Route>
+        <Route path="/admin/site/site-page">{wrap(<SitePageEdit />)}</Route>
+        <Route path="/admin/site/pages/:id">{wrap(<PageEdit />)}</Route>
+        <Route path="/admin/site/pages">{wrap(<PagesList />)}</Route>
+
+        <Route path="/admin/system/automation">{wrap(<AdminAutomation />)}</Route>
+        <Route path="/admin/system/integrations">{wrap(<AdminIntegrations />)}</Route>
+        <Route path="/admin/system/activity">{wrap(<AdminActivity />)}</Route>
+        <Route path="/admin/system/users">{wrap(<AdminUsers />)}</Route>
+        <Route path="/admin/system/settings">{wrap(<AdminSettings />)}</Route>
+
+        <Route path="/admin/media">{wrap(<MediaLibrary />)}</Route>
+
+        <Route path="/admin/seo"><Redirect to="/admin/site/seo" /></Route>
+        <Route path="/admin/settings"><Redirect to="/admin/system/settings" /></Route>
+        <Route path="/admin/site-blocks"><Redirect to="/admin/site/site-blocks" /></Route>
+        <Route path="/admin/site-page"><Redirect to="/admin/site/site-page" /></Route>
+        <Route path="/admin/pages/:id">{wrap(<LegacyPageEditRedirect />)}</Route>
+        <Route path="/admin/pages"><Redirect to="/admin/site/pages" /></Route>
+
+        <Route path="/admin/:collection/:id">{wrap(<LegacyCollectionRedirect />)}</Route>
+        <Route path="/admin/:collection">{wrap(<LegacyCollectionRedirect />)}</Route>
+      </Switch>
+    </Suspense>
   );
 }

@@ -7,10 +7,14 @@
     "hello": "tsx ./src/hello.ts",
     "seed": "tsx ./src/seed-cms.ts",
     "seed-settings": "tsx ./src/seed-settings.ts",
+    "seed-foundation": "tsx ./src/seed-foundation.ts",
+    "seed-phase3": "tsx ./src/seed-phase3.ts",
+    "backfill-lead-scores": "tsx ./src/backfill-lead-scores.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@workspace/db": "workspace:*"
+    "@workspace/db": "workspace:*",
+    "drizzle-orm": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",

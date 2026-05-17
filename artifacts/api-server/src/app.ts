@@ -1,5 +1,4 @@
 import express, { type Express } from "express";
-import cors from "cors";
 import cookieParser from "cookie-parser";
 import pinoHttp from "pino-http";
 import path from "path";
@@ -8,10 +7,18 @@ import { fileURLToPath } from "url";
 import router from "./routes";
 import { logger } from "./lib/logger";
 import { authMiddleware } from "./middlewares/authMiddleware";
+import { createCorsOptions } from "./lib/cors";
+import cors from "cors";
+import { securityHeaders } from "./middlewares/securityHeaders";
 
 const app: Express = express();
 const moduleDir = path.dirname(fileURLToPath(import.meta.url));
 
+if (process.env.TRUST_PROXY === "1" || process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1);
+}
+
+app.use(securityHeaders);
 app.use(
   pinoHttp({
     logger,
@@ -31,7 +38,7 @@ app.use(
     },
   }),
 );
-app.use(cors({ credentials: true, origin: true }));
+app.use(cors(createCorsOptions()));
 app.use(cookieParser());
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));

@@ -3,6 +3,10 @@ import { Link } from "wouter";
 import { ArrowRight, Database, Zap, Network, LayoutGrid } from "lucide-react";
 import { motion } from "framer-motion";
 import NodeGraph from "@/components/canvas/NodeGraph";
+import { HeroCanvasFrame } from "@/components/motion/hero-canvas-frame";
+import { SectionHeading } from "@/components/motion/section-heading";
+import { CtaSection } from "@/components/motion/cta-section";
+import { heroCopy, heroVisualCentered, sectionReveal, itemReveal } from "@/lib/motion-presets";
 
 export default function Home() {
   return (
@@ -16,12 +20,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="py-24 bg-surface relative overflow-hidden">
         <div className="max-w-[1440px] mx-auto px-8 lg:px-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-col items-start"
-          >
+          <motion.div {...heroCopy} className="flex flex-col items-start">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-tertiary-container text-on-tertiary-container text-xs font-bold uppercase tracking-widest mb-8">
               <span className="w-1.5 h-1.5 rounded-full bg-on-tertiary-container" />
               Operational Alpha
@@ -48,74 +47,55 @@ export default function Home() {
             </div>
           </motion.div>
 
-          {/* Animated Node Graph Canvas */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="relative w-full aspect-square max-w-[600px] mx-auto lg:ml-auto"
-          >
-            <div className="absolute -inset-4 bg-primary-container/20 rounded-full blur-[120px] -z-10" />
-            <div className="w-full h-full bg-surface-container-lowest ghost-border rounded-xl shadow-2xl overflow-hidden">
-              <NodeGraph className="opacity-90" />
-            </div>
-            {/* Status bar overlay */}
-            <div className="absolute bottom-4 left-4 right-4 bg-surface/90 backdrop-blur-sm border border-border rounded-lg px-4 py-2.5 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-on-primary-container animate-pulse" />
-                <span className="text-xs font-bold text-primary tracking-widest uppercase">System Nominal</span>
-              </div>
-              <div className="text-xs font-mono text-muted-foreground">latency: 12ms</div>
-            </div>
+          <motion.div {...heroVisualCentered} className="relative w-full aspect-square max-w-[600px] mx-auto lg:ml-auto min-h-[280px]">
+            <HeroCanvasFrame>
+              <NodeGraph variant="rich" />
+            </HeroCanvasFrame>
           </motion.div>
         </div>
       </section>
 
       {/* Trust Signals */}
       <section className="py-16 bg-surface-container-lowest border-y border-border">
-        <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
+        <motion.div className="max-w-[1440px] mx-auto px-8 lg:px-16" {...sectionReveal()}>
           <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-8">Trusted by Operational Leaders</p>
           <div className="flex flex-wrap gap-12 md:gap-24 opacity-60 grayscale">
             {["Nexus Manufacturing", "Aura Logistics", "Veridian Retail", "Quantis Pharma"].map((name) => (
               <div key={name} className="text-xl md:text-2xl font-black tracking-tighter text-primary uppercase">{name}</div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* The Problem / Solution Pattern */}
       <section className="py-32 bg-surface">
         <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
-          <div className="mb-20">
-            <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">The Entropy Crisis</p>
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-primary mb-6 max-w-3xl">
-              Spreadsheets fracture. <br />Data degrades. Systems halt.
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl">
-              Manual workflows create structural vulnerability. We architect centralized data cores and automated pipelines designed for serious resilience.
-            </p>
-          </div>
+          <motion.div {...sectionReveal()}>
+            <SectionHeading
+              eyebrow="The Entropy Crisis"
+              title={
+                <>
+                  Spreadsheets fracture. <br />
+                  Data degrades. Systems halt.
+                </>
+              }
+              description="Manual workflows create structural vulnerability. We architect centralized data cores and automated pipelines designed for serious resilience."
+            />
 
-          <div className="grid md:grid-cols-3 gap-16">
+            <div className="grid md:grid-cols-3 gap-16">
             {[
               { icon: Database, title: "Unified Core Design", desc: "A singular, immutable source of truth for inventory, finance, and CRM. Eradicate data reconciliation." },
               { icon: Zap, title: "Autonomous Orchestration", desc: "If an action is repeatable, we automate it. Reclaim thousands of hours previously lost to manual data entry." },
               { icon: Network, title: "Telemetry & Vision", desc: "Real-time operational dashboards. Steer the enterprise based on current physics, not last month's reports." },
             ].map((feature, i) => (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                key={i}
-                className="flex flex-col"
-              >
+              <div key={i} className="flex flex-col">
                 <feature.icon className="w-10 h-10 text-primary mb-6 stroke-[1.5]" />
                 <h3 className="text-xl font-bold text-primary mb-4">{feature.title}</h3>
                 <p className="text-muted-foreground leading-relaxed">{feature.desc}</p>
-              </motion.div>
+              </div>
             ))}
-          </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -133,6 +113,7 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
+            <motion.div {...itemReveal(0)}>
             <Link href="/services/erp" className="group block">
               <div className="bg-surface-container-lowest ghost-border p-10 rounded-xl transition-all duration-300 hover:shadow-xl hover:-translate-y-1 h-full flex flex-col">
                 <LayoutGrid className="w-10 h-10 text-primary mb-8 stroke-[1.5]" />
@@ -143,7 +124,9 @@ export default function Home() {
                 </div>
               </div>
             </Link>
+            </motion.div>
 
+            <motion.div {...itemReveal(1)}>
             <Link href="/services/automation" className="group block">
               <div className="bg-primary border border-primary-container p-10 rounded-xl transition-all duration-300 hover:shadow-xl hover:-translate-y-1 h-full flex flex-col relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-primary-container rounded-full blur-[80px] -z-10" />
@@ -155,23 +138,23 @@ export default function Home() {
                 </div>
               </div>
             </Link>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-32 bg-surface text-center">
-        <div className="max-w-[1440px] mx-auto px-8 lg:px-16 max-w-3xl">
-          <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-6">Initiate Protocol</p>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-primary mb-8">Ready to engineer your operations?</h2>
-          <p className="text-lg text-muted-foreground mb-12">Stop treating the symptoms. Let's fix the underlying architecture.</p>
-          <Link href="/contact">
-            <button className="signature-gradient text-white font-bold rounded-lg px-12 py-5 shadow-md btn-press text-lg">
-              Schedule Architectural Review
-            </button>
-          </Link>
-        </div>
-      </section>
+      <CtaSection
+        variant="surface"
+        eyebrow="Initiate Protocol"
+        title="Ready to engineer your operations?"
+        description="Stop treating the symptoms. Let's fix the underlying architecture."
+      >
+        <Link href="/contact">
+          <button className="signature-gradient text-white font-bold rounded-lg px-12 py-5 shadow-md btn-press text-lg">
+            Schedule Architectural Review
+          </button>
+        </Link>
+      </CtaSection>
     </>
   );
 }

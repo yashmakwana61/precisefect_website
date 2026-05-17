@@ -1,6 +1,10 @@
 import { Seo } from "@/components/seo";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
+import { FadeInView } from "@/components/motion/fade-in-view";
+import NodeGraph from "@/components/canvas/NodeGraph";
+import { HeroCanvasFrame } from "@/components/motion/hero-canvas-frame";
+import { heroCopy, heroVisualCentered, sectionReveal } from "@/lib/motion-presets";
 import { useQuery } from "@tanstack/react-query";
 import {
   Accordion,
@@ -26,28 +30,26 @@ export default function FaqPage() {
         description="Answers to structural questions regarding ERP implementation, middleware automation, timelines, and our engineering methodology."
       />
 
-      <section className="py-24 md:py-32 bg-surface">
-        <div className="max-w-[1440px] mx-auto px-8 lg:px-16 max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-24"
-          >
-            <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Common Questions</p>
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary mb-8 leading-[0.95]">
-              Operational <br />
-              <span className="text-on-primary-container">Protocols.</span>
-            </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-              Absolute clarity is a prerequisite for precision engineering. Examine our operational parameters.
-            </p>
-          </motion.div>
+      <section className="py-24 md:py-32 bg-surface relative overflow-hidden">
+        <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
+          <div className="grid lg:grid-cols-2 gap-16 items-center mb-24">
+            <motion.div {...heroCopy}>
+              <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Common Questions</p>
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary mb-8 leading-[0.95]">
+                Operational <br />
+                <span className="text-on-primary-container">Protocols.</span>
+              </h1>
+              <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
+                Absolute clarity is a prerequisite for precision engineering. Examine our operational parameters.
+              </p>
+            </motion.div>
+            <motion.div {...heroVisualCentered} className="relative w-full aspect-video lg:aspect-square max-w-[600px] ml-auto min-h-[280px]">
+              <HeroCanvasFrame>
+                <NodeGraph variant="hub" className="opacity-95" />              </HeroCanvasFrame>
+            </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
+          <motion.div className="max-w-4xl mx-auto" {...sectionReveal(0.08)}>
             {isLoading ? (
               <div className="text-muted-foreground">Loading…</div>
             ) : faqs.length === 0 ? (
@@ -73,7 +75,7 @@ export default function FaqPage() {
             )}
           </motion.div>
 
-          <div className="mt-24 p-12 bg-surface-container-lowest ghost-border rounded-xl text-center shadow-xl">
+          <FadeInView className="mt-24 p-12 bg-surface-container-lowest ghost-border rounded-xl text-center shadow-xl">
             <h3 className="text-3xl font-bold tracking-tight text-primary mb-4">Require further technical parameters?</h3>
             <p className="text-lg text-muted-foreground mb-10 max-w-xl mx-auto">Our architects are available to review your specific environmental constraints.</p>
             <Link href="/contact">
@@ -81,7 +83,7 @@ export default function FaqPage() {
                 Initiate Technical Dialogue
               </button>
             </Link>
-          </div>
+          </FadeInView>
         </div>
       </section>
     </>

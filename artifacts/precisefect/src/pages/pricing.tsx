@@ -2,6 +2,10 @@ import { Seo } from "@/components/seo";
 import { Link } from "wouter";
 import { Check, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { SectionHeading } from "@/components/motion/section-heading";
+import NodeGraph from "@/components/canvas/NodeGraph";
+import { HeroCanvasFrame } from "@/components/motion/hero-canvas-frame";
+import { heroCopy, heroVisualCentered, mountReveal, sectionReveal } from "@/lib/motion-presets";
 
 export default function Pricing() {
   const plans = [
@@ -64,28 +68,28 @@ export default function Pricing() {
       />
       
       <section className="py-24 md:py-32 bg-surface relative overflow-hidden">
-        <div className="max-w-[1440px] mx-auto px-8 lg:px-16 text-center">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="max-w-3xl mx-auto mb-24"
-          >
-            <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Engagement Models</p>
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary mb-8 leading-[0.95]">
-              Structural <br />
-              <span className="text-on-primary-container">Investment.</span>
-            </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              We are a premium consultancy. We do not engage in hourly billing surprises. We scope accurately, price based on structural value delivered, and execute flawlessly.
-            </p>
-          </motion.div>
+        <motion.div className="max-w-[1440px] mx-auto px-8 lg:px-16">
+          <div className="grid lg:grid-cols-2 gap-16 items-center mb-24">
+            <motion.div {...heroCopy}>
+              <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Engagement Models</p>
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary mb-8 leading-[0.95]">
+                Structural <br />
+                <span className="text-on-primary-container">Investment.</span>
+              </h1>
+              <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
+                We are a premium consultancy. We do not engage in hourly billing surprises. We scope accurately, price based on structural value delivered, and execute flawlessly.
+              </p>
+            </motion.div>
+            <motion.div {...heroVisualCentered} className="relative w-full aspect-video lg:aspect-square max-w-[600px] ml-auto min-h-[280px]">
+              <HeroCanvasFrame>
+                <NodeGraph variant="hub" className="opacity-95" />              </HeroCanvasFrame>
+            </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto text-left">
             {plans.map((plan, i) => (
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
+              <motion.div
+                {...mountReveal(i * 0.08)}
                 key={i} 
                 className={`relative flex flex-col p-10 rounded-xl ${
                   plan.featured 
@@ -132,34 +136,39 @@ export default function Pricing() {
               </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </section>
 
       <section className="py-32 bg-surface-container-lowest border-y border-border">
         <div className="max-w-[1440px] mx-auto px-8 lg:px-16 max-w-4xl">
-          <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4 text-center">Protocol Parameters</p>
-          <h2 className="text-4xl font-bold tracking-tight text-primary mb-16 text-center">Engagement Variables</h2>
+          <SectionHeading
+            eyebrow="Protocol Parameters"
+            title="Engagement Variables"
+            centered
+            className="mb-16 text-center"
+          />
           
-          <div className="grid md:grid-cols-2 gap-12">
-            <div>
+          <motion.div className="grid md:grid-cols-2 gap-12" {...sectionReveal()}>
+            <motion.div>
               <h4 className="font-bold text-primary mb-3">Do you charge hourly?</h4>
               <p className="text-muted-foreground leading-relaxed">Rarely. We strongly prefer fixed-bid projects based on a thoroughly defined scope. It aligns our incentives: you get predictable costs, and we are incentivized to build efficiently.</p>
-            </div>
-            <div>
+            </motion.div>
+            <motion.div>
               <h4 className="font-bold text-primary mb-3">How do you handle scope changes?</h4>
               <p className="text-muted-foreground leading-relaxed">If you need new architectural features mid-project, we submit a formal change order with the associated cost and timeline impact before proceeding. No surprise invoices, ever.</p>
-            </div>
-            <div>
+            </motion.div>
+            <motion.div>
               <h4 className="font-bold text-primary mb-3">What about software licensing costs?</h4>
               <p className="text-muted-foreground leading-relaxed">Our engineering fees do not include the underlying software licenses (e.g., Zoho or Odoo subscriptions), which you will pay directly to the vendor to maintain total ownership.</p>
-            </div>
-            <div>
+            </motion.div>
+            <motion.div>
               <h4 className="font-bold text-primary mb-3">Do you offer post-launch support?</h4>
               <p className="text-muted-foreground leading-relaxed">Yes. Every deployment includes a hypercare period immediately after launch. Long-term structural support is available via our Retained Engineering agreements.</p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
     </>
   );
 }
+

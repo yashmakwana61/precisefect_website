@@ -1,6 +1,7 @@
 import { Seo } from "@/components/seo";
 import { MapPin, Briefcase } from "lucide-react";
 import { motion } from "framer-motion";
+import { heroCopy, heroVisualCentered, sectionReveal } from "@/lib/motion-presets";
 import { useQuery } from "@tanstack/react-query";
 import { cmsApi, type JobOpening } from "@/lib/cms-api";
 import { HtmlSafe } from "@/components/html-safe";
@@ -22,10 +23,7 @@ export default function Careers() {
 
       <section className="py-24 md:py-32 bg-surface relative overflow-hidden">
         <div className="max-w-[1440px] mx-auto px-8 lg:px-16 grid lg:grid-cols-2 gap-16 items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
+          <motion.div {...heroCopy}>
             <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Open Positions</p>
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary mb-8 leading-[0.95]">
               Architect <br />
@@ -36,12 +34,7 @@ export default function Careers() {
             </p>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            className="relative w-full aspect-video lg:aspect-square max-w-[600px] ml-auto"
-          >
+          <motion.div {...heroVisualCentered} className="relative w-full aspect-video lg:aspect-square max-w-[600px] ml-auto">
             <div className="absolute -inset-4 bg-primary-container/20 rounded-full blur-[120px] -z-10" />
             <div className="w-full h-full bg-surface-container-lowest ghost-border p-4 rounded-xl shadow-xl flex flex-col items-center justify-center relative overflow-hidden group">
               <div className="w-full h-full bg-surface-container-high rounded-lg border border-border flex items-center justify-center grayscale group-hover:grayscale-0 transition-all duration-700">
@@ -77,13 +70,9 @@ export default function Careers() {
               <p className="text-muted-foreground">No vacancies open at the moment. Check back soon.</p>
             </div>
           ) : (
-            <div className="space-y-6 max-w-5xl">
-              {roles.map((role, i) => (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.05 }}
+            <motion.div className="space-y-6 max-w-5xl" {...sectionReveal()}>
+              {roles.map((role) => (
+                <div
                   key={role.id}
                   data-testid={`card-job-${role.id}`}
                   className="flex flex-col lg:flex-row lg:items-center justify-between p-10 bg-surface ghost-border rounded-xl hover:-translate-y-1 hover:shadow-xl transition-all gap-8 group"
@@ -106,12 +95,12 @@ export default function Careers() {
                       Submit Credentials
                     </a>
                   </div>
-                </motion.div>
+                </div>
               ))}
-            </div>
+            </motion.div>
           )}
 
-          <div className="mt-24 p-12 bg-primary rounded-xl text-white max-w-5xl">
+          <motion.div className="mt-24 p-12 bg-primary rounded-xl text-white max-w-5xl" {...sectionReveal(0.08)}>
             <h3 className="text-3xl font-bold tracking-tight mb-4">Structural anomaly detected?</h3>
             <p className="text-white/70 mb-8 max-w-2xl leading-relaxed text-lg">
               If your expertise doesn't map to an active vacancy but you believe you belong in this architecture, transmit your credentials and a brief dossier on what you are capable of engineering.
@@ -119,7 +108,7 @@ export default function Careers() {
             <button className="bg-white text-primary font-bold rounded-lg px-10 py-4 btn-press text-lg">
               Transmit Open Application
             </button>
-          </div>
+          </motion.div>
         </div>
       </section>
     </>

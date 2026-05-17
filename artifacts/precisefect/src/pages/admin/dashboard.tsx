@@ -1,78 +1,145 @@
 import { Link } from "wouter";
-import { ArrowRight, FileText, Briefcase, HelpCircle, Users, Building2, Quote, Search, Settings, LayoutTemplate, Navigation } from "lucide-react";
-import type { CollectionName } from "@/lib/cms-api";
+import { useQuery } from "@tanstack/react-query";
+import { FileText, Inbox } from "lucide-react";
+import { cmsApi, type Lead } from "@/lib/cms-api";
+import { collectionAdminPath, CONTENT_COLLECTIONS } from "@/admin/registry";
+import { LEAD_STATUS_LABELS } from "@/admin/leads-config";
+import { useAdmin } from "@/hooks/use-admin";
 
-const COLLECTIONS: { slug: CollectionName; name: string; description: string; icon: typeof FileText }[] = [
-  { slug: "blog-posts", name: "Blog Posts", description: "Field notes, technical essays, and architectural insights.", icon: FileText },
-  { slug: "case-studies", name: "Case Studies", description: "Client outcomes with metrics, problem, solution, and results.", icon: Building2 },
-  { slug: "faqs", name: "FAQs", description: "Operational protocol questions answered for prospects.", icon: HelpCircle },
-  { slug: "team-members", name: "Team", description: "The engineers, architects, and operators behind the firm.", icon: Users },
-  { slug: "job-openings", name: "Careers", description: "Open positions and engineering roles.", icon: Briefcase },
-  { slug: "testimonials", name: "Testimonials", description: "Quoted endorsements from clients.", icon: Quote },
-];
-
-const TOOLS: { href: string; name: string; description: string; icon: typeof Search; badge?: string }[] = [
-  { href: "/admin/site-blocks", name: "Navigation & Footer", description: "Edit navbar links, CTA button, and footer columns.", icon: Navigation },
-  { href: "/admin/pages", name: "All Pages", description: "Search and edit every site page by URL—including /contact, /about, and custom /p/slug pages.", icon: LayoutTemplate },
-  { href: "/admin/seo", name: "SEO Management", description: "Override meta tags, Open Graph data, and indexing rules per page.", icon: Search },
-  { href: "/admin/settings", name: "Site Settings", description: "WhatsApp chat, GA4 analytics, Search Console verification, and site URL.", icon: Settings },
-];
+function StatCard({ label, value, href }: { label: string; value: number; href?: string }) {
+  const inner = (
+    <div className="bg-surface-container-lowest ghost-border rounded-xl p-6">
+      <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">{label}</p>
+      <p className="text-4xl font-bold text-primary">{value}</p>
+    </div>
+  );
+  return href ? <Link href={href} className="block hover:-translate-y-0.5 transition-transform">{inner}</Link> : inner;
+}
 
 export default function AdminDashboard() {
+  const { isAdmin } = useAdmin();
+
+  const { data: stats } = useQuery({
+    queryKey: ["dashboard", "lead-stats"],
+    queryFn: () => cmsApi.getLeadStats(),
+    enabled: isAdmin,
+  });
+
+  const { data: recentLeads = [] } = useQuery({
+    queryKey: ["leads", "recent"],
+    queryFn: () => cmsApi.listLeads({ limit: 5 }),
+    enabled: isAdmin,
+  });
+
+  const { data: activity = [] } = useQuery({
+    queryKey: ["system", "activity", 8],
+    queryFn: () => cmsApi.listActivity(8),
+    enabled: isAdmin,
+  });
+
+  const { data: taskDash } = useQuery({
+    queryKey: ["tasks", "dashboard"],
+    queryFn: () => cmsApi.getTaskDashboard(),
+    enabled: isAdmin,
+  });
+
+  const newCount = stats?.byStatus?.new ?? 0;
+  const unread = stats?.unread ?? 0;
+
   return (
-    <div className="max-w-[1440px] mx-auto px-8 lg:px-16 py-24">
-      <div className="mb-16">
-        <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Operational Console</p>
-        <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-primary mb-6 leading-[0.95]">
-          Content <span className="text-on-primary-container">Architecture.</span>
-        </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
-          Manage every collection and configuration rendered on the public website. Changes propagate immediately upon save.
-        </p>
+    <div className="px-8 lg:px-16 py-12">
+      <div className="mb-10">
+        <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Operations</p>
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-primary mb-2">Dashboard</h1>
+        <p className="text-muted-foreground">Leads, content, and recent activity at a glance.</p>
       </div>
 
-      {/* Content Collections */}
-      <div className="mb-6">
-        <p className="text-xs font-bold text-muted-foreground tracking-[0.18em] uppercase mb-6">Content Collections</p>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {COLLECTIONS.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/admin/${c.slug}`}
-              data-testid={`link-collection-${c.slug}`}
-              className="group block bg-surface-container-lowest ghost-border rounded-xl p-8 hover:-translate-y-1 hover:shadow-xl transition-all"
-            >
-              <c.icon className="w-8 h-8 text-primary mb-6 stroke-[1.5]" />
-              <h2 className="text-xl font-bold text-primary mb-3 group-hover:text-primary-container transition-colors tracking-tight">{c.name}</h2>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-8">{c.description}</p>
-              <div className="flex items-center text-xs font-bold text-primary tracking-[0.15em] uppercase">
-                Manage <ArrowRight className="ml-2 w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-              </div>
-            </Link>
-          ))}
-        </div>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+        <StatCard label="New leads" value={newCount} href="/admin/leads?status=new" />
+        <StatCard label="Unread" value={unread} href="/admin/leads?unread=1" />
+        <StatCard label="Tasks due today" value={taskDash?.dueToday ?? 0} href="/admin/leads" />
+        <StatCard label="Qualified" value={stats?.byStatus?.qualified ?? 0} href="/admin/leads?status=qualified" />
       </div>
 
-      {/* Tools */}
-      <div className="mt-12">
-        <p className="text-xs font-bold text-muted-foreground tracking-[0.18em] uppercase mb-6">Site Management</p>
-        <div className="grid md:grid-cols-3 gap-6">
-          {TOOLS.map((t) => (
-            <Link
-              key={t.href}
-              href={t.href}
-              className="group block bg-primary ghost-border rounded-xl p-8 hover:-translate-y-1 hover:shadow-xl transition-all relative overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary-container/20 rounded-full blur-[60px] -z-0" />
-              <t.icon className="w-8 h-8 text-on-primary-container mb-6 stroke-[1.5] relative z-10" />
-              <h2 className="text-xl font-bold text-white mb-3 tracking-tight relative z-10">{t.name}</h2>
-              <p className="text-sm text-white/60 leading-relaxed mb-8 relative z-10">{t.description}</p>
-              <div className="flex items-center text-xs font-bold text-on-primary-container tracking-[0.15em] uppercase relative z-10">
-                Open <ArrowRight className="ml-2 w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-              </div>
-            </Link>
-          ))}
-        </div>
+      {(taskDash?.tasks?.length ?? 0) > 0 && (
+        <section className="bg-surface-container-lowest border border-border rounded-xl p-6 mb-10">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-primary mb-4">Due today</h2>
+          <ul className="space-y-2 text-sm">
+            {taskDash!.tasks.map((t) => (
+              <li key={t.id}>
+                <Link href={`/admin/leads/${t.leadId}`} className="text-primary font-medium hover:underline">
+                  {t.title}
+                </Link>
+                <span className="text-muted-foreground"> — {t.leadName}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <div className="grid lg:grid-cols-2 gap-8 mb-12">
+        <section className="bg-surface-container-lowest border border-border rounded-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-primary">Recent leads</h2>
+            <Link href="/admin/leads" className="text-xs font-bold text-primary">View all</Link>
+          </div>
+          {recentLeads.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No leads yet.</p>
+          ) : (
+            <ul className="space-y-3">
+              {recentLeads.map((lead: Lead) => (
+                <li key={lead.id}>
+                  <Link href={`/admin/leads/${lead.id}`} className="flex justify-between gap-2 hover:text-primary">
+                    <span className="font-medium">{lead.name}</span>
+                    <span className="text-xs text-muted-foreground">{LEAD_STATUS_LABELS[lead.status]}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+        <section className="bg-surface-container-lowest border border-border rounded-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-primary">Recent activity</h2>
+            <Link href="/admin/system/activity" className="text-xs font-bold text-primary">Full log</Link>
+          </div>
+          {activity.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No activity yet.</p>
+          ) : (
+            <ul className="space-y-2 text-sm">
+              {activity.map((ev) => (
+                <li key={ev.id} className="flex justify-between gap-2">
+                  <span className="truncate">{ev.action}</span>
+                  <span className="text-muted-foreground shrink-0 text-xs">
+                    {new Date(ev.createdAt).toLocaleDateString()}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      </div>
+
+      <p className="text-xs font-bold text-muted-foreground tracking-[0.18em] uppercase mb-4">Quick actions</p>
+      <div className="flex flex-wrap gap-3 mb-12">
+        <Link href="/admin/leads" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-xs font-bold uppercase tracking-wider">
+          <Inbox className="w-4 h-4" /> All leads
+        </Link>
+        <Link href={collectionAdminPath("blog-posts")} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-xs font-bold uppercase tracking-wider text-primary">
+          <FileText className="w-4 h-4" /> New blog post
+        </Link>
+        <Link href="/admin/content/blog-posts" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-xs font-bold uppercase tracking-wider text-primary">
+          Manage content
+        </Link>
+      </div>
+
+      <p className="text-xs font-bold text-muted-foreground tracking-[0.18em] uppercase mb-6">Content collections</p>
+      <div className="grid md:grid-cols-3 gap-4">
+        {CONTENT_COLLECTIONS.slice(0, 3).map((c) => (
+          <Link key={c.slug} href={collectionAdminPath(c.slug)} className="text-sm font-bold text-primary hover:underline">
+            {c.name} →
+          </Link>
+        ))}
       </div>
     </div>
   );

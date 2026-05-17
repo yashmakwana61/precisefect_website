@@ -1,6 +1,7 @@
 import { pgTable, text, serial, timestamp, boolean, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod/v4";
+import { assetsTable } from "./assets";
 
 export const teamMembersTable = pgTable("team_members", {
   id: serial("id").primaryKey(),
@@ -8,6 +9,7 @@ export const teamMembersTable = pgTable("team_members", {
   role: text("role").notNull(),
   bio: text("bio").notNull().default(""),
   imageUrl: text("image_url").notNull().default(""),
+  photoAssetId: integer("photo_asset_id").references(() => assetsTable.id, { onDelete: "set null" }),
   linkedinUrl: text("linkedin_url").notNull().default(""),
   sortOrder: integer("sort_order").notNull().default(0),
   publishedAt: timestamp("published_at", { withTimezone: true }).notNull().defaultNow(),

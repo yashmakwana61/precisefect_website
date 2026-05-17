@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams, Link } from "wouter";
 import { motion } from "framer-motion";
+import { heroCopy } from "@/lib/motion-presets";
 import { Calendar, ArrowLeft } from "lucide-react";
 import { Seo } from "@/components/seo";
 import { cmsApi, type BlogPost } from "@/lib/cms-api";
@@ -34,7 +35,7 @@ export default function BlogPostPage() {
           <Link href="/blog" className="inline-flex items-center text-sm font-bold text-muted-foreground hover:text-primary mb-8">
             <ArrowLeft className="w-4 h-4 mr-2" /> All posts
           </Link>
-          <motion.article initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <motion.article {...heroCopy}>
             <span className="text-xs font-bold text-primary uppercase tracking-[0.2em] border-b-2 border-primary-container pb-1">{post.category}</span>
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-primary mt-8 mb-6">{post.title}</h1>
             <div className="flex items-center gap-4 text-sm text-muted-foreground mb-12">

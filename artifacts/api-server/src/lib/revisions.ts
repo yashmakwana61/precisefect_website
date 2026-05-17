@@ -5,12 +5,16 @@ export async function recordRevision(
   entityId: number,
   snapshot: Record<string, unknown>,
   operation: "create" | "update" | "restore" = "update",
+  createdById?: number | null,
 ): Promise<void> {
+  const createdBy =
+    createdById != null ? `user:${createdById}` : "admin";
   await db.insert(contentRevisionsTable).values({
     entityType,
     entityId,
     snapshot,
     operation,
-    createdBy: "admin",
+    createdBy,
+    createdById: createdById ?? null,
   });
 }

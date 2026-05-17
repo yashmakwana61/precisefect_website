@@ -1,10 +1,14 @@
-import { pgTable, text, serial, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, timestamp, boolean, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod/v4";
+import { pageRegistryTable } from "./site/page-registry";
 
 export const seoPagesTable = pgTable("seo_pages", {
   id: serial("id").primaryKey(),
   slug: text("slug").notNull().unique(),
+  pageRegistryId: integer("page_registry_id").references(() => pageRegistryTable.id, {
+    onDelete: "set null",
+  }),
   metaTitle: text("meta_title").notNull().default(""),
   metaDescription: text("meta_description").notNull().default(""),
   ogTitle: text("og_title").notNull().default(""),

@@ -42,6 +42,21 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    target: "es2022",
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes("node_modules")) {
+            if (id.includes("/src/pages/admin/")) return "admin";
+            if (id.includes("/src/components/canvas/")) return "canvas";
+            return undefined;
+          }
+          if (id.includes("framer-motion")) return "motion";
+          if (id.includes("@tanstack/react-query")) return "query";
+          if (id.includes("react-dom") || id.includes("/react/")) return "vendor";
+        },
+      },
+    },
   },
   server: {
     port,

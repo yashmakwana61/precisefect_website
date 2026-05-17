@@ -2,11 +2,13 @@ import { Seo } from "@/components/seo";
 import { Link } from "wouter";
 import { BarChart, TrendingUp, Clock, Zap, Shield, Users } from "lucide-react";
 import { motion } from "framer-motion";
+import { heroCopy, heroVisual, sectionReveal } from "@/lib/motion-presets";
 import { useQuery } from "@tanstack/react-query";
 import { cmsApi, type CaseStudy } from "@/lib/cms-api";
 import { HtmlSafe } from "@/components/html-safe";
 import { usePreviewMode } from "@/hooks/use-preview";
 import MetricRise from "@/components/canvas/MetricRise";
+import { HeroCanvasFrame } from "@/components/motion/hero-canvas-frame";
 
 const ICON_MAP = { TrendingUp, Clock, BarChart, Zap, Shield, Users };
 
@@ -28,7 +30,7 @@ export default function CaseStudies() {
       {/* Hero with Metric Rise Canvas */}
       <section className="py-24 md:py-32 bg-surface relative overflow-hidden">
         <div className="max-w-[1440px] mx-auto px-8 lg:px-16 grid lg:grid-cols-2 gap-16 items-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <motion.div {...heroCopy}>
             <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">The Proof</p>
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary mb-8 leading-[0.95]">
               Outcomes, <br /><span className="text-on-primary-container">Engineered.</span>
@@ -44,22 +46,10 @@ export default function CaseStudies() {
           </motion.div>
 
           {/* Animated Metric Rise Canvas */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            className="relative w-full max-w-[600px] ml-auto"
-          >
-            <div className="absolute -inset-4 bg-primary-container/20 rounded-full blur-[120px] -z-10" />
-            <div className="w-full bg-surface-container-lowest ghost-border rounded-xl shadow-xl overflow-hidden">
-              <div className="px-6 pt-6 pb-2 border-b border-border flex items-center justify-between">
-                <span className="text-xs font-bold text-primary uppercase tracking-widest">Live Outcome Metrics</span>
-                <span className="w-2 h-2 rounded-full bg-on-primary-container animate-pulse" />
-              </div>
-              <div className="h-56">
-                <MetricRise />
-              </div>
-            </div>
+          <motion.div {...heroVisual} className="relative w-full max-w-[600px] ml-auto min-h-[280px]">
+            <HeroCanvasFrame>
+              <MetricRise />
+            </HeroCanvasFrame>
           </motion.div>
         </div>
       </section>
@@ -74,9 +64,7 @@ export default function CaseStudies() {
           ) : (
             studies.map((study) => (
               <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
+                {...sectionReveal()}
                 key={study.id}
                 data-testid={`section-case-study-${study.id}`}
                 className="flex flex-col gap-12"

@@ -9,9 +9,13 @@ import { z } from "zod";
 import { useState } from "react";
 import { Mail, Phone, MapPin, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import NodeGraph from "@/components/canvas/NodeGraph";
+import { HeroCanvasFrame } from "@/components/motion/hero-canvas-frame";
+import { heroCopy, heroVisualCentered, mountReveal } from "@/lib/motion-presets";
 import { useSitePage } from "@/hooks/use-site-page";
 import { HtmlSafe } from "@/components/html-safe";
 import { CONTACT_INFO } from "@/lib/contact-info";
+import { cmsApi } from "@/lib/cms-api";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -38,9 +42,34 @@ export default function Contact() {
     }
   });
 
-  const onSubmit = (data: ContactFormValues) => {
-    console.log("Form data:", data);
-    setTimeout(() => setIsSubmitted(true), 800);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const onSubmit = async (data: ContactFormValues) => {
+    setSubmitError(null);
+    setSubmitting(true);
+    try {
+      await cmsApi.createLead({
+        ...data,
+        source: "contact_form",
+        sourceDetail: typeof window !== "undefined" ? window.location.pathname : "/contact",
+        website: "",
+      });
+      setIsSubmitted(true);
+    } catch (err) {
+      const msg = String(err);
+      if (msg.includes("404")) {
+        setSubmitError(
+          "The contact API is not available. Restart the API server (port 8080) after pulling the latest code.",
+        );
+      } else if (msg.includes("429")) {
+        setSubmitError("Too many attempts. Please wait an hour or email us directly.");
+      } else {
+        setSubmitError("We could not send your request. Please email us directly or try again.");
+      }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const legacyBodyContent =
@@ -60,10 +89,7 @@ export default function Contact() {
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
             
             {/* Contact Info */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
+            <motion.div {...heroCopy}>
               <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">{content.heroEyebrow}</p>
               <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary mb-8 leading-[0.95]">
                 {content.heroHeadline}
@@ -107,11 +133,15 @@ export default function Contact() {
               </div>
             </motion.div>
 
+            <div className="space-y-8">
+            <motion.div {...heroVisualCentered} className="relative w-full min-h-[220px] lg:min-h-[240px] hidden lg:block">
+              <HeroCanvasFrame>
+                <NodeGraph variant="hub" className="opacity-95" />              </HeroCanvasFrame>
+            </motion.div>
+
             {/* Form */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
+            <motion.div
+              {...mountReveal(0.12)}
               className="bg-surface-container-lowest ghost-border p-10 md:p-12 rounded-xl shadow-xl relative overflow-hidden"
             >
               <AnimatePresence mode="wait">
@@ -126,6 +156,7 @@ export default function Contact() {
                     <h2 className="text-2xl font-bold text-primary mb-8 tracking-tight">Architectural Review Request</h2>
                     <Form {...form}>
                       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
                         <FormField
                           control={form.control}
                           name="name"
@@ -213,8 +244,15 @@ export default function Contact() {
                           )}
                         />
 
-                        <button type="submit" className="w-full signature-gradient text-white font-bold rounded-lg h-14 text-lg mt-8 btn-press shadow-md">
-                          Transmit RFP
+                        {submitError && (
+                          <p className="text-sm text-destructive font-medium">{submitError}</p>
+                        )}
+                        <button
+                          type="submit"
+                          disabled={submitting}
+                          className="w-full signature-gradient text-white font-bold rounded-lg h-14 text-lg mt-8 btn-press shadow-md disabled:opacity-60"
+                        >
+                          {submitting ? "Sending…" : "Transmit RFP"}
                         </button>
                       </form>
                     </Form>
@@ -246,6 +284,7 @@ export default function Contact() {
                 )}
               </AnimatePresence>
             </motion.div>
+            </div>
           </div>
         </div>
       </section>

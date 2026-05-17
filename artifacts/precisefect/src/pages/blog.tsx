@@ -1,6 +1,9 @@
 import { Seo } from "@/components/seo";
 import { Calendar } from "lucide-react";
 import { motion } from "framer-motion";
+import DataStream from "@/components/canvas/DataStream";
+import { HeroCanvasFrame } from "@/components/motion/hero-canvas-frame";
+import { heroCopy, heroVisualCentered, itemReveal, sectionReveal } from "@/lib/motion-presets";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { cmsApi, type BlogPost } from "@/lib/cms-api";
@@ -20,21 +23,23 @@ export default function Blog() {
         description="Technical and strategic insights on ERP implementation, business automation, and scaling operations."
       />
 
-      <section className="py-24 md:py-32 bg-surface">
+      <section className="py-24 md:py-32 bg-surface relative overflow-hidden">
         <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="max-w-3xl mb-24"
-          >
-            <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Field Notes</p>
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary mb-8 leading-[0.95]">
-              Architectural <br />
-              <span className="text-on-primary-container">Insights.</span>
-            </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Technical essays, architectural tear-downs, and operational strategy from the engineers at Precisefect.
-            </p>
+          <motion.div className="grid lg:grid-cols-2 gap-16 items-center mb-24">
+            <motion.div {...heroCopy}>
+              <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Field Notes</p>
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary mb-8 leading-[0.95]">
+                Architectural <br />
+                <span className="text-on-primary-container">Insights.</span>
+              </h1>
+              <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
+                Technical essays, architectural tear-downs, and operational strategy from the engineers at Precisefect.
+              </p>
+            </motion.div>
+            <motion.div {...heroVisualCentered} className="relative w-full aspect-video lg:aspect-square max-w-[600px] ml-auto min-h-[280px]">
+              <HeroCanvasFrame>
+                <DataStream intensity="light" />              </HeroCanvasFrame>
+            </motion.div>
           </motion.div>
 
           {isLoading ? (
@@ -48,10 +53,7 @@ export default function Blog() {
               {posts.map((post, i) => (
                 <Link key={post.id} href={`/blog/${post.slug}`}>
                 <motion.article
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.05 }}
+                  {...itemReveal(i)}
                   data-testid={`card-blog-post-${post.id}`}
                   className="flex flex-col bg-surface-container-lowest ghost-border rounded-xl p-10 hover:-translate-y-1 hover:shadow-xl transition-all group cursor-pointer h-full"
                 >
@@ -84,7 +86,7 @@ export default function Blog() {
       </section>
 
       <section className="py-32 bg-primary text-center">
-        <div className="max-w-[1440px] mx-auto px-8 lg:px-16 max-w-2xl">
+        <motion.div className="max-w-[1440px] mx-auto px-8 lg:px-16 max-w-2xl" {...sectionReveal()}>
           <p className="text-xs font-bold text-on-primary-container tracking-[0.2em] uppercase mb-4">Transmission</p>
           <h2 className="text-4xl font-bold tracking-tight text-white mb-6">Receive Architectural Insights.</h2>
           <p className="text-white/70 mb-12 text-lg leading-relaxed">
@@ -100,7 +102,7 @@ export default function Blog() {
               Subscribe
             </button>
           </form>
-        </div>
+        </motion.div>
       </section>
     </>
   );

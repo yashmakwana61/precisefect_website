@@ -22,7 +22,8 @@ router.get("/revisions", requireAdmin, async (req: Request, res: Response) => {
           eq(contentRevisionsTable.entityId, entityId),
         ),
       )
-      .orderBy(desc(contentRevisionsTable.createdAt));
+      .orderBy(desc(contentRevisionsTable.createdAt))
+      .limit(Math.min(100, Math.max(1, Number(req.query.limit) || 50)));
     res.json(rows);
   } catch (err) {
     req.log.error({ err }, "revisions list failed");

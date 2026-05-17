@@ -11,5 +11,8 @@ export function useAdmin() {
     isAdmin: query.data?.isAdmin ?? false,
     isLoading: query.isLoading,
     refetch: query.refetch,
+    user: query.data ?? null,
+    permissions: query.data?.permissions ?? [],
+    hasPermission: (key: string) => (query.data?.permissions ?? []).includes(key),
   };
 }

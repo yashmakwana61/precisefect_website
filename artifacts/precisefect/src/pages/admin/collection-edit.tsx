@@ -3,6 +3,7 @@ import { Link, useLocation, useParams } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Plus, Trash2, Save, ExternalLink } from "lucide-react";
 import { cmsApi, type CollectionName, type CaseStudyMetric } from "@/lib/cms-api";
+import { collectionAdminPath } from "@/admin/registry";
 import { collectionConfigs, type FieldDef } from "./collection-config";
 import { useToast } from "@/hooks/use-toast";
 import { HtmlEditor } from "@/components/admin/html-editor";
@@ -254,7 +255,7 @@ export default function CollectionEdit() {
       qc.invalidateQueries({ queryKey: ["collection", collection] });
       qc.invalidateQueries({ queryKey: ["public", collection] });
       toast({ title: isNew ? "Created" : "Saved" });
-      setLocation(`/admin/${collection}`);
+      setLocation(collectionAdminPath(collection));
     },
     onError: (e) => toast({ title: "Save failed", description: String(e), variant: "destructive" }),
   });
@@ -280,7 +281,7 @@ export default function CollectionEdit() {
   return (
     <div className="max-w-3xl mx-auto px-8 py-16">
       <Link
-        href={`/admin/${collection}`}
+        href={collectionAdminPath(collection)}
         data-testid="link-back-to-list"
         className="inline-flex items-center text-xs font-bold text-muted-foreground hover:text-primary uppercase tracking-[0.15em] mb-8"
       >
@@ -344,7 +345,7 @@ export default function CollectionEdit() {
             </a>
           )}
           <Link
-            href={`/admin/${collection}`}
+            href={collectionAdminPath(collection)}
             className="text-sm font-medium text-muted-foreground hover:text-primary"
           >
             Cancel

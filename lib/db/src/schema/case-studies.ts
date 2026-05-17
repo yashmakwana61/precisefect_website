@@ -1,4 +1,4 @@
-import { pgTable, text, serial, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, timestamp, boolean, jsonb, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
@@ -19,7 +19,7 @@ export const caseStudiesTable = pgTable("case_studies", {
   solution: text("solution").notNull(),
   results: text("results").notNull(),
   metrics: jsonb("metrics").$type<CaseStudyMetric[]>().notNull().default([]),
-  sortOrder: serial("sort_order"),
+  sortOrder: integer("sort_order").notNull().default(0),
   publishedAt: timestamp("published_at", { withTimezone: true }).notNull().defaultNow(),
   isPublished: boolean("is_published").notNull().default(true),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -32,7 +32,6 @@ export const insertCaseStudySchema = createInsertSchema(caseStudiesTable, {
   id: true,
   createdAt: true,
   updatedAt: true,
-  sortOrder: true,
 });
 export const selectCaseStudySchema = createSelectSchema(caseStudiesTable);
 export type InsertCaseStudy = z.infer<typeof insertCaseStudySchema>;

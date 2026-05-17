@@ -2,6 +2,7 @@ import { Link, useParams } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Plus, Pencil, Trash2, EyeOff, Eye, ExternalLink } from "lucide-react";
 import { cmsApi, type CollectionName } from "@/lib/cms-api";
+import { collectionAdminPath } from "@/admin/registry";
 import { collectionConfigs } from "./collection-config";
 import { useToast } from "@/hooks/use-toast";
 import { withPreviewQuery } from "@/hooks/use-preview";
@@ -62,7 +63,7 @@ export default function CollectionList() {
           <p className="text-muted-foreground max-w-2xl">{config.description}</p>
         </div>
         <Link
-          href={`/admin/${collection}/new`}
+          href={`${collectionAdminPath(collection)}/new`}
           data-testid="link-create-new"
           className="signature-gradient text-white font-bold rounded-lg px-6 py-3 btn-press inline-flex items-center self-start"
         >
@@ -75,7 +76,7 @@ export default function CollectionList() {
       ) : items.length === 0 ? (
         <div className="bg-surface-container-lowest ghost-border rounded-xl p-12 text-center">
           <p className="text-muted-foreground mb-6">No entries yet.</p>
-          <Link href={`/admin/${collection}/new`} className="text-primary font-bold underline">
+          <Link href={`${collectionAdminPath(collection)}/new`} className="text-primary font-bold underline">
             Create the first one
           </Link>
         </div>
@@ -123,7 +124,7 @@ export default function CollectionList() {
                     </a>
                   )}
                   <Link
-                    href={`/admin/${collection}/${id}`}
+                    href={`${collectionAdminPath(collection)}/${id}`}
                     data-testid={`link-edit-${id}`}
                     className="p-2.5 rounded-lg bg-surface-container-high text-primary hover:bg-primary hover:text-white transition-colors"
                     title="Edit"
