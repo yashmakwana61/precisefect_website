@@ -76,6 +76,9 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build production artifacts
+        env:
+          GITHUB_ACTIONS: "true"
+          CI: "true"
         run: node scripts/build-prod.mjs
 
       - name: Commit production artifacts for Hostinger

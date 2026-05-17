@@ -7,7 +7,6 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const precisefectDir = path.join(root, "artifacts", "precisefect");
 const apiDistDir = path.join(root, "artifacts", "api-server", "dist");
 const frontendIndex = path.join(precisefectDir, "dist", "public", "index.html");
-const bundledPublicIndex = path.join(apiDistDir, "public", "index.html");
 const apiBundle = path.join(apiDistDir, "index.mjs");
 
 function copyPublicAssets() {
@@ -30,21 +29,16 @@ function syncRootPublicFiles(...destRoots) {
   }
 }
 
-const skipCompile =
-  !process.env.CI &&
-  existsSync(frontendIndex) &&
-  existsSync(apiBundle) &&
-  existsSync(bundledPublicIndex);
+/** GitHub Actions artifact job must compile; Hostinger/shared hosting must not. */
+function shouldCompileOnThisMachine() {
+  if (process.env.FORCE_PROD_BUILD === "1") return true;
+  if (process.env.GITHUB_ACTIONS === "true") return true;
+  if (process.env.CI === "true" && process.env.HOSTINGER !== "1") return true;
+  return false;
+}
 
-if (skipCompile) {
-  syncRootPublicFiles(
-    path.join(precisefectDir, "dist", "public"),
-    path.join(apiDistDir, "public"),
-  );
-  console.log(
-    "[build:prod] CI-built artifacts found; skipping compile (required on Hostinger shared hosting).",
-  );
-  process.exit(0);
+function canUsePublishedArtifacts() {
+  return existsSync(frontendIndex) && existsSync(apiBundle);
 }
 
 const env = {
@@ -63,6 +57,24 @@ function run(label, args, cwd = root) {
   if (result.status !== 0) {
     process.exit(result.status ?? 1);
   }
+}
+
+if (canUsePublishedArtifacts() && !shouldCompileOnThisMachine()) {
+  copyPublicAssets();
+  syncRootPublicFiles(path.join(precisefectDir, "dist", "public"));
+  console.log(
+    "[build:prod] Using CI-published artifacts (no esbuild/vite on this host).",
+  );
+  process.exit(0);
+}
+
+if (!shouldCompileOnThisMachine()) {
+  console.error(
+    "[build:prod] Missing CI artifacts. Push to main and wait for GitHub Actions, or set FORCE_PROD_BUILD=1 on a machine that can run esbuild.",
+  );
+  console.error(`  expected: ${frontendIndex}`);
+  console.error(`  expected: ${apiBundle}`);
+  process.exit(1);
 }
 
 run(
