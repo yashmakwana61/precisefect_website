@@ -81836,12 +81836,13 @@ var selectIntegrationDeliveryLogSchema = createSelectSchema(
 // ../../lib/db/src/pool-config.ts
 import dns from "node:dns";
 var IPV4_HOST = /^\d{1,3}(\.\d{1,3}){3}$/;
-function preferIpv4ConnectionString(connectionString2) {
+async function preferIpv4ConnectionString(connectionString2) {
   try {
     const url2 = new URL(connectionString2.replace(/^postgres:/, "postgresql:"));
     if (IPV4_HOST.test(url2.hostname)) return connectionString2;
-    const { address } = dns.lookupSync(url2.hostname, { family: 4 });
-    url2.hostname = address;
+    const addresses = await dns.promises.resolve4(url2.hostname);
+    if (!addresses[0]) return connectionString2;
+    url2.hostname = addresses[0];
     return url2.toString().replace(/^postgresql:/, "postgres:");
   } catch {
     return connectionString2;
@@ -81882,7 +81883,7 @@ function buildPgPoolConfig(connectionString2) {
 
 // ../../lib/db/src/index.ts
 var { Pool: Pool3 } = esm_default;
-var connectionString = preferIpv4ConnectionString(resolveDatabaseUrl());
+var connectionString = await preferIpv4ConnectionString(resolveDatabaseUrl());
 var pool = new Pool3(buildPgPoolConfig(connectionString));
 var db = drizzle(pool, { schema: schema_exports });
 async function pingDatabase() {

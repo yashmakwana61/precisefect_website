@@ -4,13 +4,15 @@ import type pg from "pg";
 const IPV4_HOST = /^\d{1,3}(\.\d{1,3}){3}$/;
 
 /** Rewrite hostname to IPv4 (Hostinger cannot reach Supabase over IPv6). */
-export function preferIpv4ConnectionString(connectionString: string): string {
+export async function preferIpv4ConnectionString(connectionString: string): Promise<string> {
   try {
     const url = new URL(connectionString.replace(/^postgres:/, "postgresql:"));
     if (IPV4_HOST.test(url.hostname)) return connectionString;
 
-    const { address } = dns.lookupSync(url.hostname, { family: 4 });
-    url.hostname = address;
+    const addresses = await dns.promises.resolve4(url.hostname);
+    if (!addresses[0]) return connectionString;
+
+    url.hostname = addresses[0];
     return url.toString().replace(/^postgresql:/, "postgres:");
   } catch {
     return connectionString;

@@ -9,7 +9,7 @@ import {
 
 const { Pool } = pg;
 
-const connectionString = preferIpv4ConnectionString(resolveDatabaseUrl());
+const connectionString = await preferIpv4ConnectionString(resolveDatabaseUrl());
 export const pool = new Pool(buildPgPoolConfig(connectionString));
 export const db = drizzle(pool, { schema });
 
