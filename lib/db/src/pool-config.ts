@@ -1,4 +1,21 @@
+import { lookupSync } from "node:dns";
 import type pg from "pg";
+
+const IPV4_HOST = /^\d{1,3}(\.\d{1,3}){3}$/;
+
+/** Rewrite hostname to IPv4 (Hostinger cannot reach Supabase over IPv6). */
+export function preferIpv4ConnectionString(connectionString: string): string {
+  try {
+    const url = new URL(connectionString.replace(/^postgres:/, "postgresql:"));
+    if (IPV4_HOST.test(url.hostname)) return connectionString;
+
+    const { address } = lookupSync(url.hostname, { family: 4 });
+    url.hostname = address;
+    return url.toString().replace(/^postgresql:/, "postgres:");
+  } catch {
+    return connectionString;
+  }
+}
 
 /** Normalize DATABASE_URL (quotes, whitespace) and set SSL / pooler options for Supabase. */
 export function resolveDatabaseUrl(): string {
@@ -29,7 +46,8 @@ export function buildPgPoolConfig(connectionString: string): pg.PoolConfig {
       sslmode === "require" ||
       sslmode === "verify-full" ||
       sslmode === "verify-ca" ||
-      host.endsWith(".supabase.co");
+      host.endsWith(".supabase.co") ||
+      connectionString.includes("supabase.co");
 
     if (needsSsl) {
       config.ssl = { rejectUnauthorized: false };
