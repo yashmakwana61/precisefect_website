@@ -32,36 +32,33 @@ export function resolveDatabaseUrl(): string {
 }
 
 export function buildPgPoolConfig(connectionString: string): pg.PoolConfig {
-  // `lookup` is supported by node-pg at runtime; older @types/pg omit it.
-  const config = {
-    connectionString,
-    lookup: ipv4Lookup,
-  } as pg.PoolConfig;
+  const isSupabase = connectionString.includes("supabase.co");
 
   try {
     const url = new URL(connectionString.replace(/^postgres:/, "postgresql:"));
     const sslmode = url.searchParams.get("sslmode");
-    const host = url.hostname;
-
     const needsSsl =
       sslmode === "require" ||
       sslmode === "verify-full" ||
       sslmode === "verify-ca" ||
-      host.endsWith(".supabase.co") ||
-      connectionString.includes("supabase.co");
+      url.hostname.endsWith(".supabase.co") ||
+      isSupabase;
 
-    if (needsSsl) {
-      config.ssl = { rejectUnauthorized: false };
-    }
-
-    if (url.port === "6543" || url.searchParams.get("pgbouncer") === "true") {
-      config.max = Math.min(config.max ?? 10, 5);
-    }
+    return {
+      host: url.hostname,
+      port: url.port ? Number(url.port) : 5432,
+      user: decodeURIComponent(url.username),
+      password: decodeURIComponent(url.password),
+      database: url.pathname.replace(/^\//, "") || "postgres",
+      lookup: ipv4Lookup,
+      ssl: needsSsl ? { rejectUnauthorized: false } : undefined,
+      max: url.port === "6543" || url.searchParams.get("pgbouncer") === "true" ? 5 : 10,
+    } as pg.PoolConfig;
   } catch {
-    if (connectionString.includes("supabase.co")) {
-      config.ssl = { rejectUnauthorized: false };
-    }
+    return {
+      connectionString,
+      lookup: ipv4Lookup,
+      ssl: isSupabase ? { rejectUnauthorized: false } : undefined,
+    } as pg.PoolConfig;
   }
-
-  return config;
 }

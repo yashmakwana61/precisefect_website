@@ -278,6 +278,10 @@ pnpm --filter @workspace/scripts exec tsx src/seed-phase3.ts
 
 Without the `leads` table (and `score` / `score_breakdown` columns), `POST /api/leads` and admin **Add lead** return HTTP 500.
 
+### Hostinger cannot reach the database
+
+If `GET /api/healthz` returns `"db":"error"` (often `ECONNREFUSED` on an IPv6 address), set Hostinger `DATABASE_URL` to the Supabase **Session pooler** URI (Project Settings → Database → Connection string), URL-encode the password, add `?sslmode=require`, restart the Node app, and confirm `{"status":"ok","db":"ok"}`.
+
 ---
 
 ## What's complete vs planned
