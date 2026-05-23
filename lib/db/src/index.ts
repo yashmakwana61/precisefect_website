@@ -1,16 +1,16 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import * as schema from "./schema";
+import { buildPgPoolConfig, resolveDatabaseUrl } from "./pool-config";
 
 const { Pool } = pg;
 
-if (!process.env.DATABASE_URL) {
-  throw new Error(
-    "DATABASE_URL must be set. Use your Supabase Postgres URI (Dashboard → Project Settings → Database).",
-  );
-}
-
-export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const connectionString = resolveDatabaseUrl();
+export const pool = new Pool(buildPgPoolConfig(connectionString));
 export const db = drizzle(pool, { schema });
+
+export async function pingDatabase(): Promise<void> {
+  await pool.query("SELECT 1");
+}
 
 export * from "./schema";

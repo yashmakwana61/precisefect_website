@@ -20,9 +20,11 @@ import { cmsPublic } from "@/lib/cms-public";
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
-  phone: z.string().min(10, "Please enter a valid phone number"),
+  phone: z
+    .string()
+    .refine((v) => v.replace(/\D/g, "").length >= 10, "Please enter a valid phone number (at least 10 digits)"),
   businessType: z.string().min(1, "Please select an industry"),
-  message: z.string().min(10, "Please provide structural details about your needs")
+  message: z.string().min(10, "Please provide structural details about your needs"),
 });
 
 type ContactFormValues = z.infer<typeof contactSchema>;

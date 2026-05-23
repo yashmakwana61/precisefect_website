@@ -2,8 +2,29 @@ import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useMutation } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
+import { z } from "zod";
 import { cmsApi } from "@/lib/cms-api";
 import { useToast } from "@/hooks/use-toast";
+
+const adminLeadSchema = z.object({
+  name: z.string().trim().min(2, "Name must be at least 2 characters"),
+  email: z.string().trim().email("Enter a valid email"),
+  phone: z
+    .string()
+    .trim()
+    .refine((v) => v.replace(/\D/g, "").length >= 7, "Phone must include at least 7 digits"),
+  businessType: z.string().trim().min(1, "Business type is required"),
+  company: z.string().trim().optional(),
+  message: z.string().trim().min(1, "Add a short note about this lead"),
+});
+
+const FIELDS = [
+  { key: "name" as const, label: "Name", required: true },
+  { key: "email" as const, label: "Email", required: true },
+  { key: "phone" as const, label: "Phone", required: true, hint: "At least 7 digits (spaces/dashes OK)" },
+  { key: "businessType" as const, label: "Business type", required: true },
+  { key: "company" as const, label: "Company", required: false },
+];
 
 export default function LeadNew() {
   const [, setLocation] = useLocation();
@@ -16,19 +37,33 @@ export default function LeadNew() {
     message: "",
     company: "",
   });
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const create = useMutation({
-    mutationFn: () =>
-      cmsApi.createLeadAdmin({
-        ...form,
+    mutationFn: () => {
+      const parsed = adminLeadSchema.safeParse(form);
+      if (!parsed.success) {
+        const errors: Record<string, string> = {};
+        for (const issue of parsed.error.issues) {
+          const key = String(issue.path[0] ?? "form");
+          if (!errors[key]) errors[key] = issue.message;
+        }
+        setFieldErrors(errors);
+        throw new Error(Object.values(errors).join("\n"));
+      }
+      setFieldErrors({});
+      return cmsApi.createLeadAdmin({
+        ...parsed.data,
+        company: parsed.data.company ?? "",
         source: "manual",
         sourceDetail: "admin",
-      }),
+      });
+    },
     onSuccess: (lead) => {
       toast({ title: "Lead created" });
       setLocation(`/admin/leads/${lead.id}`);
     },
-    onError: (e) => toast({ title: "Failed", description: String(e), variant: "destructive" }),
+    onError: (e) => toast({ title: "Could not create lead", description: String(e), variant: "destructive" }),
   });
 
   return (
@@ -44,26 +79,45 @@ export default function LeadNew() {
           create.mutate();
         }}
       >
-        {(["name", "email", "phone", "businessType", "company"] as const).map((key) => (
+        {FIELDS.map(({ key, label, required, hint }) => (
           <div key={key}>
-            <label className="text-xs font-bold uppercase tracking-wider text-primary block mb-2">{key}</label>
+            <label className="text-xs font-bold uppercase tracking-wider text-primary block mb-2">{label}</label>
             <input
-              required={key !== "company"}
+              required={required}
               value={form[key]}
-              onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))}
+              onChange={(e) => {
+                setForm((f) => ({ ...f, [key]: e.target.value }));
+                setFieldErrors((prev) => {
+                  const next = { ...prev };
+                  delete next[key];
+                  return next;
+                });
+              }}
               className="w-full px-4 py-2 rounded-lg border border-border bg-surface"
             />
+            {hint && <p className="text-xs text-muted-foreground mt-1">{hint}</p>}
+            {fieldErrors[key] && <p className="text-xs text-destructive mt-1">{fieldErrors[key]}</p>}
           </div>
         ))}
         <div>
-          <label className="text-xs font-bold uppercase tracking-wider text-primary block mb-2">Message</label>
+          <label className="text-xs font-bold uppercase tracking-wider text-primary block mb-2">Message / notes</label>
           <textarea
             required
             value={form.message}
-            onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
+            onChange={(e) => {
+              setForm((f) => ({ ...f, message: e.target.value }));
+              setFieldErrors((prev) => {
+                const next = { ...prev };
+                delete next.message;
+                return next;
+              });
+            }}
             rows={4}
+            placeholder="e.g. Met at trade show, wants ERP quote"
             className="w-full px-4 py-2 rounded-lg border border-border bg-surface resize-none"
           />
+          <p className="text-xs text-muted-foreground mt-1">Any short note is fine (minimum 1 character).</p>
+          {fieldErrors.message && <p className="text-xs text-destructive mt-1">{fieldErrors.message}</p>}
         </div>
         <button
           type="submit"
