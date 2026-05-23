@@ -52,6 +52,7 @@ export type CustomPage = {
   id: number; slug: string; title: string; pageType: string;
   heroHeadline: string; heroSubheadline: string; heroCtaText: string; heroCtaUrl: string;
   bodyContent: string; listItems: Array<{ title: string; description: string }>;
+  grapesJson?: any;
   metaTitle: string; metaDescription: string; sortOrder: number; publishedAt: string;
   isPublished: boolean; createdAt: string; updatedAt: string;
 };

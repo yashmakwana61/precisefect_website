@@ -7,6 +7,8 @@
     "preinstall": "node scripts/ensure-pnpm.cjs",
     "start": "node server.mjs",
     "build:prod": "node scripts/build-prod.mjs",
+    "db:migrate": "node scripts/apply-db-migrations.mjs",
+    "db:verify-leads": "node scripts/verify-leads-api.mjs",
     "hostinger:install": "node scripts/hostinger-noop.mjs",
     "hostinger:build": "node scripts/hostinger-noop.mjs",
     "hostinger:prepare": "node scripts/hostinger-noop.mjs",

@@ -21,6 +21,7 @@ import {
 } from "@workspace/db";
 import { logActivity } from "../system/activity.service";
 import { emitDomainEvent } from "../automation/event-bus";
+import { logger } from "../../lib/logger";
 import { applyLeadScore } from "./scoring.service";
 import { listTasksForLead } from "../crm/tasks.service";
 import type { z } from "zod";
@@ -54,21 +55,30 @@ export async function createLead(
     })
     .returning();
 
-  await applyLeadScore(lead.id);
+  try {
+    await applyLeadScore(lead.id);
+  } catch (err) {
+    logger.warn({ err, leadId: lead.id }, "lead scoring skipped");
+  }
+
   const [scored] = await db.select().from(leadsTable).where(eq(leadsTable.id, lead.id)).limit(1);
   const finalLead = scored ?? lead;
 
-  await emitDomainEvent(
-    "lead.created",
-    {
-      entityType: "leads",
-      entityId: finalLead.id,
-      lead: finalLead,
-      source: finalLead.source,
-      email: finalLead.email,
-    },
-    {},
-  );
+  try {
+    await emitDomainEvent(
+      "lead.created",
+      {
+        entityType: "leads",
+        entityId: finalLead.id,
+        lead: finalLead,
+        source: finalLead.source,
+        email: finalLead.email,
+      },
+      {},
+    );
+  } catch (err) {
+    logger.warn({ err, leadId: finalLead.id }, "lead.created event skipped");
+  }
 
   return finalLead;
 }

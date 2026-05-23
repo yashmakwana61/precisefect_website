@@ -13,6 +13,7 @@ export const customPagesTable = pgTable("custom_pages", {
   heroCtaUrl: text("hero_cta_url").notNull().default(""),
   bodyContent: text("body_content").notNull().default(""),
   listItems: jsonb("list_items").notNull().default([]),
+  grapesJson: jsonb("grapes_json"),
   metaTitle: text("meta_title").notNull().default(""),
   metaDescription: text("meta_description").notNull().default(""),
   sortOrder: integer("sort_order").notNull().default(0),

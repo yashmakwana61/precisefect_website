@@ -1,13 +1,18 @@
-import { useQuery } from "@tanstack/react-query";
-import { useParams, Link } from "wouter";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { useParams, Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { heroCopy, itemReveal } from "@/lib/motion-presets";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Save, Edit, X } from "lucide-react";
 import { Seo } from "@/components/seo";
 import { cmsPublic } from "@/lib/cms-public";
+import { cmsApi } from "@/lib/cms-api";
 import type { CustomPage } from "@/lib/cms-api";
 import { HtmlSafe } from "@/components/html-safe";
 import { usePreviewMode } from "@/hooks/use-preview";
+import { useAdmin } from "@/hooks/use-admin";
+import { useToast } from "@/hooks/use-toast";
+import { useState, useEffect } from "react";
+import { WebstudioEditor } from "@/components/admin/webstudio-editor";
 
 type ListItem = { title: string; description: string };
 
@@ -114,12 +119,50 @@ function ListTemplate({ page }: { page: CustomPage }) {
   );
 }
 
+function GrapesTemplate({ page }: { page: CustomPage }) {
+  return (
+    <div className="w-full min-h-[60vh]">
+      <HtmlSafe html={page.bodyContent} />
+    </div>
+  );
+}
+
 export default function CustomPageRenderer() {
   const params = useParams<{ slug: string }>();
+  const [location, setLocation] = useLocation();
   const preview = usePreviewMode();
+  const qc = useQueryClient();
+  const { toast } = useToast();
+  const { isAdmin } = useAdmin();
+
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    setIsEditing(searchParams.get("edit") === "true");
+  }, [window.location.search]);
+
   const { data: page, isLoading, isError } = useQuery({
     queryKey: ["custom-page", "slug", params.slug, preview],
     queryFn: () => cmsPublic.getCustomPageBySlug(params.slug, preview ? "preview" : undefined),
+  });
+
+  // Local editor states
+  const [editForm, setEditForm] = useState<Partial<CustomPage>>({});
+
+  useEffect(() => {
+    if (page) {
+      setEditForm({ ...page });
+    }
+  }, [page]);
+
+  const saveMutation = useMutation({
+    mutationFn: () => cmsApi.updateCustomPage(page!.id, editForm),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["custom-page", "slug", params.slug] });
+      toast({ title: "Page Saved Successfully", description: "Your dynamic site updates are now live!" });
+    },
+    onError: (e) => toast({ title: "Save Failed", description: String(e), variant: "destructive" }),
   });
 
   if (isLoading) return <div className="min-h-[60vh] flex items-center justify-center text-muted-foreground">Loading…</div>;
@@ -133,6 +176,55 @@ export default function CustomPageRenderer() {
     );
   }
 
+  // Render Visual Webstudio Editor Inline
+  if (isEditing && isAdmin) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col relative z-[9999]">
+        {/* Sticky top control panel */}
+        <div className="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-[10000] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 shadow-xl">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg border border-emerald-500/20">
+              <Edit className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">In-Context Live Editor</span>
+              <h2 className="text-sm font-bold text-slate-100 mt-0.5">{page.title} ({page.slug})</h2>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 self-end">
+            <button
+              onClick={() => saveMutation.mutate()}
+              disabled={saveMutation.isPending}
+              className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-bold rounded-lg px-5 py-2.5 text-xs shadow-lg transition-colors flex items-center shrink-0"
+            >
+              <Save className="w-3.5 h-3.5 mr-1.5" />
+              {saveMutation.isPending ? "Saving..." : "Save Page"}
+            </button>
+            <button
+              onClick={() => setLocation(location.split("?")[0])}
+              className="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-lg px-5 py-2.5 text-xs border border-slate-700 transition-colors flex items-center shrink-0"
+            >
+              <X className="w-3.5 h-3.5 mr-1.5" />
+              Close Editor
+            </button>
+          </div>
+        </div>
+
+        {/* Webstudio Editor Container */}
+        <div className="flex-1 p-6 max-w-[1440px] w-full mx-auto">
+          <WebstudioEditor
+            initialHtml={editForm.bodyContent ?? ""}
+            initialProjectData={editForm.grapesJson}
+            onChange={(html, json) => {
+              setEditForm(f => ({ ...f, bodyContent: html, grapesJson: json }));
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <Seo
@@ -140,9 +232,23 @@ export default function CustomPageRenderer() {
         description={page.metaDescription || page.heroSubheadline || ""}
         slug={`/p/${page.slug}`}
       />
+      {page.pageType === "grapes" && <GrapesTemplate page={page} />}
       {page.pageType === "content" && <ContentTemplate page={page} />}
       {page.pageType === "list" && <ListTemplate page={page} />}
       {(page.pageType === "landing" || !page.pageType) && <LandingTemplate page={page} />}
+
+      {/* Floating In-Context Admin Edit Action Button */}
+      {isAdmin && (
+        <div className="fixed bottom-8 right-8 z-[999]">
+          <button
+            onClick={() => setLocation(`${location}?edit=true`)}
+            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 px-6 rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95 group border border-emerald-400/20"
+          >
+            <Edit className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+            <span className="text-xs uppercase tracking-wider">Live Edit Page</span>
+          </button>
+        </div>
+      )}
     </>
   );
 }

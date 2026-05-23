@@ -252,6 +252,32 @@ See `.env.example`. Main variables:
 - **PM2:** `ecosystem.config.cjs` (`precisefect` app, port 3000)
 - **CI:** `.github/workflows/ci.yml` — typecheck/build; commits `artifacts/*/dist` for Hostinger on push to `main`
 
+### Production database (leads / CRM)
+
+After pulling leads or CRM changes, apply schema to the **same Postgres** your Hostinger `DATABASE_URL` uses:
+
+```bash
+# Prefer direct port 5432 for migrations (see .env.example DATABASE_DIRECT_URL)
+pnpm --filter @workspace/db run push
+```
+
+Or run the SQL files in `lib/db/migrations/` in order (`0001` → `0005`) in the Supabase SQL editor, or paste **`lib/db/migrations/production-leads-bundle.sql`** (leads + CRM + permissions; requires `users` / `module_registry` from `0001`).
+
+From your machine (uses `.env` `DATABASE_URL` / `DATABASE_DIRECT_URL`):
+
+```bash
+pnpm run db:migrate
+```
+
+Then seed permissions and roles (once per environment):
+
+```bash
+pnpm --filter @workspace/scripts exec tsx src/seed-foundation.ts
+pnpm --filter @workspace/scripts exec tsx src/seed-phase3.ts
+```
+
+Without the `leads` table (and `score` / `score_breakdown` columns), `POST /api/leads` and admin **Add lead** return HTTP 500.
+
 ---
 
 ## What's complete vs planned
