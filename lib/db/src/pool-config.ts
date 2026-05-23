@@ -1,22 +1,17 @@
 import dns from "node:dns";
 import type pg from "pg";
 
-const IPV4_HOST = /^\d{1,3}(\.\d{1,3}){3}$/;
-
-/** Rewrite hostname to IPv4 (Hostinger cannot reach Supabase over IPv6). */
-export async function preferIpv4ConnectionString(connectionString: string): Promise<string> {
-  try {
-    const url = new URL(connectionString.replace(/^postgres:/, "postgresql:"));
-    if (IPV4_HOST.test(url.hostname)) return connectionString;
-
-    const addresses = await dns.promises.resolve4(url.hostname);
-    if (!addresses[0]) return connectionString;
-
-    url.hostname = addresses[0];
-    return url.toString().replace(/^postgresql:/, "postgres:");
-  } catch {
-    return connectionString;
-  }
+/** Force IPv4 when pg resolves the database host (Hostinger cannot use Supabase over IPv6). */
+function ipv4Lookup(
+  hostname: string,
+  options: dns.LookupOptions,
+  callback: (
+    err: NodeJS.ErrnoException | null,
+    address: string,
+    family: number,
+  ) => void,
+): void {
+  dns.lookup(hostname, { ...options, family: 4 }, callback);
 }
 
 /** Normalize DATABASE_URL (quotes, whitespace) and set SSL / pooler options for Supabase. */
@@ -37,7 +32,11 @@ export function resolveDatabaseUrl(): string {
 }
 
 export function buildPgPoolConfig(connectionString: string): pg.PoolConfig {
-  const config: pg.PoolConfig = { connectionString };
+  // `lookup` is supported by node-pg at runtime; older @types/pg omit it.
+  const config = {
+    connectionString,
+    lookup: ipv4Lookup,
+  } as pg.PoolConfig;
 
   try {
     const url = new URL(connectionString.replace(/^postgres:/, "postgresql:"));
@@ -55,7 +54,6 @@ export function buildPgPoolConfig(connectionString: string): pg.PoolConfig {
       config.ssl = { rejectUnauthorized: false };
     }
 
-    // Supavisor / PgBouncer transaction pooler (port 6543)
     if (url.port === "6543" || url.searchParams.get("pgbouncer") === "true") {
       config.max = Math.min(config.max ?? 10, 5);
     }

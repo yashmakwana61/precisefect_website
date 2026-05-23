@@ -1,15 +1,11 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import * as schema from "./schema";
-import {
-  buildPgPoolConfig,
-  preferIpv4ConnectionString,
-  resolveDatabaseUrl,
-} from "./pool-config";
+import { buildPgPoolConfig, resolveDatabaseUrl } from "./pool-config";
 
 const { Pool } = pg;
 
-const connectionString = await preferIpv4ConnectionString(resolveDatabaseUrl());
+const connectionString = resolveDatabaseUrl();
 export const pool = new Pool(buildPgPoolConfig(connectionString));
 export const db = drizzle(pool, { schema });
 
