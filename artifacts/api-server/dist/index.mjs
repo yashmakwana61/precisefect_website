@@ -29994,7 +29994,7 @@ See https://www.postgresql.org/docs/current/libpq-ssl.html for libpq SSL mode de
 var require_connection_parameters = __commonJS({
   "../../node_modules/.pnpm/pg@8.20.0/node_modules/pg/lib/connection-parameters.js"(exports, module) {
     "use strict";
-    var dns2 = __require("dns");
+    var dns3 = __require("dns");
     var defaults2 = require_defaults();
     var parse3 = require_pg_connection_string().parse;
     var val = function(key, config2, envVar) {
@@ -30120,7 +30120,7 @@ var require_connection_parameters = __commonJS({
         if (this.client_encoding) {
           params.push("client_encoding=" + quoteParamValue(this.client_encoding));
         }
-        dns2.lookup(this.host, function(err, address) {
+        dns3.lookup(this.host, function(err, address) {
           if (err) return cb(err, null);
           params.push("hostaddr=" + quoteParamValue(address));
           return cb(null, params.join(" "));
@@ -81834,13 +81834,13 @@ var selectIntegrationDeliveryLogSchema = createSelectSchema(
 );
 
 // ../../lib/db/src/pool-config.ts
-import { lookupSync } from "node:dns";
+import dns from "node:dns";
 var IPV4_HOST = /^\d{1,3}(\.\d{1,3}){3}$/;
 function preferIpv4ConnectionString(connectionString2) {
   try {
     const url2 = new URL(connectionString2.replace(/^postgres:/, "postgresql:"));
     if (IPV4_HOST.test(url2.hostname)) return connectionString2;
-    const { address } = lookupSync(url2.hostname, { family: 4 });
+    const { address } = dns.lookupSync(url2.hostname, { family: 4 });
     url2.hostname = address;
     return url2.toString().replace(/^postgresql:/, "postgres:");
   } catch {
@@ -96263,7 +96263,7 @@ function signWebhookPayload(body, secret) {
 }
 
 // src/lib/url-safety.ts
-import dns from "node:dns/promises";
+import dns2 from "node:dns/promises";
 import net from "node:net";
 import { URL as URL2 } from "node:url";
 var BLOCKED_HOSTNAMES = /* @__PURE__ */ new Set([
@@ -96314,7 +96314,7 @@ async function assertSafeOutboundUrl(urlStr) {
     throw new Error("Webhook URL must not target private networks");
   }
   if (!net.isIP(host2)) {
-    const records = await dns.lookup(host2, { all: true, verbatim: true });
+    const records = await dns2.lookup(host2, { all: true, verbatim: true });
     if (records.length === 0) {
       throw new Error("Webhook URL host could not be resolved");
     }
