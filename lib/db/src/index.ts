@@ -1,7 +1,11 @@
+import dns from "node:dns";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import * as schema from "./schema";
 import { buildPgPoolConfig, resolveDatabaseUrl } from "./pool-config";
+
+// Hostinger often resolves Supabase to IPv6 first; direct Postgres is unreachable over IPv6.
+dns.setDefaultResultOrder("ipv4first");
 
 const { Pool } = pg;
 
